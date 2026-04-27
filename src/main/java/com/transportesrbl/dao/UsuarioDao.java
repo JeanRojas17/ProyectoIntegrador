@@ -1,7 +1,7 @@
-package com.dao;
+package com.transportesrbl.dao;
 
 
-import com.Conexion.DatabaseConnection;
+import com.transportesrbl.config.DatabaseConnection;
 import java.sql.*;
 
 public class UsuarioDao {

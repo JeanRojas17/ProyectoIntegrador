@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="com.transportesrbl.controlador.DashboardController"
+            stylesheets="@dashboard.css">
+    <left>
+        <VBox styleClass="sidebar" prefWidth="200">
+            <Label text="Transportes RBL" style="-fx-text-fill: white; -fx-padding: 20;"/>
+            <Button text="DASHBOARD" styleClass="menu-button"/>
+        </VBox>
+    </left>
+    <center>
+        <VBox styleClass="main-content">
+            <Label text="ENTREGAS ACTIVAS" />
+            <Label fx:id="lblEntregas" styleClass="card-number" />
+        </VBox>
+    </center>
+</BorderPane>

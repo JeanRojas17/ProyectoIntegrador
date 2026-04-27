@@ -1,7 +1,7 @@
-package com.controlador;
+package com.transportesrbl.controllers;
 
 
-import com.dao.UsuarioDao;
+import com.transportesrbl.dao.UsuarioDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 

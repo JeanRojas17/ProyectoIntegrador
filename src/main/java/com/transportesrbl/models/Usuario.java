@@ -1,4 +1,4 @@
-package com.modelo;
+package com.transportesrbl.models;
 
 public class Usuario {
     private int id;

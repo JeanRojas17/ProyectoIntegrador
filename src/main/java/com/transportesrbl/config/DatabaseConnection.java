@@ -1,4 +1,4 @@
-package com.Conexion;
+package com.transportesrbl.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
