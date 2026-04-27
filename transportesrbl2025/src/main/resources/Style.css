@@ -1,0 +1,33 @@
+/* Fondo de la ventana */
+.root {
+    -fx-background-color: #6200ea; /* El color púrpura del fondo */
+}
+
+/* El "Card" o recuadro blanco */
+.login-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);
+    -fx-padding: 40px;
+}
+
+/* Campos de texto (Username/Password) */
+.text-field {
+    -fx-background-color: #eeeeee;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+    -fx-border-radius: 20px;
+}
+
+/* Botón Login */
+.login-button {
+    -fx-background-color: #00bcd4; /* Color cian del botón */
+    -fx-background-radius: 20px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+.login-button:hover {
+    -fx-background-color: #00acc1; /* Un poco más oscuro al pasar el mouse */
+}

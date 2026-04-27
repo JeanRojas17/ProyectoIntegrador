@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane alignment="CENTER" xmlns:fx="http://javafx.com/fxml" 
+           fx:controller="com.controlador.LoginController">
+    
+    <VBox alignment="CENTER" spacing="15" maxWidth="350" styleClass="login-card">
+        
+        <Label text="Login Transportes RBL" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+        
+        <TextField fx:id="txtUsuario" promptText="Usuario" styleClass="text-field"/>
+        
+        <PasswordField fx:id="txtPassword" promptText="Contraseña" styleClass="text-field"/>
+        
+        <Button text="Ingresar" onAction="#handleLogin" styleClass="login-button" maxWidth="Infinity"/>
+        
+        <Label fx:id="lblMensaje" textFill="red"/>
+        
+    </VBox>
+</StackPane>
