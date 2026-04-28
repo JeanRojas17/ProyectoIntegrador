@@ -1,26 +1,40 @@
 package com.transportesrbl.dao;
 
 
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.transportesrbl.config.DatabaseConnection;
-import java.sql.*;
+import com.transportesrbl.models.Usuario;
 
 public class UsuarioDao {
-    
-public boolean validarLogin(String user, String pass) {
-        String sql = "SELECT * FROM usuarios WHERE usuario = ? AND contrasena = ?";
+
+    public Usuario validarUsuario(String user, String pass) {
+        String sql = "SELECT id_usuario, nombre, usuario, contrasena, id_rol FROM usuario WHERE usuario = ? AND contrasena = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, user);
-            stmt.setString(2, pass); // Nota: En producción, recuerda usar hashing para la contraseña
+            stmt.setString(2, pass); // Nota: En producción usarías BCrypt aquí
             
-            ResultSet rs = stmt.executeQuery();
-            return rs.next(); // Si devuelve true, el usuario existe
-            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Usuario(
+                        rs.getInt("id_usuario"),
+                        rs.getString("nombre"),
+                        rs.getString("usuario"),
+                        rs.getString("contrasena"),
+                        rs.getInt("id_rol")
+                    );
+                }
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            System.err.println("Error al validar usuario en Neon: " + e.getMessage());
         }
+        return null;
     }
 }

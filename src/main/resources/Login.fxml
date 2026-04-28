@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<StackPane alignment="CENTER" xmlns:fx="http://javafx.com/fxml" 
-           fx:controller="com.transportesrbl.controllers.LoginController">
-    
-    <VBox alignment="CENTER" spacing="15" maxWidth="350" styleClass="login-card">
-        
-        <Label text="Login Transportes RBL" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
-        
-        <TextField fx:id="txtUsuario" promptText="Usuario" styleClass="text-field"/>
-        
-        <PasswordField fx:id="txtPassword" promptText="Contraseña" styleClass="text-field"/>
-        
-        <Button text="Ingresar" onAction="#handleLogin" styleClass="login-button" maxWidth="Infinity"/>
-        
-        <Label fx:id="lblMensaje" textFill="red"/>
-        
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane alignment="CENTER"
+           xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.transportesrbl.controllers.LoginController"
+           styleClass="root">
+
+    <VBox alignment="CENTER" spacing="20" maxWidth="380" styleClass="login-card">
+
+        <Label text="Transportes RBL" styleClass="title"/>
+        <Label text="Inicia sesión en tu cuenta" styleClass="subtitle"/>
+
+        <TextField fx:id="txtUsuario" promptText="Usuario" styleClass="input"/>
+        <PasswordField fx:id="txtContrasena" promptText="Contraseña" styleClass="input"/>
+
+        <Button text="Ingresar" onAction="#handleLogin"
+                styleClass="login-button" maxWidth="Infinity"/>
+
+        <Label fx:id="lblMensaje" styleClass="error-label"/>
+
     </VBox>
 </StackPane>
