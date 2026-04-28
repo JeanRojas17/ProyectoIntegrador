@@ -1,12 +1,9 @@
-
-src/main/resources/db.properties
+db.properties
 .env
 .env.example
 
-
 target/
 *.class
-
 
 .settings/
 .project
