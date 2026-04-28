@@ -1,1 +1,0 @@
-'operador01', 'clave789'
