@@ -1,27 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Button?>
 
-<StackPane alignment="CENTER"
-           xmlns="http://javafx.com/javafx/17"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.transportesrbl.controllers.LoginController"
-           styleClass="root">
+<HBox prefHeight="600.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.LoginController">
+   <children>
+      <!-- PANEL IZQUIERDO (Color #D8DBE3) -->
+      <VBox alignment="CENTER" prefWidth="400.0" styleClass="side-panel" HBox.hgrow="ALWAYS">
+         <children>
+            <StackPane styleClass="logo-circle">
+               <children>
+                  <Label text="RBL" styleClass="logo-text" />
+               </children>
+            </StackPane>
+            <Label text="Transportes RBL" styleClass="brand-title" />
+            <Label text="Sistema de Gestión Logística" styleClass="brand-subtitle" />
+            <Label alignment="CENTER" styleClass="brand-description" text="Optimiza tus entregas con eficiencia y control total" textAlignment="CENTER" wrapText="true" />
+         </children>
+      </VBox>
 
-    <VBox alignment="CENTER" spacing="20" maxWidth="380" styleClass="login-card">
+      <!-- PANEL DERECHO (Color #353538) -->
+      <VBox alignment="CENTER" prefWidth="500.0" spacing="25.0" styleClass="form-container" HBox.hgrow="ALWAYS">
+         <children>
+            <!-- CARD PRINCIPAL (Color #CBCBD4) -->
+            <VBox maxWidth="400.0" spacing="15.0" styleClass="login-card">
+               <children>
+                  <Label styleClass="form-header" text="INICIAR SESIÓN" />
+                  <Label styleClass="form-subhead" text="INGRESA TUS CREDENCIALES PARA INGRESAR AL SISTEMA" />
+                  
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label styleClass="input-label" text="USUARIO" />
+                        <TextField fx:id="txtUsuario" promptText="INGRESA TU USUARIO" styleClass="login-input" />
+                     </children>
+                  </VBox>
+                  
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label styleClass="input-label" text="CONTRASEÑA" />
+                        <PasswordField fx:id="txtContrasena" promptText="INGRESA TU CONTRASEÑA" styleClass="login-input" />
+                     </children>
+                  </VBox>
+                  
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <CheckBox styleClass="login-checkbox" text="RECORDARME" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Hyperlink styleClass="login-link" text="¿OLVIDASTE TU CONTRASEÑA?" />
+                     </children>
+                  </HBox>
+                  
+                  <Button maxWidth="Infinity" onAction="#handleLogin" styleClass="btn-primary" text="INICIAR SESION" />
+               </children>
+            </VBox>
 
-        <Label text="Transportes RBL" styleClass="title"/>
-        <Label text="Inicia sesión en tu cuenta" styleClass="subtitle"/>
-
-        <TextField fx:id="txtUsuario" promptText="Usuario" styleClass="input"/>
-        <PasswordField fx:id="txtContrasena" promptText="Contraseña" styleClass="input"/>
-
-        <Button text="Ingresar" onAction="#handleLogin"
-                styleClass="login-button" maxWidth="Infinity"/>
-
-        <Label fx:id="lblMensaje" styleClass="error-label"/>
-
-    </VBox>
-</StackPane>
+            <!-- ACCESO POR ROL (Debajo de la Card) -->
+            <VBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Label styleClass="role-header" text="ACCESO POR ROL" />
+                  <!-- Fila 1: 3 botones -->
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <Button styleClass="btn-role" text="ADMINISTRADOR" />
+                        <Button styleClass="btn-role" text="COORDINADOR" />
+                        <Button styleClass="btn-role" text="CONDUCTOR" />
+                     </children>
+                  </HBox>
+                  <!-- Fila 2: 2 botones -->
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <Button styleClass="btn-role" text="AUXILIAR" />
+                        <Button styleClass="btn-role" text="CLIENTE" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</HBox>
