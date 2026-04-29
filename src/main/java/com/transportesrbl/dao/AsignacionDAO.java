@@ -1,16 +1,17 @@
 package com.transportesrbl.dao;
 
-import com.transportesrbl.config.DatabaseConnection;
-import com.transportesrbl.models.Asignacion;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.transportesrbl.config.DatabaseConnection;
+import com.transportesrbl.models.Asignacion;
+
 public class AsignacionDAO {
 
-    /**
-     * Lista todas las asignaciones con sus relaciones
-     */
     public List<Asignacion> listar() {
         List<Asignacion> lista = new ArrayList<>();
         String sql = "SELECT ap.id_asig_paquete, c.modelo_camion, con.nombre_completo, " +
@@ -29,7 +30,6 @@ public class AsignacionDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            
             while (rs.next()) {
                 lista.add(new Asignacion(
                     rs.getInt("id_asig_paquete"),
@@ -46,52 +46,67 @@ public class AsignacionDAO {
         return lista;
     }
 
-    /**
-     * Inserta una nueva asignación de paquete.
-     */
     public boolean insertar(Asignacion asig) {
-        String sql = "INSERT INTO ASIGNACION_PAQUETE (Id_Asignacion, Id_Paquete, Dir_Entrega, Cantidad) VALUES (?, ?, ?, ?)";
-        
+         String sql = "INSERT INTO ASIGNACION_PAQUETE (Id_Asignacion, Id_Paquete, Dir_Entrega, Cantidad) VALUES (?, ?, ?, ?)";
+        //String sql = "INSERT INTO ASIGNACION_PAQUETE (Id_Asignacion, Id_Paquete, Dir_Entrega, Cantidad) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection(); 
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
-            ps.setInt(1, 1); // ID temporal
-            ps.setInt(2, 1); // ID temporal
+            ps.setInt(1, 1); 
+            ps.setInt(2, 1); 
             ps.setString(3, asig.getRuta()); 
             ps.setInt(4, 1);
-
-            System.out.println(">>> Ejecutando SQL: " + sql);
             return ps.executeUpdate() > 0;
-
         } catch (SQLException e) {
             System.err.println("Error al insertar: " + e.getMessage());
-            e.printStackTrace();
             return false;
         }
     }
 
-    /**
-     * Actualiza la dirección o el paquete de una asignación existente
-     */
-    public boolean actualizar(int idAsigPaquete, String nuevaDireccion) {
-        String sql = "UPDATE asignacion_paquete SET dir_entrega = ? WHERE id_asig_paquete = ?";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    public boolean actualizar(Asignacion asig) {
+    // SQL para actualizar la dirección de entrega en la tabla principal
+    String sqlUpdate = "UPDATE ASIGNACION_PAQUETE SET Dir_Entrega = ? WHERE Id_Asig_Paquete = ?";
+    
+    // SQL para insertar el nuevo rastro en el historial
+    String sqlHistorial = "INSERT INTO HISTORIAL_ESTADOS (Id_Asig_Paq, Estado, Observacion) VALUES (?, ?, ?)";
+
+    // Usamos tu clase DatabaseConnection para obtener la sesión
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        if (conn == null) return false;
+
+        // Iniciamos la transacción para que ambos cambios ocurran al tiempo[cite: 1]
+        conn.setAutoCommit(false); 
+
+        try (PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
+             PreparedStatement psHistorial = conn.prepareStatement(sqlHistorial)) {
+
+            // 1. Ejecutar el Update de la dirección[cite: 1]
+            psUpdate.setString(1, asig.getRuta()); 
+            psUpdate.setInt(2, asig.getId());      
+            psUpdate.executeUpdate();
+
+            // 2. Ejecutar el Insert en el Historial[cite: 1]
+            psHistorial.setInt(1, asig.getId());    
+            psHistorial.setString(2, asig.getEstado()); // El estado que viene del ComboBox[cite: 3, 4]
+            psHistorial.setString(3, "Actualización manual desde Dashboard"); 
+            psHistorial.executeUpdate();
+
+            // Si todo salió bien, confirmamos en la base de datos[cite: 1]
+            conn.commit(); 
+            System.out.println(">>> CRUD: Registro y Historial actualizados con éxito.");
+            return true;
             
-            ps.setString(1, nuevaDireccion);
-            ps.setInt(2, idAsigPaquete);
-            
-            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Error al actualizar: " + e.getMessage());
+            // Si algo falla, deshacemos los cambios para evitar datos inconsistentes[cite: 1]
+            conn.rollback(); 
+            System.err.println("Error en la transacción: " + e.getMessage());
             return false;
         }
+    } catch (SQLException e) {
+        System.err.println("Error de conexión: " + e.getMessage());
+        return false;
     }
+}
 
-    /**
-     * Elimina una asignación por su ID
-     */
     public boolean eliminar(int id) {
         String sql = "DELETE FROM asignacion_paquete WHERE id_asig_paquete = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -103,18 +118,4 @@ public class AsignacionDAO {
             return false;
         }
     }
-
-    /**
-     * Carga camiones desde la BD
-     */
-    public List<String> obtenerCamionesDisponibles() {
-        List<String> camiones = new ArrayList<>();
-        String sql = "SELECT modelo_camion FROM camiones"; 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) camiones.add(rs.getString("modelo_camion"));
-        } catch (SQLException e) { e.printStackTrace(); }
-        return camiones;
-    }
-} // <--- Esta es la única llave que debe cerrar la clase al final
+}

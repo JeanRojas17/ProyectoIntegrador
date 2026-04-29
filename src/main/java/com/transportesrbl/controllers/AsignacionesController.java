@@ -1,7 +1,11 @@
 package com.transportesrbl.controllers;
 
+import java.io.IOException;
+import java.util.Optional;
+
 import com.transportesrbl.dao.AsignacionDAO;
 import com.transportesrbl.models.Asignacion;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,12 +13,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.util.Optional;
 
 public class AsignacionesController {
 
@@ -67,6 +75,40 @@ public class AsignacionesController {
         abrirFormulario("/form_asignacion.fxml", "Nueva Asignación");
     }
 
+
+
+@FXML
+private void handleModificar(ActionEvent event) {
+    Asignacion seleccionada = tblAsignaciones.getSelectionModel().getSelectedItem();
+    
+    if (seleccionada == null) {
+        mostrarAlerta("Atención", "Selecciona una fila para modificar.", Alert.AlertType.WARNING);
+        return;
+    }
+
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/form_asignacion.fxml"));
+        Parent root = loader.load();
+        
+        // Pasamos el objeto seleccionado al controlador del formulario[cite: 2]
+        FormAsignacionController formController = loader.getController();
+        formController.setAsignacion(seleccionada); 
+
+        Stage stage = new Stage();
+        stage.setTitle("Transportes RBL - Modificar");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(new Scene(root));
+        stage.showAndWait(); 
+        
+        cargarDatos(); // Refresca la tabla al cerrar la ventana[cite: 2]
+    } catch (IOException e) {
+        mostrarAlerta("Error", "No se pudo abrir el editor.", Alert.AlertType.ERROR);
+        e.printStackTrace();
+    }
+}
+
+
+    
     @FXML
     private void handleEliminar(ActionEvent event) {
         Asignacion seleccionada = tblAsignaciones.getSelectionModel().getSelectedItem();

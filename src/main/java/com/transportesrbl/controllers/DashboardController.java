@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane; // Asegúrate de que tu contenedor sea un BorderPane
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -25,16 +24,14 @@ public class DashboardController {
     @FXML private TableView<Camion> tblEstadoFlota;
     @FXML private TableColumn<Camion, String> colModelo, colEstadoCamion;
     @FXML private TableColumn<Camion, Double> colCapacidad;
-
-    // --- ESTA ES LA LÍNEA QUE TE FALTABA ---
-    // Asegúrate de que en tu dashboard.fxml, el contenedor central tenga fx:id="contentArea"
-    @FXML 
-private StackPane contentArea;
+    
+    @FXML private StackPane contentArea; // El contenedor principal del dashboard.fxml
 
     private DashboardService service = new DashboardService();
 
     @FXML
     public void initialize() {
+        // Solo intentamos cargar datos si los componentes de la tabla existen
         if (tblEntregasRecientes != null) {
             configurarTablas();
             cargarDatos();
@@ -54,13 +51,19 @@ private StackPane contentArea;
     private void cargarDatos() {
         MetricasDashboard m = service.obtenerEstadisticas();
         if (m != null) {
+            // Usamos los getters de tu modelo MetricasDashboard[cite: 4, 5]
             lblEntregasActivas.setText(String.valueOf(m.getEntregasActivas()));
             lblEntregasCompletas.setText(String.valueOf(m.getEntregasCompletas()));
             lblProductosPendientes.setText(String.valueOf(m.getProductosPendientes()));
             lblCamionesDisponibles.setText(m.getCamionesDisponibles());
         }
-        tblEntregasRecientes.setItems(FXCollections.observableArrayList(service.listarEntregas()));
-        tblEstadoFlota.setItems(FXCollections.observableArrayList(service.listarFlota()));
+        
+        if (tblEntregasRecientes != null) {
+            tblEntregasRecientes.setItems(FXCollections.observableArrayList(service.listarEntregas()));
+        }
+        if (tblEstadoFlota != null) {
+            tblEstadoFlota.setItems(FXCollections.observableArrayList(service.listarFlota()));
+        }
     }
 
     @FXML
@@ -76,20 +79,26 @@ private StackPane contentArea;
     }
 
     @FXML
-private void mostrarSeccionAsignaciones(ActionEvent event) {
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/asignaciones.fxml"));
-        Parent root = loader.load();
-        
-        // Limpiamos el contenido actual y ponemos el nuevo
-        contentArea.getChildren().setAll(root); 
-        
-        System.out.println("Cargando sección de Asignaciones...");
-    } catch (IOException e) {
-        System.err.println("Error: No se pudo cargar asignaciones.fxml");
-        e.printStackTrace();
+    private void mostrarSeccionAsignaciones(ActionEvent event) {
+        try {
+            // Verificamos que contentArea no sea null antes de usarlo[cite: 4]
+            if (contentArea != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/asignaciones.fxml"));
+                Parent root = loader.load();
+                contentArea.getChildren().setAll(root); 
+                System.out.println("Sección de Asignaciones cargada en contentArea.");
+            } else {
+                // Si es null, cargamos la escena completa para evitar el error[cite: 4]
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/asignaciones.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(new Scene(root));
+            }
+        } catch (IOException e) {
+            System.err.println("Error: No se pudo cargar asignaciones.fxml");
+            e.printStackTrace();
+        }
     }
-}
 
     @FXML
     private void handleNuevaAsignacion(ActionEvent event) {
@@ -102,6 +111,8 @@ private void mostrarSeccionAsignaciones(ActionEvent event) {
             stage.setResizable(false);
             stage.setScene(new Scene(root));
             stage.showAndWait(); 
+            
+            // Refrescamos los datos después de cerrar el formulario
             cargarDatos(); 
         } catch (IOException e) {
             System.err.println("Error: No se pudo cargar form_asignacion.fxml");

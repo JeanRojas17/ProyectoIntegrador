@@ -36,6 +36,15 @@
         
 <Label text="Dirección:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
 <TextField fx:id="cmbRuta" promptText="Dirección de destino" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+<VBox spacing="5">
+    <Label text="Estado de la Entrega:"/>
+    <ComboBox fx:id="cmbEstado" prefWidth="200" promptText="Seleccionar Estado"/>
+</VBox>
+
+
+
+
     </GridPane>
     
     <HBox spacing="15" alignment="CENTER_RIGHT">

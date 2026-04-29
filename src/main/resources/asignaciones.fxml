@@ -41,8 +41,15 @@
             <Label text="Fecha" styleClass="card-label"/>
             <DatePicker fx:id="dpFecha" prefWidth="130"/>
         </VBox>
+        
         <Region HBox.hgrow="ALWAYS" />
-        <Button text="Limpiar Filtros" onAction="#handleLimpiar" styleClass="secondary-button"/>
+
+        <!-- Nuevos botones para Modificar y Eliminar -->
+        <HBox spacing="10">
+            <Button text="Modificar" onAction="#handleModificar" styleClass="action-button" style="-fx-background-color: #f39c12;"/>
+            <Button text="Eliminar" onAction="#handleEliminar" styleClass="action-button" style="-fx-background-color: #e74c3c;"/>
+            <Button text="Limpiar Filtros" onAction="#handleLimpiar" styleClass="secondary-button"/>
+        </HBox>
     </HBox>
 
     <!-- Tabla de Datos -->
