@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<VBox spacing="20" prefWidth="450" styleClass="form-container" 
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.transportesrbl.controllers.FormAsignacionController">
+    
+    <stylesheets>
+    <URL value="@estilos_formulario.css" />
+    </stylesheets>
+
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+    
+    <Label text="DETALLES DE LA ASIGNACIÓN" styleClass="label-titulo"/>
+    <Separator/>
+    
+    <GridPane hgap="15" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints minWidth="100" prefWidth="120" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label text="Producto:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtProducto" promptText="Nombre del producto o paquete" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        
+        <Label text="Camión:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cmbCamion" promptText="Seleccionar camión" maxWidth="Infinity" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        
+        <Label text="Conductor:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cmbConductor" promptText="Seleccionar conductor" maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        
+<Label text="Dirección:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+<TextField fx:id="cmbRuta" promptText="Dirección de destino" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+    
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" onAction="#cerrarVentana" styleClass="button-cancelar" prefWidth="100"/>
+        <Button text="Guardar Registro" onAction="#guardarAsignacion" styleClass="button-guardar" prefWidth="150"/>
+    </HBox>
+</VBox>

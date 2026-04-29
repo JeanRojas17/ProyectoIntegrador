@@ -33,8 +33,8 @@
                     <padding>
                         <Insets top="20" right="10" bottom="0" left="10"/>
                     </padding>
-                    <Button text="DASHBOARD" styleClass="menu-button-active" maxWidth="Infinity"/>
-                    <Button text="ASIGNACIONES" styleClass="menu-button" maxWidth="Infinity"/>
+                    <Button text="DASHBOARD" onAction="#mostrarSeccionDashboard" styleClass="menu-button" maxWidth="Infinity"/> 
+                    <Button text="ASIGNACIONES" onAction="#mostrarSeccionAsignaciones" styleClass="menu-button"/>
                     <Button text="PRODUCTOS" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="CAMIONES" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="RUTAS" styleClass="menu-button" maxWidth="Infinity"/>
@@ -60,107 +60,108 @@
 
     <!-- CONTENIDO CENTRAL -->
     <center>
-        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f4f7f6;">
-            <content>
-                <VBox spacing="20">
-                    <padding>
-                        <Insets top="25" right="25" bottom="25" left="25"/>
-                    </padding>
-                    
-                    <!-- Encabezado del Dashboard -->
-                    <HBox alignment="CENTER_LEFT" styleClass="header-box">
+        <StackPane fx:id="contentArea"> 
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f4f7f6;">
+                <content>
+                    <VBox spacing="20">
                         <padding>
-                            <Insets top="15" right="20" bottom="15" left="20"/>
+                            <Insets top="25" right="25" bottom="25" left="25"/>
                         </padding>
-                        <VBox HBox.hgrow="ALWAYS">
-                            <Label text="DASHBOARD" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-                            <Label text="GENERAL"/>
+                        
+                        <!-- Encabezado del Dashboard -->
+                        <HBox alignment="CENTER_LEFT" styleClass="header-box">
+                            <padding>
+                                <Insets top="15" right="20" bottom="15" left="20"/>
+                            </padding>
+                            <VBox HBox.hgrow="ALWAYS">
+                                <Label text="DASHBOARD" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                                <Label text="GENERAL"/>
+                            </VBox>
+                            <HBox spacing="15" alignment="CENTER">
+                                <VBox alignment="CENTER" styleClass="date-box">
+                                    <Label text="Hoy: 28 Abr"/>
+                                    <Label text="2026"/>
+                                </VBox>
+                                <Button text="Nueva Asignación" styleClass="action-button" onAction="#mostrarSeccionAsignaciones"/>
+                            </HBox>
+                        </HBox>
+
+                        <!-- Grilla de Tarjetas (Cards) -->
+                        <FlowPane hgap="20" vgap="20" alignment="CENTER">
+                            <children>
+                                <VBox styleClass="stat-card">
+                                    <Region prefHeight="100" style="-fx-background-color: #ecf0f1;"/>
+                                    <VBox alignment="CENTER" spacing="5">
+                                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                                        <Label fx:id="lblEntregasActivas" text="0" styleClass="card-number"/>
+                                        <Label text="ENTREGAS ACTIVAS" styleClass="card-label"/>
+                                    </VBox>
+                                </VBox>
+                                <VBox styleClass="stat-card">
+                                    <Region prefHeight="100" style="-fx-background-color: #ecf0f1;"/>
+                                    <VBox alignment="CENTER" spacing="5">
+                                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                                        <Label fx:id="lblEntregasCompletas" text="0" styleClass="card-number"/>
+                                        <Label text="ENTREGAS COMPLETADAS" styleClass="card-label"/>
+                                    </VBox>
+                                </VBox>
+                                <VBox styleClass="stat-card">
+                                    <Region prefHeight="100" style="-fx-background-color: #ecf0f1;"/>
+                                    <VBox alignment="CENTER" spacing="5">
+                                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                                        <Label fx:id="lblProductosPendientes" text="0" styleClass="card-number"/>
+                                        <Label text="PRODUCTOS PENDIENTES" styleClass="card-label"/>
+                                    </VBox>
+                                </VBox>
+                                <VBox styleClass="stat-card">
+                                    <Region prefHeight="100" style="-fx-background-color: #ecf0f1;"/>
+                                    <VBox alignment="CENTER" spacing="5">
+                                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                                        <Label fx:id="lblCamionesDisponibles" text="0/0" styleClass="card-number"/>
+                                        <Label text="CAMIONES DISPONIBLES" styleClass="card-label"/>
+                                    </VBox>
+                                </VBox>
+                            </children>
+                        </FlowPane>
+
+                        <!-- SECCIÓN: ENTREGAS RECIENTES -->
+                        <VBox spacing="10" styleClass="list-container">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="ENTREGAS RECIENTES:" styleClass="section-title" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                <Hyperlink text="VER TODAS---"/>
+                            </HBox>
+                            <TableView fx:id="tblEntregasRecientes" prefHeight="200">
+                                <columns>
+                                    <TableColumn fx:id="colProducto" text="Producto" prefWidth="250" />
+                                    <TableColumn fx:id="colDireccion" text="Dirección" prefWidth="300" />
+                                    <TableColumn fx:id="colEstadoEntrega" text="Estado" prefWidth="150" />
+                                </columns>
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                </columnResizePolicy>
+                            </TableView>
                         </VBox>
-                        <HBox spacing="15" alignment="CENTER">
-                            <VBox alignment="CENTER" styleClass="date-box">
-                                <Label text="Hoy: 28 Abr"/>
-                                <Label text="2026"/>
-                            </VBox>
-                            <!-- ACCIÓN DEL BOTÓN CONECTADA -->
-                            <Button text="Nueva Asignación" styleClass="action-button" onAction="#handleNuevaAsignacion"/>
-                        </HBox>
-                    </HBox>
 
-                    <!-- Grilla de Tarjetas (Cards) -->
-                    <FlowPane hgap="20" vgap="20" alignment="CENTER">
-                        <children>
-                            <VBox styleClass="stat-card">
-                                <Region prefHeight="100" style="-fx-background-color: #ecf0f1;"/>
-                                <VBox alignment="CENTER" spacing="5">
-                                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                                    <Label fx:id="lblEntregasActivas" text="0" styleClass="card-number"/>
-                                    <Label text="ENTREGAS ACTIVAS" styleClass="card-label"/>
-                                </VBox>
-                            </VBox>
-                            <VBox styleClass="stat-card">
-                                <Region prefHeight="100" style="-fx-background-color: #ecf0f1;"/>
-                                <VBox alignment="CENTER" spacing="5">
-                                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                                    <Label fx:id="lblEntregasCompletas" text="0" styleClass="card-number"/>
-                                    <Label text="ENTREGAS COMPLETADAS" styleClass="card-label"/>
-                                </VBox>
-                            </VBox>
-                            <VBox styleClass="stat-card">
-                                <Region prefHeight="100" style="-fx-background-color: #ecf0f1;"/>
-                                <VBox alignment="CENTER" spacing="5">
-                                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                                    <Label fx:id="lblProductosPendientes" text="0" styleClass="card-number"/>
-                                    <Label text="PRODUCTOS PENDIENTES" styleClass="card-label"/>
-                                </VBox>
-                            </VBox>
-                            <VBox styleClass="stat-card">
-                                <Region prefHeight="100" style="-fx-background-color: #ecf0f1;"/>
-                                <VBox alignment="CENTER" spacing="5">
-                                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                                    <Label fx:id="lblCamionesDisponibles" text="0/0" styleClass="card-number"/>
-                                    <Label text="CAMIONES DISPONIBLES" styleClass="card-label"/>
-                                </VBox>
-                            </VBox>
-                        </children>
-                    </FlowPane>
-
-                    <!-- SECCIÓN: ENTREGAS RECIENTES (Con TableView) -->
-                    <VBox spacing="10" styleClass="list-container">
-                        <HBox alignment="CENTER_LEFT">
-                            <Label text="ENTREGAS RECIENTES:" styleClass="section-title" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                            <Hyperlink text="VER TODAS---"/>
-                        </HBox>
-                        <TableView fx:id="tblEntregasRecientes" prefHeight="200">
-                            <columns>
-                                <TableColumn fx:id="colProducto" text="Producto" prefWidth="250" />
-                                <TableColumn fx:id="colDireccion" text="Dirección" prefWidth="300" />
-                                <TableColumn fx:id="colEstadoEntrega" text="Estado" prefWidth="150" />
-                            </columns>
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                            </columnResizePolicy>
-                        </TableView>
+                        <!-- SECCIÓN: ESTADO DE LA FLOTA -->
+                        <VBox spacing="10" styleClass="list-container">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="ESTADO DE LA FLOTA:" styleClass="section-title" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                <Hyperlink text="VER DETALLES---"/>
+                            </HBox>
+                            <TableView fx:id="tblEstadoFlota" prefHeight="200">
+                                <columns>
+                                    <TableColumn fx:id="colModelo" text="Modelo Camión" prefWidth="250" />
+                                    <TableColumn fx:id="colCapacidad" text="Capacidad (m³)" prefWidth="200" />
+                                    <TableColumn fx:id="colEstadoCamion" text="Estado" prefWidth="250" />
+                                </columns>
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                </columnResizePolicy>
+                            </TableView>
+                        </VBox>
                     </VBox>
-
-                    <!-- SECCIÓN: ESTADO DE LA FLOTA (Con TableView) -->
-                    <VBox spacing="10" styleClass="list-container">
-                        <HBox alignment="CENTER_LEFT">
-                            <Label text="ESTADO DE LA FLOTA:" styleClass="section-title" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                            <Hyperlink text="VER DETALLES---"/>
-                        </HBox>
-                        <TableView fx:id="tblEstadoFlota" prefHeight="200">
-                            <columns>
-                                <TableColumn fx:id="colModelo" text="Modelo Camión" prefWidth="250" />
-                                <TableColumn fx:id="colCapacidad" text="Capacidad (m³)" prefWidth="200" />
-                                <TableColumn fx:id="colEstadoCamion" text="Estado" prefWidth="250" />
-                            </columns>
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                            </columnResizePolicy>
-                        </TableView>
-                    </VBox>
-                </VBox>
-            </content>
-        </ScrollPane>
-    </center>
-</BorderPane>
+                </content>
+            </ScrollPane>
+        </StackPane> <!-- 1. AGREGADO: Cierre correcto del StackPane -->
+    </center> <!-- 2. CORREGIDO: Cierre del área central -->
+</BorderPane> <!-- 3. Cierre del documento -->

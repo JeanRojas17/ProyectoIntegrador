@@ -1,0 +1,95 @@
+/* --- Estilos para el Módulo de Asignaciones --- */
+
+.main-container {
+    -fx-background-color: #f4f7f6; /* Gris muy claro de fondo */
+}
+
+/* Cajas contenedoras (Filtros y Tabla) */
+.list-container {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #dcdde1;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 4);
+}
+
+/* Encabezado */
+.header-box {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #dcdde1;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Etiquetas de los campos */
+.card-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-weight: bold;
+}
+
+/* Botón Principal (Azul oscuro como tu sidebar) */
+.action-button {
+    -fx-background-color: #2c3e50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-background-color: #34495e;
+}
+
+/* Botón Secundario (Limpiar) */
+.secondary-button {
+    -fx-background-color: #bdc3c7;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8 15;
+    -fx-background-radius: 5;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #95a5a6;
+}
+
+/* Inputs y Selectores */
+.text-field, .combo-box, .date-picker {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 5;
+}
+
+.text-field:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 1.5;
+}
+
+/* Personalización de la Tabla */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 10;
+    -fx-border-color: transparent transparent #dcdde1 transparent;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fafafa;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e1f0fa;
+    -fx-text-fill: #2980b9;
+}

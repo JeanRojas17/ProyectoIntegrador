@@ -1,0 +1,43 @@
+.root {
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+.form-container {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdde1;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.label-titulo {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2f3640;
+}
+
+.text-field, .combo-box {
+    -fx-background-color: #f5f6fa;
+    -fx-border-color: #dcdde1;
+    -fx-border-radius: 5;
+    -fx-padding: 8;
+}
+
+.button-guardar {
+    -fx-background-color: #2f3640;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.button-guardar:hover {
+    -fx-background-color: #353b48;
+}
+
+.button-cancelar {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7f8c8d;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+    -fx-cursor: hand;
+}
