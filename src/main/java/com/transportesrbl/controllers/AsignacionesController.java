@@ -2,6 +2,7 @@ package com.transportesrbl.controllers;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.time.LocalDate;
 
 import com.transportesrbl.dao.AsignacionDAO;
 import com.transportesrbl.models.Asignacion;
@@ -13,23 +14,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.Node;
 
 public class AsignacionesController {
 
+    // Componentes de la Tabla
     @FXML private TableView<Asignacion> tblAsignaciones;
     @FXML private TableColumn<Asignacion, Integer> colId;
     @FXML private TableColumn<Asignacion, String> colCamion, colConductor, colRuta, colProducto, colEstado;
     
+    // Componentes de Filtros
     @FXML private TextField txtBuscar;
     @FXML private ComboBox<String> cbEstado;
     @FXML private DatePicker dpFecha;
@@ -40,6 +38,18 @@ public class AsignacionesController {
     public void initialize() {
         configurarTabla();
         configurarFiltros();
+        
+        // Listeners para búsqueda en tiempo real mientras el usuario escribe o selecciona[cite: 7]
+        if (txtBuscar != null) {
+            txtBuscar.textProperty().addListener((obs, oldVal, newVal) -> ejecutarFiltro());
+        }
+        if (cbEstado != null) {
+            cbEstado.setOnAction(e -> ejecutarFiltro());
+        }
+        if (dpFecha != null) {
+            dpFecha.setOnAction(e -> ejecutarFiltro());
+        }
+
         cargarDatos();
     }
 
@@ -54,20 +64,32 @@ public class AsignacionesController {
 
     private void configurarFiltros() {
         if (cbEstado != null) {
-            cbEstado.setItems(FXCollections.observableArrayList("Pendiente", "En Ruta", "Completado"));
+            // "Seleccionar" actúa como el valor nulo para mostrar todo[cite: 7]
+            cbEstado.setItems(FXCollections.observableArrayList("Seleccionar", "Pendiente", "En reparto", "Completado"));
+            cbEstado.setValue("Seleccionar");
         }
     }
 
     private void cargarDatos() {
         try {
+            // Carga inicial completa usando el método listar original
             ObservableList<Asignacion> lista = FXCollections.observableArrayList(dao.listar());
             tblAsignaciones.setItems(lista);
-            if (lista.isEmpty()) {
-                System.out.println("No se encontraron registros para mostrar.");
-            }
         } catch (Exception e) {
             mostrarAlerta("Error de Base de Datos", "No se pudieron cargar los datos: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    private void ejecutarFiltro() {
+        String producto = txtBuscar.getText();
+        String estado = cbEstado.getValue();
+        LocalDate fecha = dpFecha.getValue();
+
+        // Llama al método de búsqueda dinámica que añadimos al DAO[cite: 7, 8]
+        ObservableList<Asignacion> listaFiltrada = FXCollections.observableArrayList(
+            dao.buscarConFiltros(producto, estado, fecha)
+        );
+        tblAsignaciones.setItems(listaFiltrada);
     }
 
     @FXML
@@ -75,50 +97,44 @@ public class AsignacionesController {
         abrirFormulario("/form_asignacion.fxml", "Nueva Asignación");
     }
 
+    @FXML
+    private void handleModificar(ActionEvent event) {
+        Asignacion seleccionada = tblAsignaciones.getSelectionModel().getSelectedItem();
+        
+        if (seleccionada == null) {
+            mostrarAlerta("Atención", "Selecciona una fila para modificar.", Alert.AlertType.WARNING);
+            return;
+        }
 
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/form_asignacion.fxml"));
+            Parent root = loader.load();
+            
+            FormAsignacionController formController = loader.getController();
+            formController.setAsignacion(seleccionada); 
 
-@FXML
-private void handleModificar(ActionEvent event) {
-    Asignacion seleccionada = tblAsignaciones.getSelectionModel().getSelectedItem();
-    
-    if (seleccionada == null) {
-        mostrarAlerta("Atención", "Selecciona una fila para modificar.", Alert.AlertType.WARNING);
-        return;
+            Stage stage = new Stage();
+            stage.setTitle("Transportes RBL - Modificar");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.showAndWait(); 
+            
+            ejecutarFiltro(); // Refresca manteniendo los filtros activos[cite: 7]
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo abrir el editor.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/form_asignacion.fxml"));
-        Parent root = loader.load();
-        
-        // Pasamos el objeto seleccionado al controlador del formulario[cite: 2]
-        FormAsignacionController formController = loader.getController();
-        formController.setAsignacion(seleccionada); 
-
-        Stage stage = new Stage();
-        stage.setTitle("Transportes RBL - Modificar");
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setScene(new Scene(root));
-        stage.showAndWait(); 
-        
-        cargarDatos(); // Refresca la tabla al cerrar la ventana[cite: 2]
-    } catch (IOException e) {
-        mostrarAlerta("Error", "No se pudo abrir el editor.", Alert.AlertType.ERROR);
-        e.printStackTrace();
-    }
-}
-
-
-    
     @FXML
     private void handleEliminar(ActionEvent event) {
         Asignacion seleccionada = tblAsignaciones.getSelectionModel().getSelectedItem();
         
         if (seleccionada == null) {
-            mostrarAlerta("Atención", "Por favor, selecciona una fila de la tabla primero.", Alert.AlertType.WARNING);
+            mostrarAlerta("Atención", "Por favor, selecciona una fila primero.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Diálogo de confirmación
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacion.setTitle("Confirmar Eliminación");
         confirmacion.setHeaderText("¿Estás seguro de eliminar esta asignación?");
@@ -127,10 +143,9 @@ private void handleModificar(ActionEvent event) {
         Optional<ButtonType> resultado = confirmacion.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             if (dao.eliminar(seleccionada.getId())) {
-                cargarDatos();
-                System.out.println("Asignación ID " + seleccionada.getId() + " eliminada.");
+                ejecutarFiltro(); // Refresca la tabla tras eliminar[cite: 7, 8]
             } else {
-                mostrarAlerta("Error", "No se pudo eliminar el registro de la base de datos.", Alert.AlertType.ERROR);
+                mostrarAlerta("Error", "No se pudo eliminar el registro.", Alert.AlertType.ERROR);
             }
         }
     }
@@ -138,10 +153,10 @@ private void handleModificar(ActionEvent event) {
     @FXML
     private void handleLimpiar(ActionEvent event) {
         if (txtBuscar != null) txtBuscar.clear();
-        if (cbEstado != null) cbEstado.getSelectionModel().clearSelection();
+        if (cbEstado != null) cbEstado.setValue("Seleccionar");
         if (dpFecha != null) dpFecha.setValue(null);
         
-        cargarDatos();
+        cargarDatos(); // Restablece la tabla a la vista completa[cite: 7]
     }
 
     // --- MÉTODOS DE APOYO (HELPER METHODS) ---
@@ -155,13 +170,12 @@ private void handleModificar(ActionEvent event) {
             stage.setTitle("Transportes RBL - " + titulo);
             stage.initModality(Modality.APPLICATION_MODAL); 
             stage.setResizable(false);
-            
             stage.setScene(new Scene(root));
             stage.showAndWait(); 
             
-            cargarDatos(); // Refrescar al cerrar
+            cargarDatos(); 
         } catch (IOException e) {
-            mostrarAlerta("Error de Sistema", "No se pudo abrir el formulario: " + rutaFxml, Alert.AlertType.ERROR);
+            mostrarAlerta("Error de Sistema", "No se pudo abrir el formulario.", Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }

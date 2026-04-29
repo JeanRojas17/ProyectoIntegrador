@@ -108,14 +108,90 @@ public class AsignacionDAO {
 }
 
     public boolean eliminar(int id) {
-        String sql = "DELETE FROM asignacion_paquete WHERE id_asig_paquete = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+    // SQL para borrar primero el historial y luego la asignación
+    String sqlHistorial = "DELETE FROM historial_estados WHERE id_asig_paq = ?";
+    String sqlAsignacion = "DELETE FROM asignacion_paquete WHERE id_asig_paquete = ?";
+
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        if (conn == null) return false;
+        
+        // Iniciamos transacción para asegurar que se borren ambos o ninguno
+        conn.setAutoCommit(false);
+
+        try (PreparedStatement psH = conn.prepareStatement(sqlHistorial);
+             PreparedStatement psA = conn.prepareStatement(sqlAsignacion)) {
+            
+            // 1. Borrar referencias en historial
+            psH.setInt(1, id);
+            psH.executeUpdate();
+
+            // 2. Borrar la asignación principal
+            psA.setInt(1, id);
+            int filasAfectadas = psA.executeUpdate();
+
+            conn.commit(); // Confirmamos los cambios
+            return filasAfectadas > 0;
+
         } catch (SQLException e) {
-            System.err.println("Error al eliminar: " + e.getMessage());
+            conn.rollback(); // Si algo falla, deshacemos el borrado parcial
+            System.err.println("Error en transacción de eliminación: " + e.getMessage());
             return false;
         }
+    } catch (SQLException e) {
+        System.err.println("Error de conexión al eliminar: " + e.getMessage());
+        return false;
     }
+}
+
+
+    //metodo para los filtros
+
+    public List<Asignacion> buscarConFiltros(String producto, String estado, java.time.LocalDate fecha) {
+    List<Asignacion> lista = new ArrayList<>();
+    StringBuilder sql = new StringBuilder(
+        "SELECT ap.id_asig_paquete, c.modelo_camion, con.nombre_completo, " +
+        "ap.dir_entrega, p.descripcion, h.estado " +
+        "FROM asignacion_paquete ap " +
+        "JOIN asignacion a ON ap.id_asignacion = a.id_asignacion " +
+        "JOIN camiones c ON a.id_camion = c.id_camion " +
+        "LEFT JOIN conductores con ON c.id_conductor = con.id_conductor " +
+        "JOIN paquete p ON ap.id_paquete = p.id_paquete " +
+        "LEFT JOIN ( " +
+        "  SELECT DISTINCT ON (id_asig_paq) id_asig_paq, estado, fecha " +
+        "  FROM historial_estados " +
+        "  ORDER BY id_asig_paq, fecha DESC " +
+        ") h ON ap.id_asig_paquete = h.id_asig_paq " +
+        "WHERE 1=1 "
+    );
+
+    // Filtros dinámicos
+    if (producto != null && !producto.trim().isEmpty()) sql.append("AND p.descripcion ILIKE ? ");
+    if (estado != null && !estado.equals("Seleccionar")) sql.append("AND h.estado = ? ");
+    if (fecha != null) sql.append("AND h.fecha::date = ? ");
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        
+        int i = 1;
+        if (producto != null && !producto.trim().isEmpty()) ps.setString(i++, "%" + producto + "%");
+        if (estado != null && !estado.equals("Seleccionar")) ps.setString(i++, estado);
+        if (fecha != null) ps.setDate(i++, java.sql.Date.valueOf(fecha));
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(new Asignacion(
+                    rs.getInt("id_asig_paquete"),
+                    rs.getString("modelo_camion"),
+                    rs.getString("nombre_completo"),
+                    rs.getString("dir_entrega"),
+                    rs.getString("descripcion"),
+                    rs.getString("estado") != null ? rs.getString("estado") : "Pendiente"
+                ));
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error en búsqueda filtrada: " + e.getMessage());
+    }
+    return lista;
+}
 }

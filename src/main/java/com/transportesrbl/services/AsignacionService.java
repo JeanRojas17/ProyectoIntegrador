@@ -12,4 +12,9 @@ public class AsignacionService {
         if (a.getProducto() == null || a.getProducto().isEmpty()) return false;
         return dao.insertar(a);
     }
+
+    public java.util.List<Asignacion> filtrarAsignaciones(String producto, String estado, java.time.LocalDate fecha) {
+    return dao.buscarConFiltros(producto, estado, fecha);
+}
+
 }
