@@ -9,17 +9,23 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        // 1. Cargamos el FXML
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Login.fxml"));
+        
+        // 2. Quitamos los números 400, 400 para que no fuerce un tamaño pequeño
+        Scene scene = new Scene(fxmlLoader.load()); 
 
-    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Login.fxml"));
-    Scene scene = new Scene(fxmlLoader.load(), 400, 400); // Definimos un tamaño inicial
+        // 3. Vinculamos el CSS (Asegúrate de que el archivo se llame Style.css con 'S' mayúscula si así lo tienes)
+        scene.getStylesheets().add(getClass().getResource("/Style.css").toExternalForm());
 
-    // ESTA LÍNEA ES LA CLAVE: busca el archivo Style.css en src/main/resources
-    scene.getStylesheets().add(getClass().getResource("/Style.css").toExternalForm());
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Transportes RBL - Sistema Logístico");
 
-    primaryStage.setScene(scene);
-    primaryStage.setTitle("Transportes RBL - Sistema Logístico");
-    primaryStage.show();
-
+        // 4. ESTA ES LA CLAVE PARA EL AUTOAJUSTE:
+        primaryStage.setResizable(false); // Evita que el usuario deforme el diseño
+        primaryStage.sizeToScene();      // Ajusta la ventana al tamaño exacto de los nodos del FXML
+        
+        primaryStage.show();
     }
 
     public static void main(String[] args) {
