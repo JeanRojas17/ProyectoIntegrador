@@ -43,7 +43,7 @@ public class LoginController {
     private void mostrarDashboard(ActionEvent event) {
         try {
             // Cargamos el FXML del Dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/dashboard.fxml"));
             Parent root = loader.load();
 
             // Obtenemos la ventana (stage) actual

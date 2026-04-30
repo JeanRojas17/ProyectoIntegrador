@@ -77,7 +77,7 @@ public class DashboardController {
     @FXML
     private void mostrarSeccionDashboard(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/dashboard.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -91,13 +91,13 @@ public class DashboardController {
         try {
             // Verificamos que contentArea no sea null antes de usarlo[cite: 4]
             if (contentArea != null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/asignaciones.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/asignaciones.fxml"));
                 Parent root = loader.load();
                 contentArea.getChildren().setAll(root); 
                 System.out.println("Sección de Asignaciones cargada en contentArea.");
             } else {
                 // Si es null, cargamos la escena completa para evitar el error[cite: 4]
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/asignaciones.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/asignaciones.fxml"));
                 Parent root = loader.load();
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root));
@@ -108,12 +108,10 @@ public class DashboardController {
         }
     }
 
-
-
    @FXML
     private void MostrarSeccionProductos(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/productos.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/productos.fxml"));
             ScrollPane productosView = loader.load();
 
             contentArea.getChildren().clear();
@@ -126,14 +124,10 @@ public class DashboardController {
         }
     }
 
-
-
-
-
     @FXML
     private void handleNuevaAsignacion(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/form_asignacion.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/form_asignacion.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Transportes RBL - Nueva Asignación");
@@ -149,5 +143,4 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
-
 }

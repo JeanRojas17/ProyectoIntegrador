@@ -94,7 +94,7 @@ public class AsignacionesController {
 
     @FXML
     private void handleNuevo(ActionEvent event) {
-        abrirFormulario("/form_asignacion.fxml", "Nueva Asignación");
+        abrirFormulario("/com/transportesrbl/views/fxml/form_asignacion.fxml", "Nueva Asignación");
     }
 
     @FXML
@@ -107,7 +107,7 @@ public class AsignacionesController {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/form_asignacion.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/form_asignacion.fxml"));
             Parent root = loader.load();
             
             FormAsignacionController formController = loader.getController();
