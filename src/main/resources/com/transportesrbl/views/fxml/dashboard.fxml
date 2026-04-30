@@ -34,7 +34,7 @@
                         <Insets top="20" right="10" bottom="0" left="10"/>
                     </padding>
                     <Button text="DASHBOARD" onAction="#mostrarSeccionDashboard" styleClass="menu-button" maxWidth="Infinity"/> 
-                    <Button text="ASIGNACIONES" onAction="#mostrarSeccionAsignaciones" styleClass="menu-button"/>
+                    <Button text="ASIGNACIONES" onAction="#mostrarSeccionAsignaciones" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="PRODUCTOS" onAction="#MostrarSeccionProductos" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="CAMIONES" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="RUTAS" styleClass="menu-button" maxWidth="Infinity"/>
@@ -51,7 +51,7 @@
                     <Circle radius="20" fill="#ecf0f1"/>
                     <VBox>
                         <Label fx:id="lblNombreUsuario" text="Juan Pérez" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
-                        <Label fx:id="lblRol" text="COORDINADOR LOGISTICO" style="-fx-text-fill: #bdc3c7; -fx-font-size: 10;"/>
+                        <Label fx:id="lblRolUsuario" text="COORDINADOR LOGISTICO" style="-fx-text-fill: #bdc3c7; -fx-font-size: 10;"/>
                     </VBox>
                 </HBox>
             </children>
