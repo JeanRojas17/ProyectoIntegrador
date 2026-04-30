@@ -42,14 +42,22 @@ public class LoginController {
 
     private void mostrarDashboard(ActionEvent event) {
         try {
-            // Cargamos el FXML del Dashboard que diseñamos
+            // Cargamos el FXML del Dashboard
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
             Parent root = loader.load();
 
-            // Obtenemos el Stage (ventana) actual para cambiar la escena
+            // Obtenemos la ventana (stage) actual
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            
+            // Creamos la nueva escena para el Dashboard
             stage.setScene(new Scene(root));
             stage.setTitle("Transportes RBL - Dashboard");
+            
+            // ---- CONFIGURACIÓN CLAVE PARA PERMITIR REDIMENSIONAR ----
+            stage.setResizable(true);
+            stage.setMinWidth(1000); // Tamaño mínimo de ancho
+            stage.setMinHeight(600);  // Tamaño mínimo de alto
+            
             stage.show();
             
         } catch (IOException e) {

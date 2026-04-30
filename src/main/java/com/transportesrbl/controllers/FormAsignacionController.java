@@ -2,7 +2,10 @@ package com.transportesrbl.controllers;
 
 import com.transportesrbl.dao.AsignacionDAO;
 import com.transportesrbl.models.Asignacion;
+import com.transportesrbl.config.DatabaseConnection;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -11,83 +14,109 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class FormAsignacionController {
 
-    @FXML private TextField txtProducto, cmbRuta; 
+    // Cambiamos el TextField de texto por un ComboBox para seleccionar de la BD
+    @FXML private ComboBox<String> txtProducto; 
+    @FXML private TextField cmbRuta; 
     @FXML private ComboBox<String> cmbCamion, cmbConductor;
     @FXML private ComboBox<String> cmbEstado;
 
     private AsignacionDAO dao = new AsignacionDAO();
-    private Asignacion asignacionExistente = null; // Para saber si editamos[cite: 3]
+    private Asignacion asignacionExistente = null; 
 
     @FXML
     public void initialize() {
-        cmbCamion.getItems().setAll("Chevrolet NPR", "NPR Turbo", "Foton");
-        cmbConductor.getItems().setAll("Stiven Ramirez", "Edward Gomez", "Juan Perez");
-        cmbEstado.getItems().setAll("Pendiente", "En reparto", "Completado");
+        cmbCamion.getItems().setAll("Chevrolet NPR", "NPR Turbo", "Fotón Aumark");
+        cmbConductor.getItems().setAll("Stiven Ramirez", "Edward Gomez", "Carlos Mendoza");
+        cmbEstado.getItems().setAll("Pendiente", "En reparto", "Entregado", "No entregado");
+        
+        // Cargar productos desde la base de datos
+        cargarProductosDisponibles();
     }
 
-    // Método para recibir datos desde la tabla principal[cite: 3]
+    private void cargarProductosDisponibles() {
+        ObservableList<String> productos = FXCollections.observableArrayList();
+        String sql = "SELECT Descripcion FROM PAQUETE"; // Puedes cambiar a Productos si usas esa tabla
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                productos.add(rs.getString("Descripcion"));
+            }
+            
+            txtProducto.setItems(productos);
+            
+        } catch (SQLException e) {
+            System.err.println("Error al cargar productos: " + e.getMessage());
+        }
+    }
+
     public void setAsignacion(Asignacion asig) {
         this.asignacionExistente = asig;
-        txtProducto.setText(asig.getProducto());
-        cmbCamion.setValue(asig.getCamion());
-        cmbConductor.setValue(asig.getConductor());
-        cmbRuta.setText(asig.getRuta());
-        cmbEstado.setValue(asig.getEstado());
-        txtProducto.setEditable(false); // Opcional: no permitir cambiar el producto al editar
-    }
-
-    @FXML
-private void guardarAsignacion(ActionEvent event) {
-    // 1. Validar que nada esté vacío
-    if (txtProducto.getText().isEmpty() || cmbCamion.getValue() == null || 
-        cmbConductor.getValue() == null || cmbRuta.getText().isEmpty() || 
-        cmbEstado.getValue() == null) {
-        
-        mostrarAlerta("Campos Incompletos", "Por favor, completa todos los datos para Transportes RBL.");
-        return;
-    }
-
-    try {
-        if (asignacionExistente == null) {
-            // --- MODO: NUEVO ---[cite: 3, 4]
-            // Nota: En tu SQL esto insertaría en ASIGNACION_PAQUETE
-            Asignacion nueva = new Asignacion(
-                cmbCamion.getValue(),
-                cmbConductor.getValue(),
-                cmbRuta.getText(), // Equivale a Dir_Entrega en tu SQL
-                txtProducto.getText(),
-                cmbEstado.getValue()
-            );
-            if (dao.insertar(nueva)) {
-                cerrarVentana(event);
-            }
-        } else {
-            // --- MODO: EDITAR ---[cite: 3, 4]
-            // Sincronizamos el objeto con lo que el usuario seleccionó en la interfaz
-            asignacionExistente.setCamion(cmbCamion.getValue());
-            asignacionExistente.setConductor(cmbConductor.getValue());
-            asignacionExistente.setRuta(cmbRuta.getText()); // Setea la Dir_Entrega
-            asignacionExistente.setEstado(cmbEstado.getValue()); // El nuevo estado elegido[cite: 3]
-
-            if (dao.actualizar(asignacionExistente)) {
-                cerrarVentana(event);
-            } else {
-                mostrarAlerta("Error", "No se pudo actualizar el registro en la base de datos.");
-            }
+        if (asig != null) {
+            txtProducto.setValue(asig.getProducto());
+            cmbRuta.setText(asig.getRuta());
+            cmbCamion.setValue(asig.getCamion());
+            cmbConductor.setValue(asig.getConductor());
+            cmbEstado.setValue(asig.getEstado());
         }
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-}
 
-    @FXML private void cerrarVentana(ActionEvent event) {
+    @FXML 
+    private void guardar(ActionEvent event) {
+        try {
+            if (txtProducto.getValue() == null || cmbCamion.getValue() == null || cmbConductor.getValue() == null || cmbRuta.getText().isEmpty()) {
+                mostrarAlerta("Campos Incompletos", "Por favor, complete todos los campos de la asignación.");
+                return;
+            }
+
+            if (asignacionExistente == null) {
+                Asignacion nueva = new Asignacion(
+                    0,
+                    cmbCamion.getValue(),
+                    cmbConductor.getValue(),
+                    cmbRuta.getText(),
+                    txtProducto.getValue(), // Usa el valor seleccionado de la base de datos
+                    cmbEstado.getValue()
+                );
+                if (dao.insertar(nueva)) {
+                    cerrarVentana(event);
+                }
+            } else {
+                asignacionExistente.setCamion(cmbCamion.getValue());
+                asignacionExistente.setConductor(cmbConductor.getValue());
+                asignacionExistente.setRuta(cmbRuta.getText());
+                asignacionExistente.setEstado(cmbEstado.getValue());
+
+                if (dao.actualizar(asignacionExistente)) {
+                    cerrarVentana(event);
+                } else {
+                    mostrarAlerta("Error", "No se pudo actualizar el registro en la base de datos.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML 
+    private void cerrarVentana(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }
 
-    @FXML private void cancelar(ActionEvent event) { cerrarVentana(event); }
+    @FXML 
+    private void cancelar(ActionEvent event) { 
+        cerrarVentana(event); 
+    }
 
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

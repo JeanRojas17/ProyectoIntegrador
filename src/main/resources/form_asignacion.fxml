@@ -25,8 +25,8 @@
             <ColumnConstraints hgrow="ALWAYS" />
         </columnConstraints>
 
-        <Label text="Producto:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="txtProducto" promptText="Nombre del producto o paquete" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+       <Label text="Producto:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="txtProducto" promptText="Seleccionar de la lista" maxWidth="Infinity" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
         
         <Label text="Camión:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
         <ComboBox fx:id="cmbCamion" promptText="Seleccionar camión" maxWidth="Infinity" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
@@ -49,6 +49,6 @@
     
     <HBox spacing="15" alignment="CENTER_RIGHT">
         <Button text="Cancelar" onAction="#cerrarVentana" styleClass="button-cancelar" prefWidth="100"/>
-        <Button text="Guardar Registro" onAction="#guardarAsignacion" styleClass="button-guardar" prefWidth="150"/>
+        <Button text="Guardar" onAction="#guardar" styleClass="button-guardar" prefWidth="150"/>
     </HBox>
 </VBox>

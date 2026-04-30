@@ -1,7 +1,12 @@
 package com.transportesrbl.controllers;
 
-import com.transportesrbl.models.*;
+import java.io.IOException;
+
+import com.transportesrbl.models.Camion;
+import com.transportesrbl.models.Entrega;
+import com.transportesrbl.models.MetricasDashboard;
 import com.transportesrbl.services.DashboardService;
+
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,12 +14,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import java.io.IOException;
 
 public class DashboardController {
 
@@ -100,6 +108,28 @@ public class DashboardController {
         }
     }
 
+
+
+   @FXML
+    private void MostrarSeccionProductos(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/productos.fxml"));
+            ScrollPane productosView = loader.load();
+
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(productosView);
+
+            System.out.println(">>> Sección de Productos cargada en el contentArea.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar la sección de productos: " + e.getMessage());
+        }
+    }
+
+
+
+
+
     @FXML
     private void handleNuevaAsignacion(ActionEvent event) {
         try {
@@ -119,4 +149,5 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
+
 }
