@@ -32,6 +32,8 @@ public class DashboardController {
     @FXML private TableView<Camion> tblEstadoFlota;
     @FXML private TableColumn<Camion, String> colModelo, colEstadoCamion;
     @FXML private TableColumn<Camion, Double> colCapacidad;
+    @FXML private Label lblNombreUsuario;
+    @FXML private Label lblRolUsuario;
     
     @FXML private StackPane contentArea; // El contenedor principal del dashboard.fxml
 
@@ -44,7 +46,23 @@ public class DashboardController {
             configurarTablas();
             cargarDatos();
         }
+        cargarDatosUsuario();
     }
+
+
+
+    private void cargarDatosUsuario() {
+        com.transportesrbl.models.Usuario usuario = com.transportesrbl.models.SesionUsuario.getInstancia().getUsuarioActivo();
+        if (usuario != null) {
+            if (lblNombreUsuario != null) {
+                lblNombreUsuario.setText(usuario.getNombre());
+            }
+            if (lblRolUsuario != null) {
+                lblRolUsuario.setText(usuario.getRol()); // Llama al método getRol() de Usuario
+            }
+        }
+    }
+
 
     private void configurarTablas() {
         colProducto.setCellValueFactory(new PropertyValueFactory<>("producto"));

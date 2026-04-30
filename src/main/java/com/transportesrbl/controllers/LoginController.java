@@ -33,6 +33,9 @@ public class LoginController {
 
         if (usuario != null) {
             System.out.println("Bienvenido: " + usuario.getNombre());
+
+            com.transportesrbl.models.SesionUsuario.getInstancia().setUsuarioActivo(usuario);
+            
             mostrarDashboard(event);
         } else {
             System.out.println("Error: Usuario o contraseña incorrectos en Neon DB.");

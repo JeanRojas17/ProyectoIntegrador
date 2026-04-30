@@ -19,4 +19,13 @@ public class Usuario {
     public String getNombre() { return nombre; }
     public String getUsername() { return username; }
     public int getIdRol() { return idRol; }
+
+    // Retorna el nombre del rol según su ID en la base de datos
+    public String getRol() {
+        if (this.idRol == 1) {
+            return "COORDINADOR LOGISTICO";
+        } else {
+            return "OPERADOR";
+        }
+    }
 }

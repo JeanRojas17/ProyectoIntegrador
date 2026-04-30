@@ -1,0 +1,20 @@
+[33m2e36ed8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: pull: Fast-forward
+[33m86e70a1[m HEAD@{1}: commit: Modificacion de basicamente todo y base de datos
+[33m024ea85[m HEAD@{2}: commit: Ajuste Login
+[33mecf8dbc[m HEAD@{3}: commit: Acomodando pocicion y colores
+[33m30388dd[m HEAD@{4}: commit: Agregando botones y cards futuros
+[33m9b586c5[m HEAD@{5}: commit: Ajustando Tamaño de ventanas
+[33m3622b98[m HEAD@{6}: commit: Modificacion de Consulta DELETE
+[33m57da47b[m HEAD@{7}: commit: CRUDS Y LOGICA DE DASHBOARD COMPLETA
+[33mded1d16[m HEAD@{8}: commit: Actualizacion nueva Asignaciones + Crud
+[33mbf5b517[m HEAD@{9}: commit: Actualizacion db
+[33me718c66[m HEAD@{10}: pull: Fast-forward
+[33m03f12df[m HEAD@{11}: commit: actualizacion
+[33m40f493e[m HEAD@{12}: commit: Limpieza de archivos ignorados y sensibles
+[33m7a8350a[m HEAD@{13}: commit: actualizacion db.propities
+[33m3c14cfc[m HEAD@{14}: commit: Actualizacion nueva interfas
+[33m8ed1667[m HEAD@{15}: commit (merge): nueva dashboard
+[33mafc7e4c[m[33m ([m[1;31morigin/Daniel[m[33m, [m[1;32mDaniel[m[33m)[m HEAD@{16}: checkout: moving from Daniel to main
+[33mafc7e4c[m[33m ([m[1;31morigin/Daniel[m[33m, [m[1;32mDaniel[m[33m)[m HEAD@{17}: checkout: moving from main to Daniel
+[33mafc7e4c[m[33m ([m[1;31morigin/Daniel[m[33m, [m[1;32mDaniel[m[33m)[m HEAD@{18}: Branch: renamed refs/heads/master to refs/heads/main
+[33mafc7e4c[m[33m ([m[1;31morigin/Daniel[m[33m, [m[1;32mDaniel[m[33m)[m HEAD@{20}: commit (initial): Mi primer commit del proyecto Transportes RBL
