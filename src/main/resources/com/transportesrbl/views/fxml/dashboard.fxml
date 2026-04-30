@@ -5,7 +5,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@dashboard.css" 
+<BorderPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/dashboard.css" 
             xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="com.transportesrbl.controllers.DashboardController">
     

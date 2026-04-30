@@ -6,7 +6,7 @@
 
 <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f4f7f6;" 
       xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="com.transportesrbl.controllers.ProductosController" stylesheets="@productos.css">
+      fx:controller="com.transportesrbl.controllers.ProductosController" stylesheets="@../css/productos.css">
     
     <content>
         <VBox spacing="20">

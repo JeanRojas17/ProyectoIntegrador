@@ -11,7 +11,7 @@
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Button?>
 
-<HBox prefHeight="600.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.LoginController">
+<HBox prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.LoginController">
    <children>
       <!-- PANEL IZQUIERDO (Color #D8DBE3) -->
       <VBox alignment="CENTER" prefWidth="400.0" styleClass="side-panel" HBox.hgrow="ALWAYS">

@@ -9,7 +9,7 @@
       fx:controller="com.transportesrbl.controllers.FormAsignacionController">
     
     <stylesheets>
-    <URL value="@estilos_formulario.css" />
+    <URL value="@../css/estilos_formulario.css" />
     </stylesheets>
 
     <padding>
