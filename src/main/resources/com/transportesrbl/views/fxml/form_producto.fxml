@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<VBox spacing="20" prefWidth="400" styleClass="form-container" 
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.transportesrbl.controllers.FormProductoController">
+    
+    <stylesheets>
+        <URL value="@../css/estilos_formulario.css" />
+    </stylesheets>
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+    
+    <Label text="REGISTRAR NUEVO PRODUCTO" styleClass="label-titulo"/>
+    <Separator/>
+    
+    <GridPane hgap="15" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints minWidth="90" prefWidth="100" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtNombre" promptText="Ej: Nevera Industrial" maxWidth="Infinity" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        
+        <Label text="Volumen (m³):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtVolumen" promptText="Ej: 5.5" maxWidth="Infinity" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        
+        <Label text="Cantidad:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <Spinner fx:id="spnCantidad" editable="true" maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Estado:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cbEstado" promptText="Seleccionar Estado" maxWidth="Infinity" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Destino:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cbDestino" promptText="Seleccionar Destino" maxWidth="Infinity" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    </GridPane>
+    
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" onAction="#handleCancelar" styleClass="button-cancelar"/>
+        <Button text="Guardar" onAction="#handleGuardar" styleClass="button-guardar"/>
+    </HBox>
+</VBox>

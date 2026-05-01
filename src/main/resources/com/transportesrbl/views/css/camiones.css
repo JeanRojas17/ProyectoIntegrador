@@ -1,0 +1,102 @@
+/* camiones.css */
+.main-container {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 30;
+}
+
+.section-title {
+    -fx-font-size: 28px;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: #2c3e50;
+}
+
+/* Botón Nuevo */
+.btn-new {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #2c3e50;
+    -fx-border-radius: 5;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.btn-new:hover {
+    -fx-background-color: #f1f1f1;
+}
+
+/* Tarjetas de Métricas (Top) */
+.metric-card {
+    -fx-background-color: white;
+    -fx-border-color: #dcdde1;
+    -fx-border-radius: 5;
+    -fx-padding: 15;
+    -fx-pref-width: 250;
+    -fx-pref-height: 100;
+}
+
+.metric-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-family: "Segoe UI";
+}
+
+.metric-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Filtros */
+.filter-container {
+    -fx-spacing: 15;
+    -fx-alignment: center-left;
+}
+
+.filter-field {
+    -fx-pref-height: 35;
+    -fx-border-color: #dcdde1;
+    -fx-background-color: white;
+}
+
+.btn-clear {
+    -fx-background-color: #2c3e50;
+    -fx-text-fill: white;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+/* Tarjetas de Camiones (Grid) */
+.truck-card {
+    -fx-background-color: white;
+    -fx-border-color: #dcdde1;
+    -fx-border-radius: 5;
+    -fx-padding: 20;
+    -fx-pref-width: 350;
+}
+
+.truck-driver {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-alignment: center;
+}
+
+.truck-info-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.truck-info-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.status-active {
+    -fx-text-fill: #27ae60;
+}
+
+.status-route {
+    -fx-text-fill: #2980b9;
+}

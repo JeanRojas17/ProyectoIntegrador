@@ -11,12 +11,12 @@ public class ProductoDAO {
     public List<Producto> listar() {
         List<Producto> lista = new ArrayList<>();
         
-        // Consulta SQL corregida para extraer la información real de los productos y paquetes
         String sql = "SELECT p.Id_Paquete AS id_producto, " +
                      "       p.Descripcion AS nombre_producto, " +
                      "       c.Nombre_Empresa AS proveedor, " +
                      "       c.Nombre_Empresa AS cliente, " +
                      "       p.Volumen_m3 AS volumen, " +
+                     "       p.Cantidad AS cantidad, " +
                      "       ap.Dir_Entrega AS destino, " +
                      "       h.Estado AS estado " +
                      "FROM PAQUETE p " +
@@ -27,21 +27,25 @@ public class ProductoDAO {
                      "  FROM HISTORIAL_ESTADOS " +
                      "  ORDER BY Id_Asig_Paq, Fecha DESC" +
                      ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq";
-
+                     
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                lista.add(new Producto(
-                        rs.getInt("id_producto"),
-                        rs.getString("nombre_producto"),
-                        rs.getString("proveedor"),
-                        rs.getString("cliente"),
-                        rs.getDouble("volumen"),
-                        rs.getString("destino"),
-                        rs.getString("estado") != null ? rs.getString("estado") : "Pendiente"
-                ));
+                // Utiliza el constructor completo para asignar las variables proveedor y cliente
+                Producto p = new Producto(
+                    rs.getInt("id_producto"),
+                    rs.getString("nombre_producto"),
+                    rs.getString("proveedor"),
+                    rs.getString("cliente"),
+                    rs.getDouble("volumen"),
+                    rs.getInt("cantidad"), 
+                    rs.getDouble("volumen") * rs.getInt("cantidad"),
+                    rs.getString("estado"),
+                    rs.getString("destino")
+                );
+                lista.add(p);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -50,16 +54,87 @@ public class ProductoDAO {
     }
 
     public boolean insertar(Producto producto) {
-        String sql = "INSERT INTO PAQUETE (Id_Cliente, Nro_Paquete, Volumen_m3, Descripcion) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sqlGetCliente = "SELECT Id_Cliente FROM CLIENTE LIMIT 1";
+        String sqlGetCamion = "SELECT id_camion FROM CAMIONES LIMIT 1";
+        String sqlInsertPaquete = "INSERT INTO PAQUETE (Id_Cliente, Nro_Paquete, Volumen_m3, Descripcion, Cantidad) VALUES (?, ?, ?, ?, ?) RETURNING Id_Paquete";
+        String sqlInsertAsignacion = "INSERT INTO ASIGNACION (Id_Camion) VALUES (?) RETURNING Id_Asignacion";
+        String sqlInsertAsigPaq = "INSERT INTO ASIGNACION_PAQUETE (Id_Asignacion, Id_Paquete, Dir_Entrega, Cantidad) VALUES (?, ?, ?, ?)";
+        String sqlInsertHistorial = "INSERT INTO HISTORIAL_ESTADOS (Id_Asig_Paq, Estado, Observacion) VALUES (?, ?, ?)";
+        
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            if (conn == null) return false;
+            conn.setAutoCommit(false);
 
-            ps.setInt(1, 1); // Ajustar según el ID del cliente seleccionado en la vista
-            ps.setString(2, "PKT-" + System.currentTimeMillis()); // Generador único
-            ps.setDouble(3, producto.getVolumen());
-            ps.setString(4, producto.getNombreProducto());
+            try {
+                // 1. Obtener Cliente y Camion por defecto
+                int idCliente = -1;
+                try (Statement stmt = conn.createStatement();
+                     ResultSet rs = stmt.executeQuery(sqlGetCliente)) {
+                    if (rs.next()) idCliente = rs.getInt("Id_Cliente");
+                }
 
-            return ps.executeUpdate() > 0;
+                int idCamion = -1;
+                try (Statement stmt = conn.createStatement();
+                     ResultSet rs = stmt.executeQuery(sqlGetCamion)) {
+                    if (rs.next()) idCamion = rs.getInt("id_camion");
+                }
+
+                if (idCliente == -1 || idCamion == -1) {
+                    System.err.println("Error: No hay clientes o camiones registrados.");
+                    return false;
+                }
+
+                // 2. Insertar Paquete
+                int idPaquete = -1;
+                try (PreparedStatement ps = conn.prepareStatement(sqlInsertPaquete)) {
+                    ps.setInt(1, idCliente);
+                    ps.setString(2, "PKT-" + (System.currentTimeMillis() % 1000000));
+                    ps.setDouble(3, producto.getVolumenUnitario());
+                    ps.setString(4, producto.getNombreProducto());
+                    ps.setInt(5, producto.getCantidad());
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) idPaquete = rs.getInt("Id_Paquete");
+                    }
+                }
+
+                // 3. Crear Asignación automática
+                int idAsignacion = -1;
+                try (PreparedStatement ps = conn.prepareStatement(sqlInsertAsignacion)) {
+                    ps.setInt(1, idCamion);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) idAsignacion = rs.getInt("Id_Asignacion");
+                    }
+                }
+
+                // 4. Vincular Paquete a Asignación (con Destino)
+                int idAsigPaq = -1;
+                try (PreparedStatement ps = conn.prepareStatement(sqlInsertAsigPaq, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setInt(1, idAsignacion);
+                    ps.setInt(2, idPaquete);
+                    ps.setString(3, producto.getDestino());
+                    ps.setInt(4, producto.getCantidad());
+                    ps.executeUpdate();
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (rs.next()) idAsigPaq = rs.getInt(1);
+                    }
+                }
+
+                // 5. Registrar Estado Inicial en Historial
+                try (PreparedStatement ps = conn.prepareStatement(sqlInsertHistorial)) {
+                    ps.setInt(1, idAsigPaq);
+                    ps.setString(2, producto.getEstado());
+                    ps.setString(3, "Registro inicial de producto");
+                    ps.executeUpdate();
+                }
+
+                conn.commit();
+                return true;
+
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                return false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -67,15 +142,44 @@ public class ProductoDAO {
     }
 
     public boolean actualizar(Producto producto) {
-        String sql = "UPDATE PAQUETE SET Descripcion = ?, Volumen_m3 = ? WHERE Id_Paquete = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sqlUpdatePaquete = "UPDATE PAQUETE SET Descripcion = ?, Volumen_m3 = ?, Cantidad = ? WHERE Id_Paquete = ?";
+        String sqlUpdateAsigPaq = "UPDATE ASIGNACION_PAQUETE SET Dir_Entrega = ? WHERE Id_Paquete = ?";
+        String sqlInsertHistorial = "INSERT INTO HISTORIAL_ESTADOS (Id_Asig_Paq, Estado, Observacion) " +
+                                    "SELECT Id_Asignacion_Paquete, ?, 'Actualización desde módulo productos' " +
+                                    "FROM ASIGNACION_PAQUETE WHERE Id_Paquete = ?";
 
-            ps.setString(1, producto.getNombreProducto());
-            ps.setDouble(2, producto.getVolumen());
-            ps.setInt(3, producto.getIdProducto());
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            if (conn == null) return false;
+            conn.setAutoCommit(false);
 
-            return ps.executeUpdate() > 0;
+            try {
+                try (PreparedStatement ps = conn.prepareStatement(sqlUpdatePaquete)) {
+                    ps.setString(1, producto.getNombreProducto());
+                    ps.setDouble(2, producto.getVolumenUnitario());
+                    ps.setInt(3, producto.getCantidad());
+                    ps.setInt(4, producto.getIdProducto());
+                    ps.executeUpdate();
+                }
+
+                try (PreparedStatement ps = conn.prepareStatement(sqlUpdateAsigPaq)) {
+                    ps.setString(1, producto.getDestino());
+                    ps.setInt(2, producto.getIdProducto());
+                    ps.executeUpdate();
+                }
+
+                try (PreparedStatement ps = conn.prepareStatement(sqlInsertHistorial)) {
+                    ps.setString(1, producto.getEstado());
+                    ps.setInt(2, producto.getIdProducto());
+                    ps.executeUpdate();
+                }
+
+                conn.commit();
+                return true;
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                return false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -83,12 +187,36 @@ public class ProductoDAO {
     }
 
     public boolean eliminar(int id) {
-        String sql = "DELETE FROM PAQUETE WHERE Id_Paquete = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sqlDeleteHistorial = "DELETE FROM HISTORIAL_ESTADOS WHERE Id_Asig_Paq IN (SELECT Id_Asignacion_Paquete FROM ASIGNACION_PAQUETE WHERE Id_Paquete = ?)";
+        String sqlDeleteAsigPaq = "DELETE FROM ASIGNACION_PAQUETE WHERE Id_Paquete = ?";
+        String sqlDeletePaquete = "DELETE FROM PAQUETE WHERE Id_Paquete = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            if (conn == null) return false;
+            conn.setAutoCommit(false);
 
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+            try {
+                try (PreparedStatement ps = conn.prepareStatement(sqlDeleteHistorial)) {
+                    ps.setInt(1, id);
+                    ps.executeUpdate();
+                }
+
+                try (PreparedStatement ps = conn.prepareStatement(sqlDeleteAsigPaq)) {
+                    ps.setInt(1, id);
+                    ps.executeUpdate();
+                }
+
+                try (PreparedStatement ps = conn.prepareStatement(sqlDeletePaquete)) {
+                    ps.setInt(1, id);
+                    int result = ps.executeUpdate();
+                    conn.commit();
+                    return result > 0;
+                }
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                return false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

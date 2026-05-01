@@ -1,5 +1,7 @@
 package com.transportesrbl.controllers;
 
+import java.io.IOException;
+
 import com.transportesrbl.models.Producto;
 import com.transportesrbl.services.ProductoService;
 
@@ -7,8 +9,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class ProductosController {
 
@@ -64,8 +71,9 @@ public class ProductosController {
 
     @FXML
     private void handleNuevo(ActionEvent event) {
-        // Lógica para abrir modal de crear un nuevo producto
+        abrirFormulario(null, "Nuevo Producto");
     }
+
 
     @FXML
     private void handleModificar(ActionEvent event) {
@@ -74,7 +82,30 @@ public class ProductosController {
             mostrarAlerta("Seleccionar Producto", "Por favor, selecciona un producto de la tabla para modificar.", Alert.AlertType.WARNING);
             return;
         }
-        // Lógica de modificación
+        abrirFormulario(seleccionado, "Modificar Producto");
+    }
+
+    private void abrirFormulario(Producto producto, String titulo) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/form_producto.fxml"));
+            Parent root = loader.load();
+            
+            FormProductoController controller = loader.getController();
+            controller.setProducto(producto);
+
+            Stage stage = new Stage();
+            stage.setTitle("Transportes RBL - " + titulo);
+            stage.initModality(Modality.APPLICATION_MODAL); 
+            stage.setResizable(false);
+            stage.setScene(new Scene(root));
+            stage.showAndWait(); 
+            
+            cargarDatos();
+            actualizarIndicadores();
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar el formulario.", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML

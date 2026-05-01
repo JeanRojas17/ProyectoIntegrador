@@ -1,0 +1,74 @@
+.root {
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-base: #f5f6fa;
+}
+
+/* Contenedor principal del formulario */
+.form-container {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdde1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 2);
+}
+
+/* Título de la ventana */
+.label-titulo {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2f3640;
+    -fx-padding: 5px 0px;
+}
+
+/* Campos de entrada (TextFields, ComboBox, Spinners) */
+.text-field, .combo-box, .spinner {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #b2bec3;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 5px;
+}
+
+.text-field:focused, .combo-box:focused, .spinner:focused {
+    -fx-border-color: #0984e3;
+    -fx-border-width: 1.5px;
+}
+
+/* Botón Guardar / Acción Principal */
+.button-guardar {
+    -fx-background-color: #2ed573;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+}
+
+.button-guardar:hover {
+    -fx-background-color: #26af5f;
+}
+
+/* Botón Cancelar */
+.button-cancelar {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #57606f;
+    -fx-border-color: #ced6e0;
+    -fx-border-width: 1px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+}
+
+.button-cancelar:hover {
+    -fx-background-color: #f1f2f6;
+    -fx-border-color: #a4b0be;
+}
+
+/* Separadores */
+.separator {
+    -fx-padding: 5px 0px;
+}

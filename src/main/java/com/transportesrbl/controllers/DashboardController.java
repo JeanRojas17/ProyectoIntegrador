@@ -126,7 +126,7 @@ public class DashboardController {
         }
     }
 
-   @FXML
+    @FXML
     private void MostrarSeccionProductos(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/productos.fxml"));
@@ -139,6 +139,22 @@ public class DashboardController {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error al cargar la sección de productos: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void mostrarSeccionCamiones(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/camiones.fxml"));
+            ScrollPane camionesView = loader.load();
+
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(camionesView);
+
+            System.out.println(">>> Sección de Camiones cargada en el contentArea.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar la sección de camiones: " + e.getMessage());
         }
     }
 

@@ -32,12 +32,37 @@ public class FormAsignacionController {
 
     @FXML
     public void initialize() {
-        cmbCamion.getItems().setAll("Chevrolet NPR", "NPR Turbo", "Fotón Aumark");
-        cmbConductor.getItems().setAll("Stiven Ramirez", "Edward Gomez", "Carlos Mendoza");
         cmbEstado.getItems().setAll("Pendiente", "En reparto", "Entregado", "No entregado");
         
-        // Cargar productos desde la base de datos
+        cargarCamionesDisponibles();
+        cargarConductoresDisponibles();
         cargarProductosDisponibles();
+    }
+
+    private void cargarCamionesDisponibles() {
+        ObservableList<String> camiones = FXCollections.observableArrayList();
+        String sql = "SELECT modelo_camion FROM CAMIONES";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) camiones.add(rs.getString("modelo_camion"));
+            cmbCamion.setItems(camiones);
+        } catch (SQLException e) {
+            System.err.println("Error al cargar camiones: " + e.getMessage());
+        }
+    }
+
+    private void cargarConductoresDisponibles() {
+        ObservableList<String> conductores = FXCollections.observableArrayList();
+        String sql = "SELECT nombre_completo FROM CONDUCTORES";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) conductores.add(rs.getString("nombre_completo"));
+            cmbConductor.setItems(conductores);
+        } catch (SQLException e) {
+            System.err.println("Error al cargar conductores: " + e.getMessage());
+        }
     }
 
     private void cargarProductosDisponibles() {

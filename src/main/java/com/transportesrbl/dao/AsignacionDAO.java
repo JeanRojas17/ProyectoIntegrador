@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,18 +49,75 @@ public class AsignacionDAO {
     }
 
     public boolean insertar(Asignacion asig) {
-        String sql = "INSERT INTO ASIGNACION_PAQUETE (Id_Asignacion, Id_Paquete, Dir_Entrega, Cantidad) " +
-                     "SELECT 1, p.Id_Paquete, ?, 1 FROM PAQUETE p WHERE p.Descripcion = ?";
-        
-        try (Connection conn = DatabaseConnection.getConnection(); 
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
-            ps.setString(1, asig.getRuta());
-            ps.setString(2, asig.getProducto()); // Valida con el producto real de la BD
-            
-            return ps.executeUpdate() > 0;
+        String sqlGetCamion = "SELECT id_camion FROM CAMIONES WHERE modelo_camion = ? LIMIT 1";
+        String sqlGetPaquete = "SELECT Id_Paquete FROM PAQUETE WHERE Descripcion = ? LIMIT 1";
+        String sqlInsertAsig = "INSERT INTO ASIGNACION (Id_Camion) VALUES (?) RETURNING Id_Asignacion";
+        String sqlInsertAsigPaq = "INSERT INTO ASIGNACION_PAQUETE (Id_Asignacion, Id_Paquete, Dir_Entrega, Cantidad) VALUES (?, ?, ?, 1)";
+        String sqlInsertHistorial = "INSERT INTO HISTORIAL_ESTADOS (Id_Asig_Paq, Estado, Observacion) VALUES (?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            if (conn == null) return false;
+            conn.setAutoCommit(false);
+
+            try {
+                int idCamion = -1;
+                try (PreparedStatement ps = conn.prepareStatement(sqlGetCamion)) {
+                    ps.setString(1, asig.getCamion());
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) idCamion = rs.getInt("id_camion");
+                    }
+                }
+
+                int idPaquete = -1;
+                try (PreparedStatement ps = conn.prepareStatement(sqlGetPaquete)) {
+                    ps.setString(1, asig.getProducto());
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) idPaquete = rs.getInt("Id_Paquete");
+                    }
+                }
+
+                if (idCamion == -1 || idPaquete == -1) {
+                    System.err.println("No se encontró el camión o el paquete.");
+                    return false;
+                }
+
+                int idAsignacion = -1;
+                try (PreparedStatement ps = conn.prepareStatement(sqlInsertAsig)) {
+                    ps.setInt(1, idCamion);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) idAsignacion = rs.getInt("Id_Asignacion");
+                    }
+                }
+
+                int idAsigPaq = -1;
+                try (PreparedStatement ps = conn.prepareStatement(sqlInsertAsigPaq, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setInt(1, idAsignacion);
+                    ps.setInt(2, idPaquete);
+                    ps.setString(3, asig.getRuta());
+                    ps.executeUpdate();
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (rs.next()) idAsigPaq = rs.getInt(1);
+                    }
+                }
+
+                if (idAsigPaq != -1) {
+                    try (PreparedStatement ps = conn.prepareStatement(sqlInsertHistorial)) {
+                        ps.setInt(1, idAsigPaq);
+                        ps.setString(2, asig.getEstado());
+                        ps.setString(3, "Asignación inicial");
+                        ps.executeUpdate();
+                    }
+                }
+
+                conn.commit();
+                return true;
+            } catch (SQLException e) {
+                conn.rollback();
+                System.err.println("Error en transacción de inserción: " + e.getMessage());
+                return false;
+            }
         } catch (SQLException e) {
-            System.err.println("Error al insertar asignacion: " + e.getMessage());
+            System.err.println("Error de conexión al insertar: " + e.getMessage());
             return false;
         }
     }

@@ -89,12 +89,13 @@ public class DashboardDAO {
 
     public List<Camion> obtenerEstadoFlota() {
         List<Camion> lista = new ArrayList<>();
-        String sql = "SELECT modelo_camion, capacidad_m3, estado FROM CAMIONES ORDER BY id_camion ASC LIMIT 5";
+        String sql = "SELECT id_camion, modelo_camion, capacidad_m3, estado FROM CAMIONES ORDER BY id_camion ASC LIMIT 5";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 lista.add(new Camion(
+                    rs.getInt("id_camion"),
                     rs.getString("modelo_camion"), 
                     rs.getDouble("capacidad_m3"), 
                     rs.getString("estado")

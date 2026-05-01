@@ -36,7 +36,7 @@
                     <Button text="DASHBOARD" onAction="#mostrarSeccionDashboard" styleClass="menu-button" maxWidth="Infinity"/> 
                     <Button text="ASIGNACIONES" onAction="#mostrarSeccionAsignaciones" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="PRODUCTOS" onAction="#MostrarSeccionProductos" styleClass="menu-button" maxWidth="Infinity"/>
-                    <Button text="CAMIONES" styleClass="menu-button" maxWidth="Infinity"/>
+                    <Button text="CAMIONES" onAction="#mostrarSeccionCamiones" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="RUTAS" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="PERSONAL" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="REPORTES" styleClass="menu-button" maxWidth="Infinity"/>
@@ -54,6 +54,13 @@
                         <Label fx:id="lblRolUsuario" text="COORDINADOR LOGISTICO" style="-fx-text-fill: #bdc3c7; -fx-font-size: 10;"/>
                     </VBox>
                 </HBox>
+
+
+
+
+
+
+                
             </children>
         </VBox>
     </left>
