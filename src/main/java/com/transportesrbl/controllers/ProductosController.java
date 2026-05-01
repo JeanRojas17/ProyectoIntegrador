@@ -1,9 +1,9 @@
 package com.transportesrbl.controllers;
 
-import java.io.IOException;
-
 import com.transportesrbl.models.Producto;
 import com.transportesrbl.services.ProductoService;
+
+import java.io.IOException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,13 +19,11 @@ import javafx.stage.Stage;
 
 public class ProductosController {
 
-    // Componentes de la Tabla
     @FXML private TableView<Producto> tblProductos;
     @FXML private TableColumn<Producto, Integer> colId;
     @FXML private TableColumn<Producto, String> colProducto, colProveedor, colCliente, colDestino, colEstado;
     @FXML private TableColumn<Producto, Double> colVolumen;
 
-    // Componentes de Filtros e Indicadores
     @FXML private TextField txtBuscar;
     @FXML private TextField txtProveedor;
     @FXML private TextField txtCliente;
@@ -120,7 +118,6 @@ public class ProductosController {
     private void handleNuevo(ActionEvent event) {
         abrirFormulario(null, "Nuevo Producto");
     }
-
 
     @FXML
     private void handleModificar(ActionEvent event) {

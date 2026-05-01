@@ -4,16 +4,18 @@ import com.transportesrbl.dao.ProductoDAO;
 import com.transportesrbl.models.ComboItem;
 import com.transportesrbl.models.Producto;
 import com.transportesrbl.config.DatabaseConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class FormProductoController {
 

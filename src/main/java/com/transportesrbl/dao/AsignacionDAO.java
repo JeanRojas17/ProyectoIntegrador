@@ -1,15 +1,16 @@
 package com.transportesrbl.dao;
 
+import com.transportesrbl.config.DatabaseConnection;
+import com.transportesrbl.models.Asignacion;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.transportesrbl.config.DatabaseConnection;
-import com.transportesrbl.models.Asignacion;
 
 public class AsignacionDAO {
 

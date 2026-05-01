@@ -1,14 +1,12 @@
 package com.transportesrbl.dao;
 
-
+import com.transportesrbl.config.DatabaseConnection;
+import com.transportesrbl.models.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import com.transportesrbl.config.DatabaseConnection;
-import com.transportesrbl.models.Usuario;
 
 public class UsuarioDao {
 
@@ -19,7 +17,7 @@ public class UsuarioDao {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, user);
-            stmt.setString(2, pass); // Nota: En producción usarías BCrypt aquí
+            stmt.setString(2, pass);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {

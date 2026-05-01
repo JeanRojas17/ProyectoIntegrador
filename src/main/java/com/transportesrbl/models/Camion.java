@@ -1,6 +1,7 @@
 package com.transportesrbl.models;
 
 public class Camion {
+
     private int id;
     private String modelo;
     private double capacidad;
@@ -13,9 +14,19 @@ public class Camion {
         this.estado = estado;
     }
 
-    // Getters (Importantes para la TableView)
-    public int getId() { return id; }
-    public String getModelo() { return modelo; }
-    public double getCapacidad() { return capacidad; }
-    public String getEstado() { return estado; }
+    public int getId() {
+        return id;
+    }
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public double getCapacidad() {
+        return capacidad;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
 }

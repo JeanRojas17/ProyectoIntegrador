@@ -1,6 +1,7 @@
 package com.transportesrbl.models;
 
 public class Usuario {
+
     private int id;
     private String nombre;
     private String usuario;
@@ -15,14 +16,26 @@ public class Usuario {
         this.idRol = idRol;
     }
 
-    // Getters
-    public int getId() { return id; }
-    public String getNombre() { return nombre; }
-    public String getUsuario() { return usuario; }
-    public String getContrasena() { return contrasena; }
-    public int getIdRol() { return idRol; }
+    public int getId() {
+        return id;
+    }
 
-    // Retorna el nombre del rol según su ID en la base de datos
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public int getIdRol() {
+        return idRol;
+    }
+
     public String getRol() {
         switch (this.idRol) {
             case 1: return "Administrador";

@@ -2,7 +2,9 @@ package com.transportesrbl.dao;
 
 import com.transportesrbl.models.*;
 import com.transportesrbl.config.DatabaseConnection;
+
 import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,6 @@ public class DashboardDAO {
     public MetricasDashboard obtenerMetricas() {
         int activas = 0, completas = 0, pendientes = 0, total = 0, disp = 0;
 
-        // SQL Corregido: Se utiliza el estado 'Entregado' para contar las completas correctamente
         String sql = "SELECT " +
             "COUNT(*) FILTER (WHERE COALESCE(h.Estado, 'Pendiente') = 'En reparto') as activas, " +
             "COUNT(*) FILTER (WHERE COALESCE(h.Estado, 'Pendiente') = 'Entregado') as completas, " +
@@ -54,14 +55,12 @@ public class DashboardDAO {
             System.err.println("Error al conectar con la base de datos: " + e.getMessage());
         }
 
-        // Se retorna el objeto con 4 parámetros para mantener la compatibilidad del constructor
         return new MetricasDashboard(activas, completas, pendientes, disp + "/" + total);
     }
 
-
     public List<Entrega> obtenerEntregasRecientes() {
         List<Entrega> lista = new ArrayList<>();
-        // Consulta unificada con los campos correctos para evitar referencias nulas
+
         String sql = "SELECT ap.Id_Asignacion_Paquete, p.Descripcion, ap.Dir_Entrega, h.Estado " +
                      "FROM ASIGNACION_PAQUETE ap " +
                      "JOIN PAQUETE p ON ap.Id_Paquete = p.Id_Paquete " +

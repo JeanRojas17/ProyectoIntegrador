@@ -1,6 +1,7 @@
 package com.transportesrbl.models;
 
 public class ComboItem {
+    
     private final Integer id;
     private final String label;
 

@@ -6,7 +6,6 @@ import com.transportesrbl.models.Producto;
 import java.util.List;
 
 public class ProductoService {
-
     private final ProductoDAO productoDAO;
 
     public ProductoService() {

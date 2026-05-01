@@ -2,6 +2,7 @@ package com.transportesrbl.controllers;
 
 import com.transportesrbl.dao.CamionDAO;
 import com.transportesrbl.models.Camion;
+
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

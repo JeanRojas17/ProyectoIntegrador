@@ -9,11 +9,9 @@
             xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="com.transportesrbl.controllers.DashboardController">
     
-    <!-- BARRA LATERAL (SIDEBAR) -->
     <left>
         <VBox prefWidth="250.0" styleClass="sidebar">
             <children>
-                <!-- Logo y Nombre -->
                 <VBox alignment="CENTER" spacing="10">
                     <padding>
                         <Insets top="30" right="0" bottom="30" left="0"/>
@@ -28,7 +26,6 @@
 
                 <Separator style="-fx-background-color: #3e4f5f;"/>
 
-                <!-- Botones del Menú -->
                 <VBox spacing="5" VBox.vgrow="ALWAYS">
                     <padding>
                         <Insets top="20" right="10" bottom="0" left="10"/>
@@ -43,7 +40,6 @@
                     <Button text="CONFIGURACION" styleClass="menu-button" maxWidth="Infinity"/>
                 </VBox>
 
-                <!-- Perfil de Usuario abajo -->
                 <HBox spacing="15" styleClass="user-profile">
                     <padding>
                         <Insets top="15" right="15" bottom="15" left="15"/>
@@ -53,19 +49,11 @@
                         <Label fx:id="lblNombreUsuario" text="Juan Pérez" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
                         <Label fx:id="lblRolUsuario" text="COORDINADOR LOGISTICO" style="-fx-text-fill: #bdc3c7; -fx-font-size: 10;"/>
                     </VBox>
-                </HBox>
-
-
-
-
-
-
-                
+                </HBox>                
             </children>
         </VBox>
     </left>
 
-    <!-- CONTENIDO CENTRAL -->
     <center>
         <StackPane fx:id="contentArea"> 
             <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f4f7f6;">
@@ -75,7 +63,6 @@
                             <Insets top="25" right="25" bottom="25" left="25"/>
                         </padding>
                         
-                        <!-- Encabezado del Dashboard -->
                         <HBox alignment="CENTER_LEFT" styleClass="header-box">
                             <padding>
                                 <Insets top="15" right="20" bottom="15" left="20"/>
@@ -93,7 +80,6 @@
                             </HBox>
                         </HBox>
 
-                        <!-- Grilla de Tarjetas (Cards) -->
                         <FlowPane hgap="20" vgap="20" alignment="CENTER">
                             <children>
                                 <VBox styleClass="stat-card">
@@ -131,7 +117,6 @@
                             </children>
                         </FlowPane>
 
-                        <!-- SECCIÓN: ENTREGAS RECIENTES -->
                         <VBox spacing="10" styleClass="list-container">
                             <HBox alignment="CENTER_LEFT">
                                 <Label text="ENTREGAS RECIENTES:" styleClass="section-title" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
@@ -149,7 +134,6 @@
                             </TableView>
                         </VBox>
 
-                        <!-- SECCIÓN: ESTADO DE LA FLOTA -->
                         <VBox spacing="10" styleClass="list-container">
                             <HBox alignment="CENTER_LEFT">
                                 <Label text="ESTADO DE LA FLOTA:" styleClass="section-title" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
@@ -169,6 +153,6 @@
                     </VBox>
                 </content>
             </ScrollPane>
-        </StackPane> <!-- 1. AGREGADO: Cierre correcto del StackPane -->
-    </center> <!-- 2. CORREGIDO: Cierre del área central -->
-</BorderPane> <!-- 3. Cierre del documento -->
+        </StackPane>
+    </center>
+</BorderPane>

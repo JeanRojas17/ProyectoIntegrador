@@ -41,12 +41,7 @@
     <Label text="Estado de la Entrega:"/>
     <ComboBox fx:id="cmbEstado" prefWidth="200" promptText="Seleccionar Estado"/>
 </VBox>
-
-
-
-
     </GridPane>
-    
     <HBox spacing="15" alignment="CENTER_RIGHT">
         <Button text="Cancelar" onAction="#cerrarVentana" styleClass="button-cancelar" prefWidth="100"/>
         <Button text="Guardar" onAction="#guardar" styleClass="button-guardar" prefWidth="150"/>

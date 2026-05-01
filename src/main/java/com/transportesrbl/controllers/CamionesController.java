@@ -2,6 +2,11 @@ package com.transportesrbl.controllers;
 
 import com.transportesrbl.models.Camion;
 import com.transportesrbl.services.CamionService;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,10 +18,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 
 public class CamionesController {
 

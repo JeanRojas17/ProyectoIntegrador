@@ -1,11 +1,11 @@
 package com.transportesrbl.controllers;
 
+import com.transportesrbl.dao.AsignacionDAO;
+import com.transportesrbl.models.Asignacion;
+
 import java.io.IOException;
 import java.util.Optional;
 import java.time.LocalDate;
-
-import com.transportesrbl.dao.AsignacionDAO;
-import com.transportesrbl.models.Asignacion;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,12 +22,10 @@ import javafx.scene.Node;
 
 public class AsignacionesController {
 
-    // Componentes de la Tabla
     @FXML private TableView<Asignacion> tblAsignaciones;
     @FXML private TableColumn<Asignacion, Integer> colId;
     @FXML private TableColumn<Asignacion, String> colCamion, colConductor, colRuta, colProducto, colEstado;
     
-    // Componentes de Filtros
     @FXML private TextField txtBuscar;
     @FXML private ComboBox<String> cbEstado;
     @FXML private DatePicker dpFecha;
@@ -39,7 +37,6 @@ public class AsignacionesController {
         configurarTabla();
         configurarFiltros();
         
-        // Listeners para búsqueda en tiempo real mientras el usuario escribe o selecciona[cite: 7]
         if (txtBuscar != null) {
             txtBuscar.textProperty().addListener((obs, oldVal, newVal) -> ejecutarFiltro());
         }
@@ -64,7 +61,6 @@ public class AsignacionesController {
 
     private void configurarFiltros() {
         if (cbEstado != null) {
-            // "Seleccionar" actúa como el valor nulo para mostrar todo[cite: 7]
             cbEstado.setItems(FXCollections.observableArrayList("Seleccionar", "Pendiente", "En reparto", "Entregado", "No entregado"));
             cbEstado.setValue("Seleccionar");
         }
@@ -72,7 +68,6 @@ public class AsignacionesController {
 
     private void cargarDatos() {
         try {
-            // Carga inicial completa usando el método listar original
             ObservableList<Asignacion> lista = FXCollections.observableArrayList(dao.listar());
             tblAsignaciones.setItems(lista);
         } catch (Exception e) {
@@ -85,7 +80,6 @@ public class AsignacionesController {
         String estado = cbEstado.getValue();
         LocalDate fecha = dpFecha.getValue();
 
-        // Llama al método de búsqueda dinámica que añadimos al DAO[cite: 7, 8]
         ObservableList<Asignacion> listaFiltrada = FXCollections.observableArrayList(
             dao.buscarConFiltros(producto, estado, fecha)
         );
@@ -119,7 +113,7 @@ public class AsignacionesController {
             stage.setScene(new Scene(root));
             stage.showAndWait(); 
             
-            ejecutarFiltro(); // Refresca manteniendo los filtros activos[cite: 7]
+            ejecutarFiltro();
         } catch (IOException e) {
             mostrarAlerta("Error", "No se pudo abrir el editor.", Alert.AlertType.ERROR);
             e.printStackTrace();
@@ -143,7 +137,7 @@ public class AsignacionesController {
         Optional<ButtonType> resultado = confirmacion.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             if (dao.eliminar(seleccionada.getId())) {
-                ejecutarFiltro(); // Refresca la tabla tras eliminar[cite: 7, 8]
+                ejecutarFiltro();
             } else {
                 mostrarAlerta("Error", "No se pudo eliminar el registro.", Alert.AlertType.ERROR);
             }
@@ -156,10 +150,8 @@ public class AsignacionesController {
         if (cbEstado != null) cbEstado.setValue("Seleccionar");
         if (dpFecha != null) dpFecha.setValue(null);
         
-        cargarDatos(); // Restablece la tabla a la vista completa[cite: 7]
+        cargarDatos();
     }
-
-    // --- MÉTODOS DE APOYO (HELPER METHODS) ---
 
     private void abrirFormulario(String rutaFxml, String titulo) {
         try {

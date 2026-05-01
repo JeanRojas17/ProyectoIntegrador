@@ -13,7 +13,6 @@
 
 <HBox prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.LoginController">
    <children>
-      <!-- PANEL IZQUIERDO (Color #D8DBE3) -->
       <VBox alignment="CENTER" prefWidth="400.0" styleClass="side-panel" HBox.hgrow="ALWAYS">
          <children>
             <StackPane styleClass="logo-circle">
@@ -27,10 +26,8 @@
          </children>
       </VBox>
 
-      <!-- PANEL DERECHO (Color #353538) -->
       <VBox alignment="CENTER" prefWidth="500.0" spacing="25.0" styleClass="form-container" HBox.hgrow="ALWAYS">
          <children>
-            <!-- CARD PRINCIPAL (Color #CBCBD4) -->
             <VBox maxWidth="400.0" spacing="15.0" styleClass="login-card">
                <children>
                   <Label styleClass="form-header" text="INICIAR SESIÓN" />
@@ -49,15 +46,10 @@
                         <PasswordField fx:id="txtContrasena" promptText="INGRESA TU CONTRASEÑA" styleClass="login-input" />
                      </children>
                   </VBox>
-                  
-                 
-                  
+
                   <Button maxWidth="Infinity" onAction="#handleLogin" styleClass="btn-primary" text="INICIAR SESION" />
                </children>
             </VBox>
-
-            <!-- ACCESO POR ROL (Debajo de la Card) -->
-           
          </children>
       </VBox>
    </children>

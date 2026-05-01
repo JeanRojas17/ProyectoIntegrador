@@ -1,18 +1,16 @@
-/* PANEL IZQUIERDO - Azul vibrante #2887DE */
 .side-panel {
     -fx-background-color: #2887DE;
     -fx-padding: 40;
     -fx-alignment: CENTER;
 }
 
-/* LOGO CIRCULAR - Corregido para que sea redondo */
 .logo-circle {
     -fx-min-width: 130;
     -fx-max-width: 130;
     -fx-min-height: 130;
     -fx-max-height: 130;
     -fx-background-color: #FFFFFF;
-    -fx-background-radius: 500; /* Un valor alto asegura que sea circular */
+    -fx-background-radius: 500;
     -fx-border-color: #353538;
     -fx-border-radius: 500;
     -fx-border-width: 1;
@@ -24,7 +22,6 @@
     -fx-text-fill: #353538;
 }
 
-/* Títulos del Panel Izquierdo (Texto Blanco para resaltar sobre el azul) */
 .brand-title {
     -fx-font-size: 28;
     -fx-font-weight: bold;
@@ -36,20 +33,17 @@
     -fx-opacity: 0.9;
 }
 
-/* PANEL DERECHO - Gris oscuro #353538 */
 .form-container {
     -fx-background-color: #353538;
     -fx-padding: 50;
 }
 
-/* TEXTO BLANCO EN PANEL DERECHO */
 .role-header {
-    -fx-text-fill: #FFFFFF; /* Texto blanco pedido */
+    -fx-text-fill: #FFFFFF;
     -fx-font-weight: bold;
     -fx-font-size: 14;
 }
 
-/* CARD DE LOGIN - Gris suave #CBCBD4 */
 .login-card {
     -fx-background-color: #CBCBD4;
     -fx-padding: 30;
@@ -57,7 +51,6 @@
     -fx-spacing: 15;
 }
 
-/* BOTÓN PRIMARIO - Azul corporativo #1D53C2 */
 .btn-primary {
     -fx-background-color: #1D53C2;
     -fx-text-fill: white;
@@ -66,7 +59,6 @@
     -fx-background-radius: 5;
 }
 
-/* BOTONES DE ROL */
 .btn-role {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #353538;

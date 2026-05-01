@@ -1,6 +1,7 @@
 package com.transportesrbl.models;
 
 public class MetricasDashboard {
+    
     private int entregasActivas;
     private int entregasCompletas;
     private int productosPendientes;
@@ -13,9 +14,16 @@ public class MetricasDashboard {
         this.camionesDisponibles = camiones;
     }
 
-    // Getters
-    public int getEntregasActivas() { return entregasActivas; }
-    public int getEntregasCompletas() { return entregasCompletas; }
-    public int getProductosPendientes() { return productosPendientes; }
-    public String getCamionesDisponibles() { return camionesDisponibles; }
+    public int getEntregasActivas() {
+        return entregasActivas;
+    }
+    public int getEntregasCompletas() {
+        return entregasCompletas;
+    }
+    public int getProductosPendientes() {
+        return productosPendientes;
+    }
+    public String getCamionesDisponibles() {
+        return camionesDisponibles;
+    }
 }

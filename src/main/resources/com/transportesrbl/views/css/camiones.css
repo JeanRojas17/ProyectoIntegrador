@@ -1,4 +1,3 @@
-/* camiones.css */
 .main-container {
     -fx-background-color: #f8f9fa;
     -fx-padding: 30;
@@ -10,7 +9,6 @@
     -fx-text-fill: #2c3e50;
 }
 
-/* Botón Nuevo */
 .btn-new {
     -fx-background-color: #ffffff;
     -fx-border-color: #2c3e50;
@@ -25,7 +23,6 @@
     -fx-background-color: #f1f1f1;
 }
 
-/* Tarjetas de Métricas (Top) */
 .metric-card {
     -fx-background-color: white;
     -fx-border-color: #dcdde1;
@@ -47,7 +44,6 @@
     -fx-text-fill: #2c3e50;
 }
 
-/* Filtros */
 .filter-container {
     -fx-spacing: 15;
     -fx-alignment: center-left;
@@ -66,7 +62,6 @@
     -fx-cursor: hand;
 }
 
-/* Tarjetas de Camiones (Grid) */
 .truck-card {
     -fx-background-color: white;
     -fx-border-color: #dcdde1;

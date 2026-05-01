@@ -1,6 +1,7 @@
 package com.transportesrbl.models;
 
 public class Producto {
+
     private int idProducto;
     private int clienteId;
     private String nombre;
@@ -12,7 +13,6 @@ public class Producto {
     private String estado;
     private String destino;
 
-    // Constructor completo de 10 parámetros (incluye clienteId) para mapear proveedor y cliente
     public Producto(int idProducto, int clienteId, String nombre, String proveedor, String cliente, double volumenUnitario, int cantidad, double volumenTotal, String estado, String destino) {
         this.idProducto = idProducto;
         this.clienteId = clienteId;
@@ -26,43 +26,63 @@ public class Producto {
         this.destino = destino;
     }
 
-    // Constructor completo de 9 parámetros (necesario para mapear proveedor y cliente sin clienteId)
     public Producto(int idProducto, String nombre, String proveedor, String cliente, double volumenUnitario, int cantidad, double volumenTotal, String estado, String destino) {
         this(idProducto, -1, nombre, proveedor, cliente, volumenUnitario, cantidad, volumenTotal, estado, destino);
     }
 
-    // Constructor de 7 parámetros 
     public Producto(int idProducto, String nombre, double volumenUnitario, int cantidad, double volumenTotal, String estado, String destino) {
         this(idProducto, -1, nombre, "Sin Proveedor", "Sin Cliente", volumenUnitario, cantidad, volumenTotal, estado, destino);
     }
 
-    // Constructor de 6 parámetros
     public Producto(String nombre, double volumenUnitario, int cantidad, double volumenTotal, String estado, String destino) {
         this(-1, nombre, "Sin Proveedor", "Sin Cliente", volumenUnitario, cantidad, volumenTotal, estado, destino);
     }
 
-    // Getters requeridos por las TableColumn y PropertyValueFactory
-    public int getIdProducto() { return idProducto; }
+    public int getIdProducto() {
+        return idProducto;
+    }
 
-    public String getNombreProducto() { return nombre; }
+    public String getNombreProducto() {
+        return nombre;
+    }
 
-    public String getProveedor() { return proveedor; }
+    public String getProveedor() {
+        return proveedor;
+    }
 
-    public String getCliente() { return cliente; }
-    public int getClienteId() { return clienteId; }
+    public String getCliente() {
+        return cliente;
+    }
 
-    // Utilizado por el controlador para obtener el volumen de los indicadores
-    public double getVolumen() { return volumenUnitario; }
+    public int getClienteId() {
+        return clienteId;
+    }
 
-    public double getVolumenUnitario() { return volumenUnitario; }
+    public void setClienteId(int clienteId) {
+        this.clienteId = clienteId;
+    }
 
-    public int getCantidad() { return cantidad; }
+    public double getVolumen() {
+        return volumenUnitario;
+    }
 
-    public double getVolumenTotal() { return volumenTotal; }
+    public double getVolumenUnitario() {
+        return volumenUnitario;
+    }
 
-    public String getEstado() { return estado; }
+    public int getCantidad() {
+        return cantidad;
+    }
 
-    public String getDestino() { return destino; }
+    public double getVolumenTotal() {
+        return volumenTotal;
+    }
 
-    public void setClienteId(int clienteId) { this.clienteId = clienteId; }
+    public String getEstado() {
+        return estado;
+    }
+
+    public String getDestino() {
+        return destino;
+    }
 }

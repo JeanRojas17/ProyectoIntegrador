@@ -1,6 +1,7 @@
 package com.transportesrbl.models;
 
 public class Asignacion {
+
     private int id;
     private Integer asignacionId;
     private Integer camionId;
@@ -12,7 +13,6 @@ public class Asignacion {
     private String producto;
     private String estado;
 
-    // Constructor para NUEVAS asignaciones (Sin ID de Asignación)
     public Asignacion(String camion, String conductor, String ruta, String producto, String estado) {
         this.camion = camion;
         this.conductor = conductor;
@@ -21,7 +21,6 @@ public class Asignacion {
         this.estado = estado;
     }
 
-    // Constructor para NUEVAS asignaciones con IDs de artículos seleccionados
     public Asignacion(Integer camionId, Integer conductorId, Integer productoId, String camion, String conductor, String ruta, String producto, String estado) {
         this.camionId = camionId;
         this.conductorId = conductorId;
@@ -33,7 +32,6 @@ public class Asignacion {
         this.estado = estado;
     }
 
-    // Constructor para CARGAR desde la BD (Con ID de Asignación)
     public Asignacion(int id, Integer asignacionId, Integer camionId, Integer conductorId, Integer productoId, String camion, String conductor, String ruta, String producto, String estado) {
         this.id = id;
         this.asignacionId = asignacionId;
@@ -47,27 +45,83 @@ public class Asignacion {
         this.estado = estado;
     }
 
-    // --- GETTERS ---
-    public int getId() { return id; }
-    public Integer getAsignacionId() { return asignacionId; }
-    public Integer getCamionId() { return camionId; }
-    public Integer getConductorId() { return conductorId; }
-    public Integer getProductoId() { return productoId; }
-    public String getCamion() { return camion; }
-    public String getConductor() { return conductor; }
-    public String getRuta() { return ruta; }
-    public String getProducto() { return producto; }
-    public String getEstado() { return estado; }
+    public int getId() {
+        return id;
+    }
 
-    // --- SETTERS (Necesarios para Modificar) ---
-    public void setId(int id) { this.id = id; }
-    public void setAsignacionId(Integer asignacionId) { this.asignacionId = asignacionId; }
-    public void setCamionId(Integer camionId) { this.camionId = camionId; }
-    public void setConductorId(Integer conductorId) { this.conductorId = conductorId; }
-    public void setProductoId(Integer productoId) { this.productoId = productoId; }
-    public void setCamion(String camion) { this.camion = camion; }
-    public void setConductor(String conductor) { this.conductor = conductor; }
-    public void setRuta(String ruta) { this.ruta = ruta; }
-    public void setProducto(String producto) { this.producto = producto; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Integer getAsignacionId() {
+        return asignacionId;
+    }
+
+    public void setAsignacionId(Integer asignacionId) {
+        this.asignacionId = asignacionId;
+    }
+
+    public Integer getCamionId() {
+        return camionId;
+    }
+
+    public void setCamionId(Integer camionId) {
+        this.camionId = camionId;
+    }
+
+    public Integer getConductorId() {
+        return conductorId;
+    }
+    
+    public void setConductorId(Integer conductorId) {
+        this.conductorId = conductorId;
+    }
+
+    public Integer getProductoId() {
+        return productoId;
+    }
+
+    public void setProductoId(Integer productoId) {
+        this.productoId = productoId;
+    }
+
+    public String getCamion() {
+        return camion;
+    }
+
+    public void setCamion(String camion) {
+        this.camion = camion;
+    }
+
+    public String getConductor() {
+        return conductor;
+    }
+
+    public void setConductor(String conductor) {
+        this.conductor = conductor;
+    }
+
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
+    }
+
+    public String getProducto() {
+        return producto;
+    }
+
+    public void setProducto(String producto) {
+        this.producto = producto;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 }

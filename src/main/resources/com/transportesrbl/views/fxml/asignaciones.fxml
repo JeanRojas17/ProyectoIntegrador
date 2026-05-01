@@ -12,7 +12,6 @@
         <Insets top="25" right="25" bottom="25" left="25"/>
     </padding>
 
-    <!-- Encabezado de Sección -->
     <HBox alignment="CENTER_LEFT" styleClass="header-box">
         <padding>
             <Insets top="15" right="20" bottom="15" left="20"/>
@@ -24,7 +23,6 @@
         <Button text="+ Nueva Asignación" onAction="#handleNuevo" styleClass="action-button"/>
     </HBox>
 
-    <!-- Panel de Filtros -->
     <HBox spacing="15" alignment="BOTTOM_LEFT" styleClass="list-container">
         <padding>
             <Insets top="15" right="15" bottom="15" left="15"/>
@@ -44,7 +42,6 @@
         
         <Region HBox.hgrow="ALWAYS" />
 
-        <!-- Nuevos botones para Modificar y Eliminar -->
         <HBox spacing="10">
             <Button text="Modificar" onAction="#handleModificar" styleClass="action-button" style="-fx-background-color: #f39c12;"/>
             <Button text="Eliminar" onAction="#handleEliminar" styleClass="action-button" style="-fx-background-color: #e74c3c;"/>
@@ -52,7 +49,6 @@
         </HBox>
     </HBox>
 
-    <!-- Tabla de Datos -->
     <VBox VBox.vgrow="ALWAYS" styleClass="list-container">
         <TableView fx:id="tblAsignaciones" VBox.vgrow="ALWAYS">
             <columns>
