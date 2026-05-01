@@ -58,11 +58,28 @@ public class CamionDAO {
     }
 
     public boolean eliminar(int id) {
-        String sql = "DELETE FROM CAMIONES WHERE id_camion = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+        String sqlCheck = "SELECT COUNT(*) AS total FROM ASIGNACION WHERE Id_Camion = ?";
+        String sqlDelete = "DELETE FROM CAMIONES WHERE id_camion = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            if (conn == null) {
+                return false;
+            }
+
+            try (PreparedStatement psCheck = conn.prepareStatement(sqlCheck)) {
+                psCheck.setInt(1, id);
+                try (ResultSet rs = psCheck.executeQuery()) {
+                    if (rs.next() && rs.getInt("total") > 0) {
+                        System.err.println("No se puede eliminar el camión porque tiene asignaciones activas.");
+                        return false;
+                    }
+                }
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(sqlDelete)) {
+                ps.setInt(1, id);
+                return ps.executeUpdate() > 0;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

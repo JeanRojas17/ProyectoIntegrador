@@ -65,7 +65,7 @@ public class AsignacionesController {
     private void configurarFiltros() {
         if (cbEstado != null) {
             // "Seleccionar" actúa como el valor nulo para mostrar todo[cite: 7]
-            cbEstado.setItems(FXCollections.observableArrayList("Seleccionar", "Pendiente", "En reparto", "Completado"));
+            cbEstado.setItems(FXCollections.observableArrayList("Seleccionar", "Pendiente", "En reparto", "Entregado", "No entregado"));
             cbEstado.setValue("Seleccionar");
         }
     }

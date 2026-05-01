@@ -2,6 +2,7 @@ package com.transportesrbl.controllers;
 
 import com.transportesrbl.dao.AsignacionDAO;
 import com.transportesrbl.models.Asignacion;
+import com.transportesrbl.models.ComboItem;
 import com.transportesrbl.config.DatabaseConnection;
 
 import javafx.collections.FXCollections;
@@ -21,10 +22,10 @@ import java.sql.SQLException;
 
 public class FormAsignacionController {
 
-    // Cambiamos el TextField de texto por un ComboBox para seleccionar de la BD
-    @FXML private ComboBox<String> txtProducto; 
-    @FXML private TextField cmbRuta; 
-    @FXML private ComboBox<String> cmbCamion, cmbConductor;
+    @FXML private ComboBox<ComboItem> txtProducto;
+    @FXML private TextField cmbRuta;
+    @FXML private ComboBox<ComboItem> cmbCamion;
+    @FXML private ComboBox<ComboItem> cmbConductor;
     @FXML private ComboBox<String> cmbEstado;
 
     private AsignacionDAO dao = new AsignacionDAO();
@@ -40,12 +41,14 @@ public class FormAsignacionController {
     }
 
     private void cargarCamionesDisponibles() {
-        ObservableList<String> camiones = FXCollections.observableArrayList();
-        String sql = "SELECT modelo_camion FROM CAMIONES";
+        ObservableList<ComboItem> camiones = FXCollections.observableArrayList();
+        String sql = "SELECT id_camion, modelo_camion FROM CAMIONES ORDER BY modelo_camion";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) camiones.add(rs.getString("modelo_camion"));
+            while (rs.next()) {
+                camiones.add(new ComboItem(rs.getInt("id_camion"), rs.getString("modelo_camion")));
+            }
             cmbCamion.setItems(camiones);
         } catch (SQLException e) {
             System.err.println("Error al cargar camiones: " + e.getMessage());
@@ -53,12 +56,14 @@ public class FormAsignacionController {
     }
 
     private void cargarConductoresDisponibles() {
-        ObservableList<String> conductores = FXCollections.observableArrayList();
-        String sql = "SELECT nombre_completo FROM CONDUCTORES";
+        ObservableList<ComboItem> conductores = FXCollections.observableArrayList();
+        String sql = "SELECT id_conductor, nombre_completo FROM CONDUCTORES ORDER BY nombre_completo";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) conductores.add(rs.getString("nombre_completo"));
+            while (rs.next()) {
+                conductores.add(new ComboItem(rs.getInt("id_conductor"), rs.getString("nombre_completo")));
+            }
             cmbConductor.setItems(conductores);
         } catch (SQLException e) {
             System.err.println("Error al cargar conductores: " + e.getMessage());
@@ -66,19 +71,16 @@ public class FormAsignacionController {
     }
 
     private void cargarProductosDisponibles() {
-        ObservableList<String> productos = FXCollections.observableArrayList();
-        String sql = "SELECT Descripcion FROM PAQUETE"; // Puedes cambiar a Productos si usas esa tabla
+        ObservableList<ComboItem> productos = FXCollections.observableArrayList();
+        String sql = "SELECT Id_Paquete, Descripcion FROM PAQUETE ORDER BY Descripcion";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            
             while (rs.next()) {
-                productos.add(rs.getString("Descripcion"));
+                productos.add(new ComboItem(rs.getInt("Id_Paquete"), rs.getString("Descripcion")));
             }
-            
             txtProducto.setItems(productos);
-            
         } catch (SQLException e) {
             System.err.println("Error al cargar productos: " + e.getMessage());
         }
@@ -87,10 +89,10 @@ public class FormAsignacionController {
     public void setAsignacion(Asignacion asig) {
         this.asignacionExistente = asig;
         if (asig != null) {
-            txtProducto.setValue(asig.getProducto());
+            txtProducto.setValue(findItemByIdOrLabel(txtProducto.getItems(), asig.getProductoId(), asig.getProducto()));
             cmbRuta.setText(asig.getRuta());
-            cmbCamion.setValue(asig.getCamion());
-            cmbConductor.setValue(asig.getConductor());
+            cmbCamion.setValue(findItemByIdOrLabel(cmbCamion.getItems(), asig.getCamionId(), asig.getCamion()));
+            cmbConductor.setValue(findItemByIdOrLabel(cmbConductor.getItems(), asig.getConductorId(), asig.getConductor()));
             cmbEstado.setValue(asig.getEstado());
         }
     }
@@ -98,26 +100,38 @@ public class FormAsignacionController {
     @FXML 
     private void guardar(ActionEvent event) {
         try {
-            if (txtProducto.getValue() == null || cmbCamion.getValue() == null || cmbConductor.getValue() == null || cmbRuta.getText().isEmpty()) {
+            ComboItem productoSeleccionado = txtProducto.getValue();
+            ComboItem camionSeleccionado = cmbCamion.getValue();
+            ComboItem conductorSeleccionado = cmbConductor.getValue();
+
+            if (productoSeleccionado == null || camionSeleccionado == null || conductorSeleccionado == null || cmbRuta.getText().isEmpty() || cmbEstado.getValue() == null) {
                 mostrarAlerta("Campos Incompletos", "Por favor, complete todos los campos de la asignación.");
                 return;
             }
 
             if (asignacionExistente == null) {
                 Asignacion nueva = new Asignacion(
-                    0,
-                    cmbCamion.getValue(),
-                    cmbConductor.getValue(),
+                    camionSeleccionado.getId(),
+                    conductorSeleccionado.getId(),
+                    productoSeleccionado.getId(),
+                    camionSeleccionado.getLabel(),
+                    conductorSeleccionado.getLabel(),
                     cmbRuta.getText(),
-                    txtProducto.getValue(), // Usa el valor seleccionado de la base de datos
+                    productoSeleccionado.getLabel(),
                     cmbEstado.getValue()
                 );
                 if (dao.insertar(nueva)) {
                     cerrarVentana(event);
+                } else {
+                    mostrarAlerta("Error", "No se pudo guardar la asignación.");
                 }
             } else {
-                asignacionExistente.setCamion(cmbCamion.getValue());
-                asignacionExistente.setConductor(cmbConductor.getValue());
+                asignacionExistente.setCamionId(camionSeleccionado.getId());
+                asignacionExistente.setConductorId(conductorSeleccionado.getId());
+                asignacionExistente.setProductoId(productoSeleccionado.getId());
+                asignacionExistente.setCamion(camionSeleccionado.getLabel());
+                asignacionExistente.setConductor(conductorSeleccionado.getLabel());
+                asignacionExistente.setProducto(productoSeleccionado.getLabel());
                 asignacionExistente.setRuta(cmbRuta.getText());
                 asignacionExistente.setEstado(cmbEstado.getValue());
 
@@ -129,7 +143,26 @@ public class FormAsignacionController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            mostrarAlerta("Error", "Ocurrió un error inesperado al guardar la asignación.");
         }
+    }
+
+    private ComboItem findItemByIdOrLabel(ObservableList<ComboItem> items, Integer id, String label) {
+        if (id != null) {
+            for (ComboItem item : items) {
+                if (id.equals(item.getId())) {
+                    return item;
+                }
+            }
+        }
+        if (label != null) {
+            for (ComboItem item : items) {
+                if (label.equals(item.getLabel())) {
+                    return item;
+                }
+            }
+        }
+        return null;
     }
 
     @FXML 

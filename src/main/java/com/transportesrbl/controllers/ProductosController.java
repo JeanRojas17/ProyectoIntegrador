@@ -42,9 +42,9 @@ public class ProductosController {
     @FXML
     public void initialize() {
         configurarTabla();
-        cargarDatos();
         configurarFiltros();
-        actualizarIndicadores();
+        configurarListeners();
+        cargarDatos();
     }
 
     private void configurarTabla() {
@@ -57,16 +57,63 @@ public class ProductosController {
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
     }
 
-    public void cargarDatos() {
-        listaProductos = FXCollections.observableArrayList(service.obtenerTodosLosProductos());
-        tblProductos.setItems(listaProductos);
-    }
-
     private void configurarFiltros() {
         if (cbEstado != null) {
-            cbEstado.setItems(FXCollections.observableArrayList("Seleccionar", "Entregado", "Pendiente"));
+            cbEstado.setItems(FXCollections.observableArrayList("Seleccionar", "Pendiente", "En reparto", "Entregado", "No entregado"));
             cbEstado.setValue("Seleccionar");
         }
+    }
+
+    private void configurarListeners() {
+        if (txtBuscar != null) {
+            txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> filtrarProductos());
+        }
+        if (txtProveedor != null) {
+            txtProveedor.textProperty().addListener((obs, oldValue, newValue) -> filtrarProductos());
+        }
+        if (txtCliente != null) {
+            txtCliente.textProperty().addListener((obs, oldValue, newValue) -> filtrarProductos());
+        }
+        if (cbEstado != null) {
+            cbEstado.setOnAction(e -> filtrarProductos());
+        }
+    }
+
+    public void cargarDatos() {
+        listaProductos = FXCollections.observableArrayList(service.obtenerTodosLosProductos());
+        filtrarProductos();
+    }
+
+    private void filtrarProductos() {
+        if (listaProductos == null) {
+            return;
+        }
+
+        String busqueda = txtBuscar != null && txtBuscar.getText() != null ? txtBuscar.getText().trim().toLowerCase() : "";
+        String proveedor = txtProveedor != null && txtProveedor.getText() != null ? txtProveedor.getText().trim().toLowerCase() : "";
+        String cliente = txtCliente != null && txtCliente.getText() != null ? txtCliente.getText().trim().toLowerCase() : "";
+        String estado = cbEstado != null && cbEstado.getValue() != null ? cbEstado.getValue() : "Seleccionar";
+        boolean filtrarEstado = !"Seleccionar".equalsIgnoreCase(estado);
+
+        ObservableList<Producto> filtrados = FXCollections.observableArrayList();
+        for (Producto p : listaProductos) {
+            String nombre = p.getNombreProducto() != null ? p.getNombreProducto().toLowerCase() : "";
+            String prov = p.getProveedor() != null ? p.getProveedor().toLowerCase() : "";
+            String cli = p.getCliente() != null ? p.getCliente().toLowerCase() : "";
+            String est = p.getEstado() != null ? p.getEstado().toLowerCase() : "";
+
+            boolean coincideBusqueda = busqueda.isEmpty() || nombre.contains(busqueda);
+            boolean coincideProveedor = proveedor.isEmpty() || prov.contains(proveedor);
+            boolean coincideCliente = cliente.isEmpty() || cli.contains(cliente);
+            boolean coincideEstado = !filtrarEstado || est.equalsIgnoreCase(estado);
+
+            if (coincideBusqueda && coincideProveedor && coincideCliente && coincideEstado) {
+                filtrados.add(p);
+            }
+        }
+
+        tblProductos.setItems(filtrados);
+        actualizarIndicadores();
     }
 
     @FXML
@@ -101,7 +148,6 @@ public class ProductosController {
             stage.showAndWait(); 
             
             cargarDatos();
-            actualizarIndicadores();
         } catch (IOException e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo cargar el formulario.", Alert.AlertType.ERROR);
@@ -119,7 +165,6 @@ public class ProductosController {
         boolean eliminado = service.eliminarProducto(seleccionado.getIdProducto());
         if (eliminado) {
             cargarDatos();
-            actualizarIndicadores();
         } else {
             mostrarAlerta("Error", "No se pudo eliminar el producto.", Alert.AlertType.ERROR);
         }
@@ -131,23 +176,22 @@ public class ProductosController {
         if (txtProveedor != null) txtProveedor.clear();
         if (txtCliente != null) txtCliente.clear();
         if (cbEstado != null) cbEstado.setValue("Seleccionar");
-        
-        cargarDatos();
-        actualizarIndicadores();
+        filtrarProductos();
     }
 
    private void actualizarIndicadores() {
-        if (listaProductos == null) {
+        ObservableList<Producto> elementos = tblProductos != null ? tblProductos.getItems() : listaProductos;
+        if (elementos == null) {
             return;
         }
 
-        lblTotalProductos.setText(String.valueOf(listaProductos.size()));
+        lblTotalProductos.setText(String.valueOf(elementos.size()));
 
         int entregados = 0;
         int pendientes = 0;
         double volumenTotal = 0.0;
 
-        for (Producto p : listaProductos) {
+        for (Producto p : elementos) {
             volumenTotal += p.getVolumen();
             String estado = p.getEstado();
 

@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -28,18 +29,18 @@ public class LoginController {
         String user = txtUsuario.getText();
         String pass = txtContrasena.getText();
 
-        // Validamos contra la base de datos de Neon
+        if (user == null || user.isBlank() || pass == null || pass.isBlank()) {
+            mostrarAlerta("Datos incompletos", "Por favor, ingresa usuario y contraseña.", Alert.AlertType.WARNING);
+            return;
+        }
+
         Usuario usuario = authService.login(user, pass);
 
         if (usuario != null) {
-            System.out.println("Bienvenido: " + usuario.getNombre());
-
             com.transportesrbl.models.SesionUsuario.getInstancia().setUsuarioActivo(usuario);
-            
             mostrarDashboard(event);
         } else {
-            System.out.println("Error: Usuario o contraseña incorrectos en Neon DB.");
-            // Opcional: Mostrar una alerta en pantalla
+            mostrarAlerta("Inicio de sesión fallido", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
         }
     }
 
@@ -67,5 +68,13 @@ public class LoginController {
             System.err.println("Error al cargar el Dashboard: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
     }
 }

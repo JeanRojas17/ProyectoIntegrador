@@ -1,18 +1,26 @@
 package com.transportesrbl.controllers;
 
 import com.transportesrbl.dao.ProductoDAO;
+import com.transportesrbl.models.ComboItem;
 import com.transportesrbl.models.Producto;
+import com.transportesrbl.config.DatabaseConnection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class FormProductoController {
 
     @FXML private TextField txtNombre;
     @FXML private TextField txtVolumen;
     @FXML private Spinner<Integer> spnCantidad;
+    @FXML private ComboBox<ComboItem> cbCliente;
     @FXML private ComboBox<String> cbEstado;
     @FXML private ComboBox<String> cbDestino;
 
@@ -25,9 +33,10 @@ public class FormProductoController {
         spnCantidad.setValueFactory(valueFactory);
 
         cbEstado.setItems(FXCollections.observableArrayList(
-            "Disponible", 
-            "En Tránsito", 
-            "Agotado"
+            "Pendiente",
+            "En reparto",
+            "Entregado",
+            "No entregado"
         ));
 
         // Lista de destinos coherentes
@@ -38,6 +47,8 @@ public class FormProductoController {
             "Barranquilla - Puerto",
             "Pereira - Centro Logístico"
         ));
+
+        cargarClientesDisponibles();
     }
 
     public void setProducto(Producto producto) {
@@ -48,6 +59,7 @@ public class FormProductoController {
             spnCantidad.getValueFactory().setValue(producto.getCantidad());
             cbEstado.setValue(producto.getEstado());
             cbDestino.setValue(producto.getDestino());
+            cbCliente.setValue(findItemByIdOrLabel(cbCliente.getItems(), producto.getClienteId(), producto.getCliente()));
         }
     }
 
@@ -67,14 +79,43 @@ public class FormProductoController {
             int cantidad = spnCantidad.getValue();
             String estado = cbEstado.getValue();
             String destino = cbDestino.getValue();
+            ComboItem clienteSeleccionado = cbCliente.getValue();
             double volumenTotal = volumenUnitario * cantidad;
+
+            if (clienteSeleccionado == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Por favor, selecciona un cliente.");
+                alert.showAndWait();
+                return;
+            }
 
             boolean exito;
             if (productoExistente == null) {
-                Producto nuevoProducto = new Producto(nombre, volumenUnitario, cantidad, volumenTotal, estado, destino);
+                Producto nuevoProducto = new Producto(
+                    -1,
+                    clienteSeleccionado.getId(),
+                    nombre,
+                    "Sin Proveedor",
+                    clienteSeleccionado.getLabel(),
+                    volumenUnitario,
+                    cantidad,
+                    volumenTotal,
+                    estado,
+                    destino
+                );
                 exito = productoDAO.insertar(nuevoProducto);
             } else {
-                Producto actualizado = new Producto(productoExistente.getIdProducto(), nombre, volumenUnitario, cantidad, volumenTotal, estado, destino);
+                Producto actualizado = new Producto(
+                    productoExistente.getIdProducto(),
+                    clienteSeleccionado.getId(),
+                    nombre,
+                    "Sin Proveedor",
+                    clienteSeleccionado.getLabel(),
+                    volumenUnitario,
+                    cantidad,
+                    volumenTotal,
+                    estado,
+                    destino
+                );
                 exito = productoDAO.actualizar(actualizado);
             }
 
@@ -92,6 +133,36 @@ public class FormProductoController {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Revise que los campos numéricos sean válidos.");
             alert.showAndWait();
         }
+    }
+
+    private void cargarClientesDisponibles() {
+        ObservableList<ComboItem> clientes = FXCollections.observableArrayList();
+        String sql = "SELECT Id_Cliente, Nombre_Empresa FROM CLIENTE ORDER BY Nombre_Empresa";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                clientes.add(new ComboItem(rs.getInt("Id_Cliente"), rs.getString("Nombre_Empresa")));
+            }
+            cbCliente.setItems(clientes);
+        } catch (SQLException e) {
+            System.err.println("Error al cargar clientes: " + e.getMessage());
+        }
+    }
+
+    private ComboItem findItemByIdOrLabel(ObservableList<ComboItem> items, int id, String label) {
+        for (ComboItem item : items) {
+            if (item.getId() == id) {
+                return item;
+            }
+        }
+        for (ComboItem item : items) {
+            if (label != null && label.equals(item.getLabel())) {
+                return item;
+            }
+        }
+        return null;
     }
 
     @FXML

@@ -34,11 +34,14 @@
         <Label text="Cantidad:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
         <Spinner fx:id="spnCantidad" editable="true" maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-        <Label text="Estado:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="cbEstado" promptText="Seleccionar Estado" maxWidth="Infinity" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="Cliente:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cbCliente" promptText="Seleccionar Cliente" maxWidth="Infinity" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-        <Label text="Destino:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="cbDestino" promptText="Seleccionar Destino" maxWidth="Infinity" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label text="Estado:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cbEstado" promptText="Seleccionar Estado" maxWidth="Infinity" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <Label text="Destino:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cbDestino" promptText="Seleccionar Destino" maxWidth="Infinity" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
     </GridPane>
     
     <HBox spacing="15" alignment="CENTER_RIGHT">
