@@ -35,8 +35,8 @@
                     <Button text="PRODUCTOS" onAction="#MostrarSeccionProductos" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="CAMIONES" onAction="#mostrarSeccionCamiones" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="RUTAS" styleClass="menu-button" maxWidth="Infinity"/>
-                    <Button text="PERSONAL" styleClass="menu-button" maxWidth="Infinity"/>
-                    <Button text="REPORTES" styleClass="menu-button" maxWidth="Infinity"/>
+                    <Button text="PERSONAL" onAction="#mostrarSeccionPersonal" styleClass="menu-button" maxWidth="Infinity"/>
+                    <Button text="REPORTES" onAction="#mostrarSeccionReportes" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="CONFIGURACION" styleClass="menu-button" maxWidth="Infinity"/>
                 </VBox>
 

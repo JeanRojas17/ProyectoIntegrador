@@ -152,6 +152,38 @@ public class DashboardController {
     }
 
     @FXML
+    private void mostrarSeccionPersonal(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/personal.fxml"));
+            ScrollPane personalView = loader.load();
+
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(personalView);
+
+            System.out.println(">>> Sección de Personal cargada en el contentArea.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar la sección de personal: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void mostrarSeccionReportes(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/reportes.fxml"));
+            ScrollPane reportesView = loader.load();
+
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(reportesView);
+
+            System.out.println(">>> Sección de Reportes cargada en el contentArea.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar la sección de reportes: " + e.getMessage());
+        }
+    }
+
+    @FXML
     private void handleNuevaAsignacion(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/form_asignacion.fxml"));

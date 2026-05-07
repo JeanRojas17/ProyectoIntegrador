@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" styleClass="form-container" stylesheets="@../css/estilos_formulario.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.FormPersonalController">
+    <padding>
+        <Insets bottom="30" left="30" right="30" top="30" />
+    </padding>
+    
+    <Label fx:id="lblTitulo" styleClass="label-titulo" text="REGISTRO DE PERSONAL" />
+    
+    <GridPane hgap="15" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="150" />
+            <ColumnConstraints prefWidth="250" />
+        </columnConstraints>
+        
+        <Label text="Nombre Completo:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="txtNombre" promptText="Ej: Juan Pérez" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        
+        <Label text="Tipo de Personal:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <ComboBox fx:id="cbTipo" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        
+        <Label text="Identificación (CC):" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <TextField fx:id="txtIdentificacion" promptText="Número de documento" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        
+        <Label text="Teléfono:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <TextField fx:id="txtTelefono" promptText="Ej: 3001234567" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        
+        <Label text="Correo Electrónico:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <TextField fx:id="txtCorreo" promptText="ejemplo@correo.com" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        
+        <Label text="Estado:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <ComboBox fx:id="cbEstado" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        
+        <!-- Campos dinámicos -->
+        <Label fx:id="lblDinamico" text="Licencia:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <TextField fx:id="txtDinamico" promptText="Categoría o Especialidad" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
+    </GridPane>
+    
+    <HBox alignment="CENTER_RIGHT" spacing="15">
+        <Button onAction="#handleCancelar" prefWidth="100" styleClass="button-cancelar" text="CANCELAR" />
+        <Button onAction="#handleGuardar" prefWidth="100" styleClass="button-guardar" text="GUARDAR" />
+    </HBox>
+</VBox>

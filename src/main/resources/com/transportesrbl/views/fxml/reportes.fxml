@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="main-container" stylesheets="@../css/reportes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.ReportesController">
+    <content>
+        <VBox spacing="20">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label styleClass="section-title" text="MODULO DE REPORTES" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleExportarPDF" styleClass="btn-export-secondary" text="Excel PDF" />
+                <Button onAction="#handleExportarExcel" styleClass="btn-export-primary" text="Exportar Excel" />
+            </HBox>
+
+            <VBox styleClass="report-card">
+                <Label styleClass="card-title" text="Entregas por semana" />
+                <BarChart fx:id="barChartEntregas" legendVisible="false" prefHeight="250">
+                    <xAxis>
+                        <CategoryAxis label="Semanas" side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Cantidad" side="LEFT" />
+                    </yAxis>
+                </BarChart>
+            </VBox>
+
+            <HBox alignment="BOTTOM_LEFT" styleClass="search-container">
+                <VBox styleClass="filter-group">
+                    <Label styleClass="filter-label" text="Fecha Inicio" />
+                    <DatePicker prefWidth="180" />
+                </VBox>
+                <VBox styleClass="filter-group">
+                    <Label styleClass="filter-label" text="Fecha Fin" />
+                    <DatePicker prefWidth="180" />
+                </VBox>
+                <VBox styleClass="filter-group">
+                    <Label styleClass="filter-label" text="Camión" />
+                    <ComboBox prefWidth="200" promptText="Seleccionar Camión" />
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleBusqueda" styleClass="btn-search" text="Busqueda" />
+            </HBox>
+
+            <GridPane hgap="20" vgap="15">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+                </columnConstraints>
+                
+                <VBox styleClass="mini-metric" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label styleClass="metric-text" text="Total Entregas" />
+                    <Label fx:id="lblTotalEntregas" style="-fx-font-size: 24; -fx-font-weight: bold;" text="0" />
+                </VBox>
+                <VBox styleClass="mini-metric" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Label styleClass="metric-text" text="Tasa de exito" />
+                    <Label fx:id="lblTasaExito" style="-fx-font-size: 24; -fx-font-weight: bold;" text="0%" />
+                </VBox>
+                <VBox styleClass="mini-metric" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <Label styleClass="metric-text" text="Tiempo Promedio" />
+                    <Label fx:id="lblTiempoPromedio" style="-fx-font-size: 24; -fx-font-weight: bold;" text="0 hrs" />
+                </VBox>
+                <VBox styleClass="mini-metric" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <Label styleClass="metric-text" text="Volumen total" />
+                    <Label fx:id="lblVolumenTotal" style="-fx-font-size: 24; -fx-font-weight: bold;" text="0 kg" />
+                </VBox>
+            </GridPane>
+
+            <VBox styleClass="report-card" spacing="10">
+                <HBox alignment="CENTER_LEFT">
+                    <Label styleClass="card-title" text="Detalles de entregas - Octubre 2025" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-cursor: hand;" text="Descargar" />
+                </HBox>
+                <TableView fx:id="tblDetallesReporte" prefHeight="200">
+                    <columns>
+                        <TableColumn fx:id="colFecha" prefWidth="100" text="Fecha" />
+                        <TableColumn fx:id="colCamion" prefWidth="120" text="Camión" />
+                        <TableColumn fx:id="colRuta" prefWidth="120" text="Ruta" />
+                        <TableColumn fx:id="colProducto" prefWidth="150" text="Producto" />
+                        <TableColumn fx:id="colVolumen" prefWidth="100" text="Volumen" />
+                        <TableColumn fx:id="colTiempo" prefWidth="100" text="Tiempo" />
+                        <TableColumn fx:id="colEstado" prefWidth="100" text="Estado" />
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>

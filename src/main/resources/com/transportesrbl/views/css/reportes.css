@@ -1,0 +1,90 @@
+/* reportes.css */
+.main-container {
+    -fx-background-color: #f8fafc;
+    -fx-padding: 25;
+}
+
+.section-title {
+    -fx-font-size: 26px;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: #1e293b;
+}
+
+/* Botones de Exportación Superior */
+.btn-export-secondary {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+}
+
+.btn-export-primary {
+    -fx-background-color: #1e293b;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+/* Contenedores de Gráficos y Tablas */
+.report-card {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 20;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #475569;
+}
+
+/* Barra de Búsqueda/Filtros */
+.search-container {
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-border-color: #e2e8f0;
+    -fx-spacing: 15;
+}
+
+.filter-group {
+    -fx-spacing: 5;
+}
+
+.filter-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: bold;
+}
+
+.btn-search {
+    -fx-background-color: white;
+    -fx-border-color: #1e293b;
+    -fx-text-fill: #1e293b;
+    -fx-font-weight: bold;
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+}
+
+/* Mini Tarjetas de Métricas */
+.mini-metric {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 5;
+    -fx-padding: 15;
+    -fx-pref-width: 400;
+}
+
+.metric-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+/* Estilo para el Gráfico */
+.chart-bar {
+    -fx-bar-fill: #3b82f6;
+}

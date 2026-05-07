@@ -1,0 +1,159 @@
+/* personal.css */
+.main-container {
+    -fx-background-color: #fafbfc;
+    -fx-padding: 25;
+    -fx-spacing: 20;
+}
+
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+
+/* Botón Nuevo */
+.btn-new {
+    -fx-background-color: #1a252f;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 8 18;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-new:hover {
+    -fx-background-color: #34495e;
+}
+
+/* Tarjetas de Métricas (Superiores) */
+.metric-card {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 15;
+    -fx-pref-width: 260px;
+    -fx-pref-height: 85px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 5, 0, 0, 2);
+}
+
+.metric-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+    -fx-font-family: "Segoe UI";
+    -fx-font-weight: bold;
+}
+
+.metric-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+/* Barra de Filtros */
+.filter-container {
+    -fx-spacing: 15;
+    -fx-alignment: center-left;
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.filter-field, .filter-combo {
+    -fx-pref-height: 34px;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 4;
+}
+
+.btn-clear {
+    -fx-background-color: #cbd5e1;
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-clear:hover {
+    -fx-background-color: #94a3b8;
+}
+
+/* Tarjetas de Contenido (Grilla) */
+.card-item {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-pref-width: 320px;
+    -fx-pref-height: 230px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 4, 0, 0, 2);
+}
+
+.card-header {
+    -fx-background-color: #f8fafc;
+    -fx-padding: 15;
+    -fx-alignment: center;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+}
+
+.card-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+}
+
+.card-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+}
+
+.card-body {
+    -fx-padding: 15;
+    -fx-spacing: 6;
+}
+
+.info-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+}
+
+.info-value {
+    -fx-font-size: 12px;
+    -fx-text-fill: #0f172a;
+}
+
+/* Botones de acción en tarjetas */
+.card-actions {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+    -fx-padding: 10 0 0 0;
+}
+
+.btn-edit-card {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 12;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-delete-card {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 12;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-edit-card:hover { -fx-background-color: #2563eb; }
+.btn-delete-card:hover { -fx-background-color: #dc2626; }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: #fafbfc;" stylesheets="@../css/personal.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.PersonalController">
+    <content>
+        <VBox styleClass="main-container">
+            
+            <HBox alignment="CENTER_LEFT">
+                <Label styleClass="section-title" text="GESTIÓN DE PERSONAL" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleNuevo" styleClass="btn-new" text="+ NUEVO PERSONAL" />
+            </HBox>
+
+            <HBox spacing="15">
+                <VBox styleClass="metric-card">
+                    <Label styleClass="metric-label" text="TOTAL PERSONAL" />
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Label fx:id="lblTotalPersonal" styleClass="metric-value" text="0" />
+                </VBox>
+                <VBox styleClass="metric-card">
+                    <Label styleClass="metric-label" text="CONDUCTORES" />
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Label fx:id="lblTotalConductores" styleClass="metric-value" text="0" />
+                </VBox>
+                <VBox styleClass="metric-card">
+                    <Label styleClass="metric-label" text="AUXILIARES" />
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Label fx:id="lblTotalAuxiliares" styleClass="metric-value" text="0" />
+                </VBox>
+                <VBox styleClass="metric-card">
+                    <Label styleClass="metric-label" text="ACTIVOS" />
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Label fx:id="lblActivos" styleClass="metric-value" text="0" />
+                </VBox>
+            </HBox>
+
+            <HBox styleClass="filter-container">
+                <VBox spacing="4">
+                    <Label style="-fx-font-size: 10px; -fx-text-fill: #64748b;" text="BUSCAR" />
+                    <TextField fx:id="txtBuscar" prefWidth="180" promptText="Buscar..." styleClass="filter-field" />
+                </VBox>
+                <VBox spacing="4">
+                    <Label style="-fx-font-size: 10px; -fx-text-fill: #64748b;" text="ESTADO" />
+                    <ComboBox fx:id="cbEstado" prefWidth="140" promptText="Seleccionar" styleClass="filter-combo" />
+                </VBox>
+                <VBox spacing="4">
+                    <Label style="-fx-font-size: 10px; -fx-text-fill: #64748b;" text="TIPO" />
+                    <ComboBox fx:id="cbTipo" prefWidth="160" promptText="Seleccionar" styleClass="filter-combo" />
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <VBox alignment="BOTTOM_RIGHT">
+                    <Button onAction="#handleLimpiar" styleClass="btn-clear" text="LIMPIAR" />
+                </VBox>
+            </HBox>
+
+            <FlowPane fx:id="flowPersonal" hgap="20" vgap="20">
+                <!-- Se poblará dinámicamente -->
+            </FlowPane>
+
+        </VBox>
+    </content>
+</ScrollPane>
