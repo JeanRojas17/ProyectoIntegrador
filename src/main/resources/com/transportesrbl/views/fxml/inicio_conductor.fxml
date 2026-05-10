@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" styleClass="main-scroll" stylesheets="@../css/conductor_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.InicioConductorController">
+    <VBox styleClass="main-container" spacing="25">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+        
+        <HBox alignment="CENTER_LEFT">
+            <VBox>
+                <Label fx:id="lblSaludo" text="BIENVENIDO, CARLOS" styleClass="section-title" />
+                <Label fx:id="lblFecha" text="Sábado, 9 de mayo de 2026" styleClass="date-text" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox styleClass="status-pill-container">
+                <Label text="ESTADO: EN RUTA" styleClass="status-pill-text" />
+            </HBox>
+        </HBox>
+
+        <VBox styleClass="hero-card">
+            <Label text="ENTREGA EN CURSO" styleClass="hero-label" />
+            <Label fx:id="lblProducto" text="ELECTRODOMESTICOS — NEVERAS LG 21FT" styleClass="hero-main-title" />
+            <Label fx:id="lblDireccion" text="CRA. 15 #72-44, BOGOTA D.C. — BODEGA CENTRAL NORTE" styleClass="hero-subtitle" />
+            
+            <HBox spacing="50" style="-fx-padding: 15 0;">
+                <VBox>
+                    <Label text="VOLUMEN" styleClass="stat-label" />
+                    <Label fx:id="lblVolumen" text="4.8 m³" styleClass="stat-value" />
+                </VBox>
+                <VBox>
+                    <Label text="PESO" styleClass="stat-label" />
+                    <Label fx:id="lblPeso" text="320 KG" styleClass="stat-value" />
+                </VBox>
+                <VBox>
+                    <Label text="CLIENTE" styleClass="stat-label" />
+                    <Label fx:id="lblCliente" text="ALKOSTO S.A." styleClass="stat-value" />
+                </VBox>
+            </HBox>
+            
+            <Button onAction="#handleFinalizarEntrega" text="FINALIZAR ENTREGA" styleClass="btn-action-primary" />
+        </VBox>
+
+        <HBox spacing="20">
+            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS">
+                <Label text="PROGRESO DE JORNADA" styleClass="card-inner-title" />
+                <HBox alignment="BASELINE_LEFT" spacing="5">
+                    <Label fx:id="lblEntregasCompletadas" text="4" styleClass="metric-big-number" />
+                    <Label fx:id="lblTotalEntregas" text="/ 6" styleClass="metric-sub-number" />
+                </HBox>
+                <ProgressBar fx:id="progressJornada" progress="0.66" maxWidth="Infinity" prefHeight="10" />
+                <Label fx:id="lblPendientes" text="2 entregas pendientes para finalizar" styleClass="metric-footer" />
+            </VBox>
+            
+            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS">
+                <Label text="VEHICULO ASIGNADO" styleClass="card-inner-title" />
+                <Label fx:id="lblPlaca" text="PLACA: JHK 342" styleClass="metric-mid-number" />
+                <Label fx:id="lblModeloVehiculo" text="FREIGHTLINER CASCADIA 2022" styleClass="metric-footer" />
+                <Separator />
+                <Label fx:id="lblEstadoVehiculo" text="ESTADO: OPERATIVO" styleClass="status-tag-green" />
+            </VBox>
+        </HBox>
+    </VBox>
+</ScrollPane>

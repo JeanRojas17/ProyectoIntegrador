@@ -125,25 +125,34 @@ CREATE TABLE HISTORIAL_ESTADOS (
 INSERT INTO rol (nombre_rol) VALUES 
 ('Administrador'),
 ('Operador'),
-('Supervisor');
+('Supervisor'),
+('Conductor');
 
 
 INSERT INTO usuario (nombre, usuario, contrasena, id_rol) VALUES 
 ('Jean Paul', 'JeanPaulRojas', 'Jean123', 2),
 ('Daniel Sundar', 'DanielSundarBonilla', 'Daniel123', 1),
-('Michel Stiven', 'MichelStivenDowglas', 'Michel123', 3);
+('Michel Stiven', 'MichelStivenDowglas', 'Michel123', 3),
+('Carlos Arango', 'carango', '123456', 4),
+('Edward Gomez', 'egomez', '123456', 4),
+('Carlos Mendoza', 'cmendoza', '123456', 4);
+
+-- Actualizar la tabla CONDUCTORES para vincularla con un usuario
+ALTER TABLE CONDUCTORES ADD COLUMN id_usuario INT;
+ALTER TABLE CONDUCTORES ADD CONSTRAINT fk_conductor_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario);
 
 INSERT INTO CLIENTE (Nombre_Empresa, Contacto) VALUES  
 ('Haceb', 'Juan Valdez'),
 ('Ajover Darnel', 'Maria Lopez'),
 ('Postobon', 'Carlos Vives'),
 ('Tecnoquímicas', 'Ana María Rojas'),
-('Alquería', 'Pedro Páramo');
+('Alquería', 'Pedro Páramo'),
+('Alkosto S.A.', 'Gerente Regional');
 
-INSERT INTO CONDUCTORES (nombre_completo, licencia, telefono, estado) VALUES  
-('Stiven Ramirez', 'LIC-001', '3001234567', 'Activo'),
-('Edward Gomez', 'LIC-002', '3007654321', 'Activo'),
-('Carlos Mendoza', 'LIC-003', '3109876543', 'Activo');
+INSERT INTO CONDUCTORES (nombre_completo, licencia, telefono, estado, id_usuario) VALUES  
+('Carlos Arango', 'LIC-001', '3001234567', 'Activo', 4),
+('Edward Gomez', 'LIC-002', '3007654321', 'Activo', 5),
+('Carlos Mendoza', 'LIC-003', '3109876543', 'Activo', 6);
 
 -- Se asume el id de usuario correspondiente creado previamente
 INSERT INTO AUXILIAR (Id_Usuario, Estado, Especialidad) VALUES 

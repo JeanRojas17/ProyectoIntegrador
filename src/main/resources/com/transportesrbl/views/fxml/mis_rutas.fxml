@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" styleClass="main-scroll" stylesheets="@../css/mis_rutas_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.MisRutasController">
+    <VBox styleClass="main-container" spacing="20">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+        
+        <VBox spacing="5">
+            <Label text="ESTADO DE RUTA DIARIA" styleClass="section-title" />
+            <Label fx:id="lblFecha" text="Sabado, 9 de mayo de 2026" styleClass="date-text" />
+        </VBox>
+
+        <HBox spacing="15">
+            <VBox styleClass="mini-stat-card" HBox.hgrow="ALWAYS">
+                <Label fx:id="lblCompletadas" text="0" styleClass="stat-number" />
+                <Label text="COMPLETADAS" styleClass="stat-desc" />
+            </VBox>
+            <VBox styleClass="mini-stat-card-active" HBox.hgrow="ALWAYS">
+                <Label fx:id="lblEnProgreso" text="0" styleClass="stat-number-active" />
+                <Label text="EN PROGRESO" styleClass="stat-desc-active" />
+            </VBox>
+            <VBox styleClass="mini-stat-card" HBox.hgrow="ALWAYS">
+                <Label fx:id="lblPendientes" text="0" styleClass="stat-number" />
+                <Label text="PENDIENTES" styleClass="stat-desc" />
+            </VBox>
+        </HBox>
+
+        <VBox fx:id="vboxRutas" spacing="0" styleClass="timeline-container">
+            <!-- Las rutas se cargarán dinámicamente aquí -->
+        </VBox>
+    </VBox>
+</ScrollPane>

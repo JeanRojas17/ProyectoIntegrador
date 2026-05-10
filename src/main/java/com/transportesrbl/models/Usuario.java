@@ -41,6 +41,7 @@ public class Usuario {
             case 1: return "Administrador";
             case 2: return "Operador";
             case 3: return "Supervisor";
+            case 4: return "Conductor";
             default: return "Desconocido";
         }
     }

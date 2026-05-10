@@ -48,13 +48,22 @@ public class LoginController {
 
     private void mostrarDashboard(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/dashboard.fxml"));
+            Usuario usuario = com.transportesrbl.models.SesionUsuario.getInstancia().getUsuarioActivo();
+            String fxmlPath = "/com/transportesrbl/views/fxml/dashboard.fxml";
+            String title = "Transportes RBL - Dashboard";
+
+            if ("Conductor".equals(usuario.getRol())) {
+                fxmlPath = "/com/transportesrbl/views/fxml/dashboard_conductor.fxml";
+                title = "Transportes RBL - Dashboard Conductor";
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             stage.setScene(new Scene(root));
-            stage.setTitle("Transportes RBL - Dashboard");
+            stage.setTitle(title);
 
             stage.setResizable(true);
             stage.setMinWidth(1000);

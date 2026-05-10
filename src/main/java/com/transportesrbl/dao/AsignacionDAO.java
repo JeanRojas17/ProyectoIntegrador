@@ -16,13 +16,13 @@ public class AsignacionDAO {
 
     public List<Asignacion> listar() {
         List<Asignacion> lista = new ArrayList<>();
-        String sql = "SELECT ap.Id_Asignacion_Paquete, a.Id_Asignacion, a.Id_Camion, c.id_conductor, ap.Id_Paquete, " +
+        String sql = "SELECT ap.Id_Asignacion_Paquete, a.Id_Asignacion, a.Id_Camion, a.Id_Conductor, ap.Id_Paquete, " +
                      "c.modelo_camion, con.nombre_completo, ap.Dir_Entrega, p.descripcion, " +
                      "COALESCE(h.estado, 'Pendiente') AS estado " +
                      "FROM ASIGNACION_PAQUETE ap " +
                      "JOIN ASIGNACION a ON ap.Id_Asignacion = a.Id_Asignacion " +
                      "JOIN CAMIONES c ON a.Id_Camion = c.id_camion " +
-                     "LEFT JOIN CONDUCTORES con ON c.id_conductor = con.id_conductor " +
+                     "LEFT JOIN CONDUCTORES con ON a.Id_Conductor = con.id_conductor " +
                      "JOIN PAQUETE p ON ap.Id_Paquete = p.Id_Paquete " +
                      "LEFT JOIN ( " +
                      "  SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, estado " +
@@ -34,7 +34,7 @@ public class AsignacionDAO {
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Integer conductorId = rs.getObject("id_conductor") != null ? rs.getInt("id_conductor") : null;
+                Integer conductorId = rs.getObject("Id_Conductor") != null ? rs.getInt("Id_Conductor") : null;
                 lista.add(new Asignacion(
                     rs.getInt("Id_Asignacion_Paquete"),
                     rs.getInt("Id_Asignacion"),
@@ -58,10 +58,9 @@ public class AsignacionDAO {
         String sqlGetCamion = "SELECT id_camion FROM CAMIONES WHERE modelo_camion = ? LIMIT 1";
         String sqlGetPaquete = "SELECT Id_Paquete FROM PAQUETE WHERE Descripcion = ? LIMIT 1";
         String sqlGetConductor = "SELECT id_conductor FROM CONDUCTORES WHERE nombre_completo = ? LIMIT 1";
-        String sqlInsertAsig = "INSERT INTO ASIGNACION (Id_Camion) VALUES (?) RETURNING Id_Asignacion";
+        String sqlInsertAsig = "INSERT INTO ASIGNACION (Id_Camion, Id_Conductor) VALUES (?, ?) RETURNING Id_Asignacion";
         String sqlInsertAsigPaq = "INSERT INTO ASIGNACION_PAQUETE (Id_Asignacion, Id_Paquete, Dir_Entrega, Cantidad) VALUES (?, ?, ?, 1)";
         String sqlInsertHistorial = "INSERT INTO HISTORIAL_ESTADOS (Id_Asig_Paq, Estado, Observacion) VALUES (?, ?, ?)";
-        String sqlUpdateCamionConductor = "UPDATE CAMIONES SET id_conductor = ? WHERE id_camion = ?";
 
         try (Connection conn = DatabaseConnection.getConnection()) {
             if (conn == null) return false;
@@ -106,6 +105,11 @@ public class AsignacionDAO {
                 int idAsignacion = -1;
                 try (PreparedStatement ps = conn.prepareStatement(sqlInsertAsig)) {
                     ps.setInt(1, idCamion);
+                    if (idConductor != null) {
+                        ps.setInt(2, idConductor);
+                    } else {
+                        ps.setNull(2, java.sql.Types.INTEGER);
+                    }
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) idAsignacion = rs.getInt("Id_Asignacion");
                     }
@@ -119,14 +123,6 @@ public class AsignacionDAO {
                     ps.executeUpdate();
                     try (ResultSet rs = ps.getGeneratedKeys()) {
                         if (rs.next()) idAsigPaq = rs.getInt(1);
-                    }
-                }
-
-                if (idConductor != null) {
-                    try (PreparedStatement ps = conn.prepareStatement(sqlUpdateCamionConductor)) {
-                        ps.setInt(1, idConductor);
-                        ps.setInt(2, idCamion);
-                        ps.executeUpdate();
                     }
                 }
 
@@ -153,9 +149,8 @@ public class AsignacionDAO {
     }
 
     public boolean actualizar(Asignacion asig) {
-        String sqlUpdateAsignacion = "UPDATE ASIGNACION SET Id_Camion = ? WHERE Id_Asignacion = ?";
+        String sqlUpdateAsignacion = "UPDATE ASIGNACION SET Id_Camion = ?, Id_Conductor = ? WHERE Id_Asignacion = ?";
         String sqlUpdateAsignacionPaq = "UPDATE ASIGNACION_PAQUETE SET Id_Paquete = ?, Dir_Entrega = ? WHERE Id_Asignacion_Paquete = ?";
-        String sqlUpdateCamionConductor = "UPDATE CAMIONES SET id_conductor = ? WHERE id_camion = ?";
         String sqlHistorial = "INSERT INTO HISTORIAL_ESTADOS (Id_Asig_Paq, Estado, Observacion) VALUES (?, ?, ?)";
         
         try (Connection conn = DatabaseConnection.getConnection()) {
@@ -171,10 +166,15 @@ public class AsignacionDAO {
                 } else {
                     psAsignacion.setNull(1, java.sql.Types.INTEGER);
                 }
+                if (asig.getConductorId() != null) {
+                    psAsignacion.setInt(2, asig.getConductorId());
+                } else {
+                    psAsignacion.setNull(2, java.sql.Types.INTEGER);
+                }
                 if (asig.getAsignacionId() == null) {
                     throw new SQLException("No se pudo determinar el ID de la asignación padre para actualizar.");
                 }
-                psAsignacion.setInt(2, asig.getAsignacionId());
+                psAsignacion.setInt(3, asig.getAsignacionId());
                 psAsignacion.executeUpdate();
 
                 if (asig.getProductoId() != null) {
@@ -185,14 +185,6 @@ public class AsignacionDAO {
                 psAsigPaq.setString(2, asig.getRuta());
                 psAsigPaq.setInt(3, asig.getId());
                 psAsigPaq.executeUpdate();
-
-                if (asig.getConductorId() != null && asig.getCamionId() != null) {
-                    try (PreparedStatement psCamion = conn.prepareStatement(sqlUpdateCamionConductor)) {
-                        psCamion.setInt(1, asig.getConductorId());
-                        psCamion.setInt(2, asig.getCamionId());
-                        psCamion.executeUpdate();
-                    }
-                }
 
                 psHistorial.setInt(1, asig.getId());
                 psHistorial.setString(2, asig.getEstado());
@@ -263,15 +255,58 @@ public class AsignacionDAO {
         }
     }
 
+    public List<Asignacion> listarPorConductor(int idConductor) {
+        List<Asignacion> lista = new ArrayList<>();
+        String sql = "SELECT ap.Id_Asignacion_Paquete, a.Id_Asignacion, a.Id_Camion, a.Id_Conductor, ap.Id_Paquete, " +
+                     "c.modelo_camion, con.nombre_completo, ap.Dir_Entrega, p.descripcion, " +
+                     "COALESCE(h.estado, 'Pendiente') AS estado " +
+                     "FROM ASIGNACION_PAQUETE ap " +
+                     "JOIN ASIGNACION a ON ap.Id_Asignacion = a.Id_Asignacion " +
+                     "JOIN CAMIONES c ON a.Id_Camion = c.id_camion " +
+                     "LEFT JOIN CONDUCTORES con ON a.Id_Conductor = con.id_conductor " +
+                     "JOIN PAQUETE p ON ap.Id_Paquete = p.Id_Paquete " +
+                     "LEFT JOIN ( " +
+                     "  SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, estado " +
+                     "  FROM HISTORIAL_ESTADOS " +
+                     "  ORDER BY Id_Asig_Paq, Fecha DESC " +
+                     ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
+                     "WHERE a.Id_Conductor = ? " +
+                     "ORDER BY a.Fecha_Asignacion DESC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idConductor);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Asignacion(
+                        rs.getInt("Id_Asignacion_Paquete"),
+                        rs.getInt("Id_Asignacion"),
+                        rs.getInt("Id_Camion"),
+                        rs.getInt("Id_Conductor"),
+                        rs.getInt("Id_Paquete"),
+                        rs.getString("modelo_camion"),
+                        rs.getString("nombre_completo"),
+                        rs.getString("Dir_Entrega"),
+                        rs.getString("descripcion"),
+                        rs.getString("estado")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error en AsignacionDAO (listarPorConductor): " + e.getMessage());
+        }
+        return lista;
+    }
+
     public List<Asignacion> buscarConFiltros(String producto, String estado, java.time.LocalDate fecha) {
         List<Asignacion> lista = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-            "SELECT ap.Id_Asignacion_Paquete, a.Id_Asignacion, a.Id_Camion, c.id_conductor, ap.Id_Paquete, " +
+            "SELECT ap.Id_Asignacion_Paquete, a.Id_Asignacion, a.Id_Camion, a.Id_Conductor, ap.Id_Paquete, " +
             "c.modelo_camion, con.nombre_completo, ap.Dir_Entrega, p.descripcion, h.estado " +
             "FROM ASIGNACION_PAQUETE ap " +
             "JOIN ASIGNACION a ON ap.Id_Asignacion = a.Id_Asignacion " +
             "JOIN CAMIONES c ON a.Id_Camion = c.id_camion " +
-            "LEFT JOIN CONDUCTORES con ON c.id_conductor = con.id_conductor " +
+            "LEFT JOIN CONDUCTORES con ON a.Id_Conductor = con.id_conductor " +
             "JOIN PAQUETE p ON ap.Id_Paquete = p.Id_Paquete " +
             "LEFT JOIN ( " +
             "  SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, estado, fecha " +
@@ -295,7 +330,7 @@ public class AsignacionDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Integer conductorId = rs.getObject("id_conductor") != null ? rs.getInt("id_conductor") : null;
+                    Integer conductorId = rs.getObject("Id_Conductor") != null ? rs.getInt("Id_Conductor") : null;
                     lista.add(new Asignacion(
                         rs.getInt("Id_Asignacion_Paquete"),
                         rs.getInt("Id_Asignacion"),

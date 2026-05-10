@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:controller="com.transportesrbl.controllers.DashboardConductorController" stylesheets="@../css/conductor_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    
+    <left>
+        <VBox styleClass="sidebar" prefWidth="240">
+            <VBox styleClass="brand-container">
+                <Label text="TRANSPORTES RBL" styleClass="brand-name" />
+                <Label text="SISTEMA OPERATIVO" styleClass="brand-sub" />
+            </VBox>
+            
+            <VBox styleClass="user-profile-box">
+                <Label fx:id="lblNombreConductor" text="CARLOS ARANGO" styleClass="user-name" />
+                <Label text="CONDUCTOR" styleClass="user-role" />
+            </VBox>
+
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <Label text="MENU PRINCIPAL" styleClass="menu-section-label" />
+                <Button onAction="#handleInicio" text="INICIO" styleClass="menu-button" maxWidth="Infinity" alignment="CENTER_LEFT" />
+                <Button onAction="#handleMisRutas" text="MIS RUTAS" styleClass="menu-button" maxWidth="Infinity" alignment="CENTER_LEFT" />
+            </VBox>
+            
+            <Button onAction="#handleLogout" text="CERRAR SESION" styleClass="menu-button-logout" maxWidth="Infinity" />
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentArea" />
+    </center>
+</BorderPane>
