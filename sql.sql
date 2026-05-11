@@ -93,8 +93,10 @@ CREATE TABLE Paquete_Producto (
 CREATE TABLE ASIGNACION (
     Id_Asignacion SERIAL PRIMARY KEY,
     Id_Camion INT NOT NULL,
+    Id_Conductor INT,
     Fecha_Asignacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_camion_asig FOREIGN KEY (Id_Camion) REFERENCES CAMIONES(id_camion)
+    CONSTRAINT fk_camion_asig FOREIGN KEY (Id_Camion) REFERENCES CAMIONES(id_camion),
+    CONSTRAINT fk_conductor_asig FOREIGN KEY (Id_Conductor) REFERENCES CONDUCTORES(id_conductor)
 );
 
 CREATE TABLE ASIGNACION_PAQUETE (
@@ -117,6 +119,16 @@ CREATE TABLE HISTORIAL_ESTADOS (
     Fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     Observacion VARCHAR(255),
     CONSTRAINT fk_asig_paq_historial FOREIGN KEY (Id_Asig_Paq) REFERENCES ASIGNACION_PAQUETE(Id_Asignacion_Paquete)
+);
+
+CREATE TABLE SEGUIMIENTO_RUTA (
+    Id_Seguimiento SERIAL PRIMARY KEY,
+    Id_Asig_Paq INT NOT NULL,
+    Latitud DECIMAL(10,7) NOT NULL,
+    Longitud DECIMAL(10,7) NOT NULL,
+    Fecha_Registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Fuente VARCHAR(30) DEFAULT 'GPS',
+    CONSTRAINT fk_asig_paq_seguimiento FOREIGN KEY (Id_Asig_Paq) REFERENCES ASIGNACION_PAQUETE(Id_Asignacion_Paquete)
 );
 
 
@@ -183,11 +195,15 @@ INSERT INTO PAQUETE (Id_Cliente, Nro_Paquete, Volumen_m3, Descripcion) VALUES
 (3, 'PKT-014', 10.10, 'Bebidas azucaradas no retornables'),
 (5, 'PKT-015', 5.00, 'Queso campesino por mayor');
 
-INSERT INTO ASIGNACION (Id_Camion) VALUES (1);
+INSERT INTO ASIGNACION (Id_Camion, Id_Conductor) VALUES (1, 1);
 
 INSERT INTO ASIGNACION_PAQUETE (Id_Asignacion, Id_Paquete, Dir_Entrega, Cantidad) VALUES
 (1, 1, 'Cali Norte', 2),
 (1, 2, 'Cali Sur', 1);
+
+INSERT INTO SEGUIMIENTO_RUTA (Id_Asig_Paq, Latitud, Longitud, Fuente) VALUES
+(1, 3.4765000, -76.5224000, 'GPS'),
+(2, 3.4178000, -76.5351000, 'GPS');
 
 INSERT INTO HISTORIAL_ESTADOS (Id_Asig_Paq, Estado, Observacion) VALUES
 (1, 'En reparto', 'Salida'),

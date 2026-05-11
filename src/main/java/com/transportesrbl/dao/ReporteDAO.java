@@ -45,7 +45,7 @@ public class ReporteDAO {
 
         // Consulta para tabla de detalles
         String sqlDetalles = "SELECT " +
-            "a.Fecha_Asignacion, c.modelo_camion, ap.Dir_Entrega, p.Descripcion, " +
+            "ap.Id_Asignacion_Paquete, a.Fecha_Asignacion, c.modelo_camion, ap.Dir_Entrega, p.Descripcion, " +
             "(p.Volumen_m3 * ap.Cantidad) as volumen_total, " +
             "EXTRACT(EPOCH FROM (h.Fecha - a.Fecha_Asignacion))/3600 as tiempo_hrs, " +
             "COALESCE(h.Estado, 'Pendiente') as estado_actual " +
@@ -84,6 +84,7 @@ public class ReporteDAO {
                  ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     detalles.add(new ReporteDetalle(
+                        rs.getInt("Id_Asignacion_Paquete"),
                         rs.getTimestamp("Fecha_Asignacion").toLocalDateTime(),
                         rs.getString("modelo_camion"),
                         rs.getString("Dir_Entrega"),

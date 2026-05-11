@@ -11,7 +11,7 @@
             <HBox alignment="CENTER_LEFT" spacing="15">
                 <Label styleClass="section-title" text="MODULO DE REPORTES" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Button onAction="#handleExportarPDF" styleClass="btn-export-secondary" text="Excel PDF" />
+                <Button onAction="#handleExportarPDF" styleClass="btn-export-secondary" text="Exportar PDF" />
                 <Button onAction="#handleExportarExcel" styleClass="btn-export-primary" text="Exportar Excel" />
             </HBox>
 
@@ -59,18 +59,18 @@
                     <Label fx:id="lblTasaExito" style="-fx-font-size: 24; -fx-font-weight: bold;" text="0%" />
                 </VBox>
                 <VBox styleClass="mini-metric" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                    <Label styleClass="metric-text" text="Tiempo Promedio" />
-                    <Label fx:id="lblTiempoPromedio" style="-fx-font-size: 24; -fx-font-weight: bold;" text="0 hrs" />
+                    <Label styleClass="metric-text" text="Tiempo aprox. promedio" />
+                    <Label fx:id="lblTiempoPromedio" style="-fx-font-size: 24; -fx-font-weight: bold;" text="0 min" />
                 </VBox>
                 <VBox styleClass="mini-metric" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <Label styleClass="metric-text" text="Volumen total" />
-                    <Label fx:id="lblVolumenTotal" style="-fx-font-size: 24; -fx-font-weight: bold;" text="0 kg" />
+                    <Label fx:id="lblVolumenTotal" style="-fx-font-size: 24; -fx-font-weight: bold;" text="0 m3" />
                 </VBox>
             </GridPane>
 
             <VBox styleClass="report-card" spacing="10">
                 <HBox alignment="CENTER_LEFT">
-                    <Label styleClass="card-title" text="Detalles de entregas - Octubre 2025" />
+                    <Label styleClass="card-title" text="Detalles de entregas y ETA de rutas" />
                     <Region HBox.hgrow="ALWAYS" />
                     <Button style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-cursor: hand;" text="Descargar" />
                 </HBox>
@@ -81,7 +81,8 @@
                         <TableColumn fx:id="colRuta" prefWidth="120" text="Ruta" />
                         <TableColumn fx:id="colProducto" prefWidth="150" text="Producto" />
                         <TableColumn fx:id="colVolumen" prefWidth="100" text="Volumen" />
-                        <TableColumn fx:id="colTiempo" prefWidth="100" text="Tiempo" />
+                        <TableColumn fx:id="colTiempo" prefWidth="130" text="Tiempo aprox." />
+                        <TableColumn fx:id="colAvance" prefWidth="90" text="Avance" />
                         <TableColumn fx:id="colEstado" prefWidth="100" text="Estado" />
                     </columns>
                 </TableView>

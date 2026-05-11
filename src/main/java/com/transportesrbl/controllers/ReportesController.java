@@ -5,6 +5,7 @@ import com.transportesrbl.models.ReporteDetalle;
 import com.transportesrbl.services.ReporteService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
@@ -33,8 +34,8 @@ public class ReportesController {
     @FXML private BarChart<String, Number> barChartEntregas;
     @FXML private TableView<ReporteDetalle> tblDetallesReporte;
     @FXML private TableColumn<ReporteDetalle, LocalDateTime> colFecha;
-    @FXML private TableColumn<ReporteDetalle, String> colCamion, colRuta, colProducto, colEstado;
-    @FXML private TableColumn<ReporteDetalle, Double> colVolumen, colTiempo;
+    @FXML private TableColumn<ReporteDetalle, String> colCamion, colRuta, colProducto, colEstado, colTiempo, colAvance;
+    @FXML private TableColumn<ReporteDetalle, Double> colVolumen;
     @FXML private Label lblTotalEntregas, lblTasaExito, lblTiempoPromedio, lblVolumenTotal;
 
     private final ReporteService service = new ReporteService();
@@ -51,7 +52,8 @@ public class ReportesController {
         colRuta.setCellValueFactory(new PropertyValueFactory<>("ruta"));
         colProducto.setCellValueFactory(new PropertyValueFactory<>("producto"));
         colVolumen.setCellValueFactory(new PropertyValueFactory<>("volumen"));
-        colTiempo.setCellValueFactory(new PropertyValueFactory<>("tiempo"));
+        colTiempo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTiempoEstimado()));
+        colAvance.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAvanceRuta()));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
     }
 
@@ -60,7 +62,7 @@ public class ReportesController {
         
         lblTotalEntregas.setText(String.valueOf(reporte.getTotalEntregas()));
         lblTasaExito.setText(String.format("%.1f%%", reporte.getTasaExito()));
-        lblTiempoPromedio.setText(String.format("%.1f hrs", reporte.getTiempoPromedio()));
+        lblTiempoPromedio.setText(formatearHoras(reporte.getTiempoPromedio()));
         lblVolumenTotal.setText(String.format("%.1f m³", reporte.getVolumenTotal()));
 
         barChartEntregas.getData().clear();
@@ -89,7 +91,7 @@ public class ReportesController {
             try (Workbook workbook = new XSSFWorkbook()) {
                 Sheet sheet = workbook.createSheet("Entregas");
                 Row headerRow = sheet.createRow(0);
-                String[] columns = {"Fecha", "Camion", "Ruta", "Producto", "Volumen", "Tiempo", "Estado"};
+                String[] columns = {"Fecha", "Camion", "Ruta", "Producto", "Volumen", "Tiempo aprox.", "Avance", "Estado"};
                 for (int i = 0; i < columns.length; i++) {
                     headerRow.createCell(i).setCellValue(columns[i]);
                 }
@@ -102,8 +104,9 @@ public class ReportesController {
                     row.createCell(2).setCellValue(d.getRuta());
                     row.createCell(3).setCellValue(d.getProducto());
                     row.createCell(4).setCellValue(d.getVolumen());
-                    row.createCell(5).setCellValue(d.getTiempo());
-                    row.createCell(6).setCellValue(d.getEstado());
+                    row.createCell(5).setCellValue(d.getTiempoEstimado());
+                    row.createCell(6).setCellValue(d.getAvanceRuta());
+                    row.createCell(7).setCellValue(d.getEstado());
                 }
 
                 try (FileOutputStream fileOut = new FileOutputStream(file)) {
@@ -135,9 +138,11 @@ public class ReportesController {
                 document.add(new Paragraph("Resumen General:"));
                 document.add(new Paragraph("Total Entregas: " + lblTotalEntregas.getText()));
                 document.add(new Paragraph("Tasa de Éxito: " + lblTasaExito.getText()));
+                document.add(new Paragraph("Tiempo aprox. promedio: " + lblTiempoPromedio.getText()));
+                document.add(new Paragraph("Volumen total: " + lblVolumenTotal.getText()));
                 document.add(new Paragraph("\nDetalle de Operaciones:"));
 
-                Table table = new Table(UnitValue.createPercentArray(new float[]{20, 15, 15, 20, 10, 10, 10}));
+                Table table = new Table(UnitValue.createPercentArray(new float[]{18, 14, 14, 18, 9, 12, 7, 8}));
                 table.setWidth(UnitValue.createPercentValue(100));
                 
                 table.addHeaderCell("Fecha");
@@ -145,7 +150,8 @@ public class ReportesController {
                 table.addHeaderCell("Ruta");
                 table.addHeaderCell("Producto");
                 table.addHeaderCell("Vol.");
-                table.addHeaderCell("Tiempo");
+                table.addHeaderCell("Tiempo aprox.");
+                table.addHeaderCell("Avance");
                 table.addHeaderCell("Estado");
 
                 for (ReporteDetalle d : tblDetallesReporte.getItems()) {
@@ -154,7 +160,8 @@ public class ReportesController {
                     table.addCell(d.getRuta());
                     table.addCell(d.getProducto());
                     table.addCell(String.valueOf(d.getVolumen()));
-                    table.addCell(String.format("%.1f", d.getTiempo()));
+                    table.addCell(d.getTiempoEstimado());
+                    table.addCell(d.getAvanceRuta());
                     table.addCell(d.getEstado());
                 }
 
@@ -178,5 +185,16 @@ public class ReportesController {
     @FXML
     private void handleBusqueda() {
         cargarDatos();
+    }
+
+    private String formatearHoras(double horas) {
+        if (horas <= 0) {
+            return "0 min";
+        }
+        int minutos = (int) Math.round(horas * 60);
+        if (minutos < 60) {
+            return minutos + " min";
+        }
+        return String.format("%.1f hrs", horas);
     }
 }

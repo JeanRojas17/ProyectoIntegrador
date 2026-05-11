@@ -152,6 +152,22 @@ public class DashboardController {
     }
 
     @FXML
+    private void mostrarSeccionRutas(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/rutas.fxml"));
+            Parent rutasView = loader.load();
+
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(rutasView);
+
+            System.out.println(">>> Seccion de Rutas cargada en el contentArea.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar la seccion de rutas: " + e.getMessage());
+        }
+    }
+
+    @FXML
     private void mostrarSeccionPersonal(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/personal.fxml"));
