@@ -11,7 +11,10 @@ import java.sql.SQLException;
 public class UsuarioDao {
 
     public Usuario validarUsuario(String user, String pass) {
-        String sql = "SELECT id_usuario, nombre, usuario, contrasena, id_rol FROM usuario WHERE usuario = ? AND contrasena = ?";
+        String sql = "SELECT u.id_usuario, u.nombre, u.usuario, u.contrasena, u.id_rol, r.nombre_rol " +
+                     "FROM usuario u " +
+                     "JOIN rol r ON u.id_rol = r.id_rol " +
+                     "WHERE u.usuario = ? AND u.contrasena = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -26,7 +29,8 @@ public class UsuarioDao {
                         rs.getString("nombre"),
                         rs.getString("usuario"),
                         rs.getString("contrasena"),
-                        rs.getInt("id_rol")
+                        rs.getInt("id_rol"),
+                        rs.getString("nombre_rol")
                     );
                 }
             }

@@ -7,13 +7,15 @@ public class Usuario {
     private String usuario;
     private String contrasena;
     private int idRol;
+    private String rolNombre;
 
-    public Usuario(int id, String nombre, String usuario, String contrasena, int idRol) {
+    public Usuario(int id, String nombre, String usuario, String contrasena, int idRol, String rolNombre) {
         this.id = id;
         this.nombre = nombre;
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.idRol = idRol;
+        this.rolNombre = rolNombre;
     }
 
     public int getId() {
@@ -37,12 +39,6 @@ public class Usuario {
     }
 
     public String getRol() {
-        switch (this.idRol) {
-            case 1: return "Administrador";
-            case 2: return "Operador";
-            case 3: return "Supervisor";
-            case 4: return "Conductor";
-            default: return "Desconocido";
-        }
+        return rolNombre;
     }
 }

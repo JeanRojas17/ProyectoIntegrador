@@ -117,7 +117,7 @@ public class PersonalDAO {
                 ps.setString(1, p.getNombre());
                 ps.setString(2, p.getNombre().toLowerCase().replace(" ", "."));
                 ps.setString(3, "123456"); // Password por defecto
-                ps.setInt(4, 2); // Rol Operador por defecto
+                ps.setInt(4, 5); // Rol Auxiliar
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) idUsuario = rs.getInt(1);
             }

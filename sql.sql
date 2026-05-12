@@ -138,7 +138,8 @@ INSERT INTO rol (nombre_rol) VALUES
 ('Administrador'),
 ('Operador'),
 ('Supervisor'),
-('Conductor');
+('Conductor'),
+('Auxiliar');
 
 
 INSERT INTO usuario (nombre, usuario, contrasena, id_rol) VALUES 

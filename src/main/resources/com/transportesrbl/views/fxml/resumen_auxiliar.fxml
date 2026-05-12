@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox spacing="25" styleClass="main-content" stylesheets="@../css/auxiliar_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.ResumenAuxiliarController">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="RESUMEN DE OPERACIONES DIARIAS" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+    <FlowPane hgap="20" vgap="20">
+        <!-- Stat Card 1 -->
+        <VBox styleClass="info-card" prefWidth="200" spacing="10" alignment="CENTER">
+            <Label text="TOTAL CARGADO" styleClass="stat-lab" />
+            <Label fx:id="lblTotalCargado" text="0" styleClass="stat-val" style="-fx-text-fill: #2ecc71;" />
+            <Label text="Paquetes hoy" styleClass="label-muted-small" />
+        </VBox>
+
+        <!-- Stat Card 2 -->
+        <VBox styleClass="info-card" prefWidth="200" spacing="10" alignment="CENTER">
+            <Label text="EFICIENCIA" styleClass="stat-lab" />
+            <Label fx:id="lblEficiencia" text="0%" styleClass="stat-val" style="-fx-text-fill: #2980b9;" />
+            <Label text="Tasa de éxito" styleClass="label-muted-small" />
+        </VBox>
+
+        <!-- Stat Card 3 -->
+        <VBox styleClass="info-card" prefWidth="200" spacing="10" alignment="CENTER">
+            <Label text="INCIDENCIAS" styleClass="stat-lab" />
+            <Label fx:id="lblIncidencias" text="00" styleClass="stat-val" style="-fx-text-fill: #e74c3c;" />
+            <Label text="Reportadas" styleClass="label-muted-small" />
+        </VBox>
+    </FlowPane>
+
+    <VBox spacing="15" VBox.vgrow="ALWAYS" styleClass="info-card">
+        <Label text="HISTORIAL RECIENTE" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+        <TableView fx:id="tblHistorial" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colHora" text="Hora" prefWidth="100" />
+                <TableColumn fx:id="colActividad" text="Actividad / Producto" prefWidth="300" />
+                <TableColumn fx:id="colVehiculo" text="Vehículo" prefWidth="150" />
+                <TableColumn fx:id="colEstado" text="Estado" prefWidth="120" />
+            </columns>
+            <placeholder>
+                <Label text="No hay actividades registradas para hoy." />
+            </placeholder>
+        </TableView>
+    </VBox>
+</VBox>

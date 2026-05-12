@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox spacing="25" styleClass="main-content" stylesheets="@../css/auxiliar_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="VEHÍCULO Y CONDUCTOR ASIGNADO" styleClass="hero-main-title" style="-fx-font-size: 20px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" />
+
+    <HBox spacing="20">
+        <!-- Vehicle Details Card -->
+        <VBox styleClass="info-card" HBox.hgrow="ALWAYS" spacing="20">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <VBox style="-fx-background-color: #f4f7f6; -fx-padding: 15; -fx-background-radius: 10;">
+                    <Label text="CAMIÓN" style="-fx-font-weight: bold;" />
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="INFORMACIÓN DEL VEHÍCULO" styleClass="stat-lab" />
+                    <Label text="CHEVROLET NPR" styleClass="stat-val" style="-fx-font-size: 18px;" />
+                    <Label text="Placa: [ JHK 342 ]" styleClass="hero-subtitle" style="-fx-font-size: 14px; -fx-text-fill: #2980b9;" />
+                </VBox>
+            </HBox>
+            
+            <Separator />
+            
+            <GridPane hgap="30" vgap="15">
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label text="CAPACIDAD TOTAL" styleClass="stat-lab" />
+                    <Label text="20.25 m³" styleClass="val-text" />
+                </VBox>
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Label text="CARGA ACTUAL" styleClass="stat-lab" />
+                    <Label text="12.50 m³" styleClass="val-text" />
+                </VBox>
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <Label text="MODELO" styleClass="stat-lab" />
+                    <Label text="2024 Turbo Diesel" styleClass="val-text" />
+                </VBox>
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <Label text="ESTADO MECÁNICO" styleClass="stat-lab" />
+                    <Label text="Óptimo" style="-fx-text-fill: #27ae60; -fx-font-weight: bold;" />
+                </VBox>
+            </GridPane>
+        </VBox>
+
+        <!-- Driver Details Card -->
+        <VBox styleClass="info-card" prefWidth="350" spacing="20">
+            <Label text="CONDUCTOR" styleClass="stat-lab" />
+            <VBox alignment="CENTER" spacing="10">
+                <Circle radius="40" fill="#ecf0f1" stroke="#dcdde1" />
+                <Label text="CARLOS ARANGO" styleClass="stat-val" />
+                <Label text="Licencia: LIC-001" styleClass="label-muted-small" />
+            </VBox>
+            <Separator />
+            <VBox spacing="10">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="TEL:" styleClass="label-muted-small" />
+                    <Label text="300 123 4567" styleClass="val-text" />
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="UBICACIÓN:" styleClass="label-muted-small" />
+                    <Label text="En base (Cali)" styleClass="val-text" />
+                </HBox>
+            </VBox>
+            <Button text="NOTIFICAR CONDUCTOR" styleClass="btn-action-deliver" maxWidth="Infinity" />
+        </VBox>
+    </HBox>
+
+    <!-- Today's Route Card -->
+    <VBox styleClass="info-card" spacing="15">
+        <Label text="RUTA DE HOY" styleClass="stat-lab" />
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <VBox alignment="CENTER" spacing="5">
+                <Circle radius="6" fill="#2ecc71" />
+                <Region prefHeight="30" prefWidth="2" style="-fx-background-color: #dcdde1;" />
+                <Circle radius="6" fill="#3498db" />
+            </VBox>
+            <VBox spacing="15">
+                <VBox>
+                    <Label text="ORIGEN" styleClass="label-muted-small" />
+                    <Label text="Centro de Logística RBL - Cali Industrial" styleClass="val-text" />
+                </VBox>
+                <VBox>
+                    <Label text="DESTINO PRINCIPAL" styleClass="label-muted-small" />
+                    <Label text="Zona Norte - Yumbo (Varias entregas)" styleClass="val-text" />
+                </VBox>
+            </VBox>
+        </HBox>
+    </VBox>
+
+</VBox>

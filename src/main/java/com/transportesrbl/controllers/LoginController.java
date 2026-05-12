@@ -55,6 +55,9 @@ public class LoginController {
             if ("Conductor".equals(usuario.getRol())) {
                 fxmlPath = "/com/transportesrbl/views/fxml/dashboard_conductor.fxml";
                 title = "Transportes RBL - Dashboard Conductor";
+            } else if ("Auxiliar".equals(usuario.getRol())) {
+                fxmlPath = "/com/transportesrbl/views/fxml/dashboard_auxiliar.fxml";
+                title = "Transportes RBL - Dashboard Auxiliar";
             }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

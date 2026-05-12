@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="25" styleClass="main-content" stylesheets="@../css/auxiliar_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.MisPaquetesController">
+    
+    <!-- Header with vehicle info -->
+    <HBox styleClass="info-card" spacing="30" alignment="CENTER_LEFT">
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="VEHÍCULO ASIGNADO" styleClass="stat-lab" />
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label fx:id="lblModeloCamion" text="BUSCANDO..." styleClass="stat-val" />
+                <Label fx:id="lblPlacaCamion" text="[ --- ]" style="-fx-text-fill: #1D53C2; -fx-font-weight: bold;" />
+            </HBox>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" />
+        
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="PENDIENTES" styleClass="stat-lab" />
+            <Label fx:id="lblPendientes" text="00" styleClass="stat-val" />
+        </VBox>
+        
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="VOLUMEN TOTAL" styleClass="stat-lab" />
+            <Label fx:id="lblVolumenTotal" text="0.0 m³" styleClass="stat-val" />
+        </VBox>
+    </HBox>
+
+    <!-- Packages Section -->
+    <VBox spacing="15" VBox.vgrow="ALWAYS">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="PAQUETES EN CARGA" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <TextField fx:id="txtBuscar" promptText="Buscar por guía o producto..." style="-fx-background-radius: 20; -fx-pref-width: 250;" />
+        </HBox>
+
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll" VBox.vgrow="ALWAYS">
+            <TilePane fx:id="containerPaquetes" hgap="20" vgap="20" prefColumns="2">
+                <!-- Los paquetes se cargarán dinámicamente desde el controlador -->
+            </TilePane>
+        </ScrollPane>
+    </VBox>
+</VBox>

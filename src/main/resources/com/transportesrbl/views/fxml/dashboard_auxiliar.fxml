@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane fx:controller="com.transportesrbl.controllers.DashboardAuxiliarController" 
+            stylesheets="@../css/auxiliar_style.css" 
+            xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1">
+    
+    <left>
+        <VBox styleClass="sidebar" prefWidth="260">
+            <!-- Logo Area -->
+            <VBox spacing="5" alignment="CENTER_LEFT" styleClass="brand-container">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Circle radius="15" fill="#212529" />
+                    <Label text="RBL LOGÍSTICA" styleClass="brand-name" />
+                </HBox>
+                <Label text="OPERACIONES DE CARGA" styleClass="brand-sub" />
+                <padding><Insets bottom="40"/></padding>
+            </VBox>
+            
+            <!-- User Profile Quick View -->
+            <VBox styleClass="user-box" spacing="10">
+                <VBox>
+                    <Label fx:id="lblNombreAuxiliar" text="JEAN PAUL ROJAS" styleClass="user-name" />
+                    <Label text="AUXILIAR DE CARGA" styleClass="user-role" />
+                </VBox>
+                <HBox styleClass="tag-active-status" spacing="5" alignment="CENTER_LEFT">
+                    <Circle radius="4" fill="#2ecc71" />
+                    <Label text="EN TURNO" style="-fx-font-size: 9px; -fx-font-weight: bold; -fx-text-fill: #2ecc71;"/>
+                </HBox>
+                <padding><Insets bottom="30"/></padding>
+            </VBox>
+
+            <!-- Navigation -->
+            <VBox spacing="8" VBox.vgrow="ALWAYS">
+                <Label text="MENÚ OPERATIVO" styleClass="label-muted-small" />
+                <Button onAction="#handleInicio" text="MIS PAQUETES" styleClass="menu-btn-active" maxWidth="Infinity" alignment="CENTER_LEFT" />
+                <Button onAction="#handleVehiculo" text="VEHÍCULO ASIGNADO" styleClass="menu-btn" maxWidth="Infinity" alignment="CENTER_LEFT" />
+                <Button onAction="#handleResumen" text="RESUMEN DÍA" styleClass="menu-btn" maxWidth="Infinity" alignment="CENTER_LEFT" />
+            </VBox>
+            
+            <!-- Bottom Actions -->
+            <VBox spacing="10">
+                <Separator style="-fx-opacity: 0.2;"/>
+                <Button onAction="#handleLogout" text="SALIR DEL SISTEMA" styleClass="btn-logout" maxWidth="Infinity" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentArea" styleClass="main-content">
+            <padding>
+                <Insets top="25" right="25" bottom="25" left="25"/>
+            </padding>
+        </StackPane>
+    </center>
+</BorderPane>

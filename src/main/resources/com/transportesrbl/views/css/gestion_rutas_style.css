@@ -1,0 +1,62 @@
+/* Configuración Base */
+.root { -fx-font-family: "Segoe UI", sans-serif; }
+.main-content { -fx-background-color: #f8f9fa; }
+
+/* Sidebar */
+.sidebar { -fx-background-color: #1a252f; -fx-padding: 20; }
+.brand-name { -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; }
+.brand-sub { -fx-text-fill: #95a5a6; -fx-font-size: 10px; }
+.menu-section-label { -fx-text-fill: #7f8c8d; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 20 0 10 0; }
+.menu-button { -fx-background-color: transparent; -fx-text-fill: #bdc3c7; -fx-cursor: hand; }
+.menu-button-active { -fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-weight: bold; }
+
+/* Encabezado */
+.view-title { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; }
+.view-subtitle { -fx-text-fill: #7f8c8d; -fx-font-size: 13px; }
+.btn-new-route {
+    -fx-background-color: #2c3e50; -fx-text-fill: white;
+    -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5;
+}
+
+/* Tarjetas */
+.metric-card {
+    -fx-background-color: white; -fx-padding: 25; -fx-alignment: center;
+    -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-background-radius: 8;
+}
+.metric-value { -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; }
+.metric-label { -fx-font-size: 11px; -fx-text-fill: #95a5a6; -fx-font-weight: bold; }
+
+/* Filtros */
+.filter-container {
+    -fx-background-color: white; -fx-padding: 20;
+    -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-background-radius: 8;
+}
+.filter-label { -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d; }
+.filter-input { -fx-background-color: #f1f2f6; -fx-padding: 8; -fx-border-color: #dcdde1; }
+.btn-clear { -fx-background-color: transparent; -fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-cursor: hand; }
+
+/* Tabla */
+.modern-table { -fx-background-color: white; -fx-border-color: #e0e0e0; }
+.modern-table .column-header { -fx-background-color: #f1f2f6; -fx-text-fill: #2c3e50; -fx-padding: 10; }
+.modern-table .table-row-cell:odd { -fx-background-color: #fafafa; }
+
+/* SplitPane y Mapa */
+.split-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.map-container {
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.section-subtitle {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 10 0;
+}

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f4f7f6;" 
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.transportesrbl.controllers.RutasController">
+    <content>
+        <VBox spacing="20" styleClass="main-content">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT">
+                <VBox>
+                    <Label text="GESTIÓN DE RUTAS" styleClass="view-title" />
+                    <Label text="Control y monitoreo de trayectos en tiempo real" styleClass="view-subtitle" />
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="+ NUEVA RUTA" styleClass="btn-new-route" />
+            </HBox>
+
+            <HBox spacing="20">
+                <VBox styleClass="metric-card" HBox.hgrow="ALWAYS">
+                    <Label fx:id="lblRutasActivas" text="0" styleClass="metric-value" />
+                    <Label text="RUTAS ACTIVAS" styleClass="metric-label" />
+                </VBox>
+                <VBox styleClass="metric-card" HBox.hgrow="ALWAYS">
+                    <Label fx:id="lblDistanciaTotal" text="0 km" styleClass="metric-value" />
+                    <Label text="DISTANCIA TOTAL" styleClass="metric-label" />
+                </VBox>
+                <VBox styleClass="metric-card" HBox.hgrow="ALWAYS">
+                    <Label fx:id="lblTiempoPromedio" text="0 min" styleClass="metric-value" />
+                    <Label text="TIEMPO PROMEDIO" styleClass="metric-label" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="15" styleClass="filter-container" alignment="CENTER_LEFT">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="BUSCAR" styleClass="filter-label" />
+                    <TextField fx:id="txtBuscar" promptText="ID, Conductor o Placa..." styleClass="filter-input" />
+                </VBox>
+                <VBox spacing="5" prefWidth="180">
+                    <Label text="TIPO DE VÍA" styleClass="filter-label" />
+                    <ComboBox fx:id="cmbTipoVia" promptText="Seleccionar..." maxWidth="Infinity" styleClass="filter-input" />
+                </VBox>
+                <VBox spacing="5" prefWidth="180">
+                    <Label text="ESTADO" styleClass="filter-label" />
+                    <ComboBox fx:id="cmbEstado" promptText="Seleccionar..." maxWidth="Infinity" styleClass="filter-input" />
+                </VBox>
+                <Button text="LIMPIAR" onAction="#handleLimpiar" styleClass="btn-clear" />
+            </HBox>
+
+            <SplitPane dividerPositions="0.4" prefHeight="500.0">
+                <items>
+                    <VBox spacing="10">
+                        <TableView fx:id="tablaRutas" VBox.vgrow="ALWAYS" styleClass="modern-table">
+                            <columns>
+                                <TableColumn fx:id="colId" text="ID" prefWidth="60" />
+                                <TableColumn fx:id="colOrigen" text="ORIGEN" prefWidth="120" />
+                                <TableColumn fx:id="colDestino" text="DESTINO" prefWidth="120" />
+                                <TableColumn fx:id="colEstado" text="ESTADO" prefWidth="100" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                    </VBox>
+                    <VBox spacing="10" styleClass="map-container">
+                        <Label text="VISTA DE MAPA EN TIEMPO REAL" styleClass="section-subtitle" />
+                        <WebView fx:id="mapView" VBox.vgrow="ALWAYS" />
+                    </VBox>
+                </items>
+            </SplitPane>
+        </VBox>
+    </content>
+</ScrollPane>
