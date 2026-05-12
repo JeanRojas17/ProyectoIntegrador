@@ -36,7 +36,7 @@ public class ResumenAuxiliarController {
 
     private void configurarTabla() {
         colHora.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-        colActividad.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        colActividad.setCellValueFactory(new PropertyValueFactory<>("producto"));
         colVehiculo.setCellValueFactory(new PropertyValueFactory<>("camion"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
 

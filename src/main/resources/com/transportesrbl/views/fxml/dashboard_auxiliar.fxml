@@ -16,7 +16,7 @@
             <VBox spacing="5" alignment="CENTER_LEFT" styleClass="brand-container">
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <Circle radius="15" fill="#212529" />
-                    <Label text="RBL LOGÍSTICA" styleClass="brand-name" />
+                    <Label text="TRANSPORTES RBL" styleClass="brand-name" />
                 </HBox>
                 <Label text="OPERACIONES DE CARGA" styleClass="brand-sub" />
                 <padding><Insets bottom="40"/></padding>
