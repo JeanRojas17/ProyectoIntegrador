@@ -47,7 +47,7 @@ public class MisPaquetesController {
     }
 
     private void actualizarResumen(List<Asignacion> lista) {
-        if (!lista.isEmpty()) {
+        if (!lista.isEmpty() && lista.get(0).getCamion() != null) {
             lblModeloCamion.setText(lista.get(0).getCamion().toUpperCase());
             lblPlacaCamion.setText("[ ASIGNADO ]");
         }

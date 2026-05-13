@@ -17,7 +17,6 @@ public class ProductoDAO {
                      "'' AS proveedor, " +
                      "c.Nombre_Empresa AS cliente, " +
                      "p.Volumen_m3 AS volumen, " +
-                     "p.Cantidad AS cantidad, " +
                      "COALESCE(ap.Dir_Entrega, '') AS destino, " +
                      "COALESCE(h.Estado, 'Pendiente') AS estado " +
                      "FROM PAQUETE p " +
@@ -34,6 +33,7 @@ public class ProductoDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
+                int cantidad = 1;
                 Producto p = new Producto(
                     rs.getInt("id_producto"),
                     rs.getInt("id_cliente"),
@@ -41,8 +41,8 @@ public class ProductoDAO {
                     rs.getString("proveedor"),
                     rs.getString("cliente"),
                     rs.getDouble("volumen"),
-                    rs.getInt("cantidad"),
-                    rs.getDouble("volumen") * rs.getInt("cantidad"),
+                    cantidad,
+                    rs.getDouble("volumen") * cantidad,
                     rs.getString("estado"),
                     rs.getString("destino")
                 );
@@ -55,7 +55,7 @@ public class ProductoDAO {
     }
 
     public boolean insertar(Producto producto) {
-        String sqlInsertPaquete = "INSERT INTO PAQUETE (Id_Cliente, Nro_Paquete, Volumen_m3, Descripcion, Cantidad) VALUES (?, ?, ?, ?, ?)";
+        String sqlInsertPaquete = "INSERT INTO PAQUETE (Id_Cliente, Nro_Paquete, Volumen_m3, Descripcion) VALUES (?, ?, ?, ?)";
 
         if (producto.getClienteId() <= 0) {
             System.err.println("Error: No se ha seleccionado un cliente para el paquete.");
@@ -72,7 +72,6 @@ public class ProductoDAO {
                     ps.setString(2, "PKT-" + (System.currentTimeMillis() % 1000000));
                     ps.setDouble(3, producto.getVolumenUnitario());
                     ps.setString(4, producto.getNombreProducto());
-                    ps.setInt(5, producto.getCantidad());
                     ps.executeUpdate();
                 }
 
@@ -90,7 +89,7 @@ public class ProductoDAO {
     }
 
     public boolean actualizar(Producto producto) {
-        String sqlUpdatePaquete = "UPDATE PAQUETE SET Descripcion = ?, Volumen_m3 = ?, Cantidad = ?, Id_Cliente = ? WHERE Id_Paquete = ?";
+        String sqlUpdatePaquete = "UPDATE PAQUETE SET Descripcion = ?, Volumen_m3 = ?, Id_Cliente = ? WHERE Id_Paquete = ?";
         String sqlUpdateAsigPaq = "UPDATE ASIGNACION_PAQUETE SET Dir_Entrega = ? WHERE Id_Paquete = ?";
         String sqlInsertHistorial = "INSERT INTO HISTORIAL_ESTADOS (Id_Asig_Paq, Estado, Observacion) " +
                                     "SELECT Id_Asignacion_Paquete, ?, 'Actualización desde módulo productos' " +
@@ -104,9 +103,8 @@ public class ProductoDAO {
                 try (PreparedStatement ps = conn.prepareStatement(sqlUpdatePaquete)) {
                     ps.setString(1, producto.getNombreProducto());
                     ps.setDouble(2, producto.getVolumenUnitario());
-                    ps.setInt(3, producto.getCantidad());
-                    ps.setInt(4, producto.getClienteId());
-                    ps.setInt(5, producto.getIdProducto());
+                    ps.setInt(3, producto.getClienteId());
+                    ps.setInt(4, producto.getIdProducto());
                     ps.executeUpdate();
                 }
 

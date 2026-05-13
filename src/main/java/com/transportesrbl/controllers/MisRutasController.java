@@ -60,7 +60,7 @@ public class MisRutasController {
             HBox item = crearItemRuta(asig, isLast);
             vboxRutas.getChildren().add(item);
 
-            String estado = asig.getEstado().toLowerCase();
+            String estado = asig.getEstado() != null ? asig.getEstado().toLowerCase() : "";
             if (estado.contains("entregado")) completadas++;
             else if (estado.contains("reparto") || estado.contains("progreso")) enProgreso++;
             else pendientes++;
@@ -73,7 +73,7 @@ public class MisRutasController {
 
     private HBox crearItemRuta(Asignacion asig, boolean isLast) {
         HBox container = new HBox();
-        String estado = asig.getEstado().toLowerCase();
+        String estado = asig.getEstado() != null ? asig.getEstado().toLowerCase() : "";
         
         if (estado.contains("entregado")) {
             container.getStyleClass().add("timeline-item-completed");
