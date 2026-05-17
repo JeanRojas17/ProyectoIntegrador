@@ -1,5 +1,6 @@
 package com.transportesrbl.dao;
 
+import com.transportesrbl.config.Constantes;
 import com.transportesrbl.config.DatabaseConnection;
 import com.transportesrbl.models.Cliente;
 import java.sql.*;
@@ -39,12 +40,9 @@ public class ClienteDAO {
                      "  SUM(p.Volumen_m3) as volumen_total " +
                      "FROM PAQUETE p " +
                      "LEFT JOIN ASIGNACION_PAQUETE ap ON p.Id_Paquete = ap.Id_Paquete " +
-                     "LEFT JOIN ( " +
-                     "  SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, estado " +
-                     "  FROM HISTORIAL_ESTADOS " +
-                     "  ORDER BY Id_Asig_Paq, Fecha DESC " +
-                     ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
-                     "WHERE p.Id_Cliente = ?";
+                      "LEFT JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE_SIN_FECHA + ") h " +
+                      "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
+                      "WHERE p.Id_Cliente = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -69,12 +67,9 @@ public class ClienteDAO {
                      "COALESCE(h.estado, 'Pendiente') as estado " +
                      "FROM PAQUETE p " +
                      "LEFT JOIN ASIGNACION_PAQUETE ap ON p.Id_Paquete = ap.Id_Paquete " +
-                     "LEFT JOIN ( " +
-                     "  SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, estado " +
-                     "  FROM HISTORIAL_ESTADOS " +
-                     "  ORDER BY Id_Asig_Paq, Fecha DESC " +
-                     ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
-                     "WHERE p.Id_Cliente = ? " +
+                      "LEFT JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE_SIN_FECHA + ") h " +
+                       "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
+                      "WHERE p.Id_Cliente = ? " +
                      "ORDER BY p.Id_Paquete DESC";
 
         try (Connection conn = DatabaseConnection.getConnection();

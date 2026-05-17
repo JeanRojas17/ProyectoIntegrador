@@ -1,5 +1,6 @@
 package com.transportesrbl.dao;
 
+import com.transportesrbl.config.Constantes;
 import com.transportesrbl.config.DatabaseConnection;
 import com.transportesrbl.models.Reporte;
 import com.transportesrbl.models.ReporteDetalle;
@@ -28,11 +29,8 @@ public class ReporteDAO {
             "FROM ASIGNACION_PAQUETE ap " +
             "JOIN ASIGNACION a ON ap.Id_Asignacion = a.Id_Asignacion " +
             "JOIN PAQUETE p ON ap.Id_Paquete = p.Id_Paquete " +
-            "LEFT JOIN ( " +
-            "   SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, Estado, Fecha " +
-            "   FROM HISTORIAL_ESTADOS " +
-            "   ORDER BY Id_Asig_Paq, Fecha DESC " +
-            ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq";
+            "LEFT JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE + ") h " +
+            "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq";
 
         // Consulta para gráfico por semana
         String sqlGrafico = "SELECT " +
@@ -54,9 +52,7 @@ public class ReporteDAO {
             "JOIN CAMIONES c ON a.Id_Camion = c.id_camion " +
             "JOIN PAQUETE p ON ap.Id_Paquete = p.Id_Paquete " +
             "LEFT JOIN ( " +
-            "   SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, Estado, Fecha " +
-            "   FROM HISTORIAL_ESTADOS " +
-            "   ORDER BY Id_Asig_Paq, Fecha DESC " +
+            "  " + Constantes.SQL_HISTORIAL_RECIENTE + " " +
             ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
             "ORDER BY a.Fecha_Asignacion DESC LIMIT 20";
 

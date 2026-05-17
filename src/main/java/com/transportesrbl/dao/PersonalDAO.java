@@ -1,6 +1,7 @@
 
 package com.transportesrbl.dao;
 
+import com.transportesrbl.config.Constantes;
 import com.transportesrbl.config.DatabaseConnection;
 import com.transportesrbl.models.Personal;
 
@@ -116,8 +117,8 @@ public class PersonalDAO {
             try (PreparedStatement ps = conn.prepareStatement(sqlUser)) {
                 ps.setString(1, p.getNombre());
                 ps.setString(2, p.getNombre().toLowerCase().replace(" ", "."));
-                ps.setString(3, "123456"); // Password por defecto
-                ps.setInt(4, 5); // Rol Auxiliar
+                ps.setString(3, Constantes.DEFAULT_PASSWORD_AUXILIAR);
+                ps.setInt(4, Constantes.ID_ROL_AUXILIAR);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) idUsuario = rs.getInt(1);
             }

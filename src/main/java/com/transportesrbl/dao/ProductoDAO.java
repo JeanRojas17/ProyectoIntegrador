@@ -1,5 +1,6 @@
 package com.transportesrbl.dao;
 
+import com.transportesrbl.config.Constantes;
 import com.transportesrbl.models.Producto;
 import com.transportesrbl.config.DatabaseConnection;
 
@@ -22,11 +23,8 @@ public class ProductoDAO {
                      "FROM PAQUETE p " +
                      "JOIN CLIENTE c ON p.Id_Cliente = c.Id_Cliente " +
                      "LEFT JOIN ASIGNACION_PAQUETE ap ON p.Id_Paquete = ap.Id_Paquete " +
-                     "LEFT JOIN ( " +
-                     "  SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, Estado " +
-                     "  FROM HISTORIAL_ESTADOS " +
-                     "  ORDER BY Id_Asig_Paq, Fecha DESC " +
-                     ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq";
+                      "LEFT JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE_SIN_FECHA + ") h " +
+                      "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();

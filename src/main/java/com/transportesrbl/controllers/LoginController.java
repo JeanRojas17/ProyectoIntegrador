@@ -1,5 +1,6 @@
 package com.transportesrbl.controllers;
 
+import com.transportesrbl.config.Constantes;
 import com.transportesrbl.models.Usuario;
 import com.transportesrbl.services.AuthService;
 
@@ -52,13 +53,13 @@ public class LoginController {
             String fxmlPath = "/com/transportesrbl/views/fxml/dashboard.fxml";
             String title = "Transportes RBL - Dashboard";
 
-            if ("Conductor".equals(usuario.getRol())) {
+            if (Constantes.ROL_CONDUCTOR.equals(usuario.getRol())) {
                 fxmlPath = "/com/transportesrbl/views/fxml/dashboard_conductor.fxml";
                 title = "Transportes RBL - Dashboard Conductor";
-            } else if ("Auxiliar".equals(usuario.getRol())) {
+            } else if (Constantes.ROL_AUXILIAR.equals(usuario.getRol())) {
                 fxmlPath = "/com/transportesrbl/views/fxml/dashboard_auxiliar.fxml";
                 title = "Transportes RBL - Dashboard Auxiliar";
-            } else if ("Cliente".equals(usuario.getRol())) {
+            } else if (Constantes.ROL_CLIENTE.equals(usuario.getRol())) {
                 fxmlPath = "/com/transportesrbl/views/fxml/dashboard_cliente.fxml";
                 title = "Transportes RBL - Dashboard Cliente";
             }

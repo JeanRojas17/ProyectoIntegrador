@@ -1,5 +1,6 @@
 package com.transportesrbl.dao;
 
+import com.transportesrbl.config.Constantes;
 import com.transportesrbl.config.DatabaseConnection;
 import com.transportesrbl.models.RutaSeguimiento;
 
@@ -33,11 +34,8 @@ public class RutaDAO {
                      "LEFT JOIN CLIENTE cli ON paq.Id_Cliente = cli.Id_Cliente " +
                      "LEFT JOIN Paquete_Producto pp ON paq.Id_Paquete = pp.Id_Paquete " +
                      "LEFT JOIN Productos p ON pp.Id_Producto = p.Id_Producto " +
-                     "LEFT JOIN ( " +
-                     "  SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, estado " +
-                     "  FROM HISTORIAL_ESTADOS " +
-                     "  ORDER BY Id_Asig_Paq, Fecha DESC " +
-                     ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
+                     "LEFT JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE_SIN_FECHA + ") h " +
+                     "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
                      "ORDER BY a.Fecha_Asignacion DESC, ap.Id_Asignacion_Paquete DESC";
 
         try (Connection conn = DatabaseConnection.getConnection()) {

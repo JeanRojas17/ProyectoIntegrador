@@ -1,5 +1,6 @@
 package com.transportesrbl.dao;
 
+import com.transportesrbl.config.Constantes;
 import com.transportesrbl.config.DatabaseConnection;
 import java.sql.*;
 import java.util.HashMap;
@@ -80,9 +81,9 @@ public class ConductorDAO {
                                        "JOIN CLIENTE c ON paq.Id_Cliente = c.Id_Cliente " +
                                        "LEFT JOIN Paquete_Producto pp ON paq.Id_Paquete = pp.Id_Paquete " +
                                        "LEFT JOIN Productos p ON pp.Id_Producto = p.Id_Producto " +
-                                       "LEFT JOIN (SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, Estado FROM HISTORIAL_ESTADOS ORDER BY Id_Asig_Paq, Fecha DESC) h " +
-                                       "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
-                                       "WHERE a.Id_Conductor = ? AND (h.Estado IS NULL OR h.Estado NOT IN ('Entregado', 'Cancelado')) " +
+                    "LEFT JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE_SIN_FECHA + ") h " +
+                    "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
+                    "WHERE a.Id_Conductor = ? AND (h.Estado IS NULL OR h.Estado NOT IN ('Entregado', 'Cancelado')) " +
                                        "ORDER BY a.Fecha_Asignacion DESC LIMIT 1";
                     
                     try (PreparedStatement ps = conn.prepareStatement(sqlEntrega)) {
@@ -104,9 +105,9 @@ public class ConductorDAO {
                                         "COUNT(*) FILTER (WHERE h.Estado = 'Entregado') as completadas " +
                                         "FROM ASIGNACION a " +
                                         "JOIN ASIGNACION_PAQUETE ap ON a.Id_Asignacion = ap.Id_Asignacion " +
-                                        "LEFT JOIN (SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, Estado FROM HISTORIAL_ESTADOS ORDER BY Id_Asig_Paq, Fecha DESC) h " +
-                                        "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
-                                        "WHERE a.Id_Conductor = ? AND a.Fecha_Asignacion::date = CURRENT_DATE";
+                    "LEFT JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE_SIN_FECHA + ") h " +
+                    "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
+                    "WHERE a.Id_Conductor = ? AND a.Fecha_Asignacion::date = CURRENT_DATE";
                     
                     try (PreparedStatement ps = conn.prepareStatement(sqlMetricas)) {
                         ps.setInt(1, idConductor);

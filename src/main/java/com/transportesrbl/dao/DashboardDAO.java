@@ -1,5 +1,6 @@
 package com.transportesrbl.dao;
 
+import com.transportesrbl.config.Constantes;
 import com.transportesrbl.models.*;
 import com.transportesrbl.config.DatabaseConnection;
 
@@ -19,9 +20,7 @@ public class DashboardDAO {
             "COUNT(*) FILTER (WHERE COALESCE(h.Estado, 'Pendiente') = 'Pendiente') as pendientes " +
             "FROM ASIGNACION_PAQUETE ap " +
             "LEFT JOIN ( " +
-            "   SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, Estado " +
-            "   FROM HISTORIAL_ESTADOS " +
-            "   ORDER BY Id_Asig_Paq, Fecha DESC " +
+            "   " + Constantes.SQL_HISTORIAL_RECIENTE_SIN_FECHA + " " +
             ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq";
 
         String sqlCamiones = "SELECT " +
@@ -64,8 +63,7 @@ public class DashboardDAO {
         String sql = "SELECT ap.Id_Asignacion_Paquete, p.Descripcion, ap.Dir_Entrega, h.Estado " +
                      "FROM ASIGNACION_PAQUETE ap " +
                      "JOIN PAQUETE p ON ap.Id_Paquete = p.Id_Paquete " +
-                     "JOIN (SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, Estado, Fecha " +
-                     "      FROM HISTORIAL_ESTADOS ORDER BY Id_Asig_Paq, Fecha DESC) h " +
+                     "JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE + ") h " +
                      "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
                      "ORDER BY h.Fecha DESC LIMIT 5";
 

@@ -1,5 +1,6 @@
 package com.transportesrbl.services;
 
+import com.transportesrbl.config.Constantes;
 import com.transportesrbl.dao.RutaDAO;
 import com.transportesrbl.models.RutaSeguimiento;
 
@@ -11,8 +12,16 @@ import java.util.Map;
 
 public class RutaService {
 
-    private static final double BASE_LAT = 3.451646;
-    private static final double BASE_LON = -76.531985;
+    private static final double CURVA_AMPLITUD = 0.006;
+    private static final int ETA_MAX_MINUTOS = 75;
+    private static final double PROGRESO_FALLIDO = 0.82;
+    private static final double PROGRESO_MAX_SIMULADO = 0.95;
+    private static final double PROGRESO_MIN_SIMULADO = 0.18;
+    private static final long SEMILLA_PROGRESO = 13L;
+    private static final int CICLO_PROGRESO = 75;
+    private static final int HASH_RANGO = 1200;
+    private static final double HASH_DIVISOR = 10000.0;
+    private static final double HASH_OFFSET = 0.0600;
     private static final String[] COLORES = {
         "#2563eb", "#16a34a", "#dc2626", "#9333ea", "#ea580c", "#0891b2", "#be123c", "#4f46e5"
     };
@@ -31,20 +40,20 @@ public class RutaService {
     private void completarSeguimiento(RutaSeguimiento ruta, int indice) {
         double[] destino = resolverDestino(ruta.getDestino());
         double progreso = calcularProgreso(ruta);
-        double curva = Math.sin(progreso * Math.PI) * 0.006;
+        double curva = Math.sin(progreso * Math.PI) * CURVA_AMPLITUD;
 
-        ruta.setOrigenLat(BASE_LAT);
-        ruta.setOrigenLon(BASE_LON);
+        ruta.setOrigenLat(Constantes.BASE_LAT);
+        ruta.setOrigenLon(Constantes.BASE_LON);
         ruta.setDestinoLat(destino[0]);
         ruta.setDestinoLon(destino[1]);
         if (ruta.isUbicacionReal() && estaEnMovimiento(ruta)) {
             progreso = calcularProgresoReal(ruta, destino);
         } else {
-            ruta.setActualLat(interpolar(BASE_LAT, destino[0], progreso) + curva);
-            ruta.setActualLon(interpolar(BASE_LON, destino[1], progreso) - curva / 2);
+            ruta.setActualLat(interpolar(Constantes.BASE_LAT, destino[0], progreso) + curva);
+            ruta.setActualLon(interpolar(Constantes.BASE_LON, destino[1], progreso) - curva / 2);
         }
         ruta.setProgreso(progreso);
-        ruta.setEtaMinutos(Math.max(0, (int) Math.round((1.0 - progreso) * 75)));
+        ruta.setEtaMinutos(Math.max(0, (int) Math.round((1.0 - progreso) * ETA_MAX_MINUTOS)));
         ruta.setColor(COLORES[Math.abs(ruta.getIdEntrega() + indice) % COLORES.length]);
     }
 
@@ -57,12 +66,12 @@ public class RutaService {
             return 0.0;
         }
         if (estado.contains("no entregado") || estado.contains("cancelado")) {
-            return 0.82;
+            return PROGRESO_FALLIDO;
         }
 
         long segundos = System.currentTimeMillis() / 1000L;
-        double avance = ((segundos + ruta.getIdEntrega() * 13L) % 75) / 100.0;
-        return Math.min(0.95, 0.18 + avance);
+        double avance = ((segundos + ruta.getIdEntrega() * SEMILLA_PROGRESO) % CICLO_PROGRESO) / 100.0;
+        return Math.min(PROGRESO_MAX_SIMULADO, PROGRESO_MIN_SIMULADO + avance);
     }
 
     private double[] resolverDestino(String direccion) {
@@ -74,9 +83,9 @@ public class RutaService {
         }
 
         int hash = Math.abs(clave.hashCode());
-        double latOffset = ((hash % 1200) / 10000.0) - 0.0600;
-        double lonOffset = (((hash / 1200) % 1200) / 10000.0) - 0.0600;
-        return new double[] { BASE_LAT + latOffset, BASE_LON + lonOffset };
+        double latOffset = ((hash % HASH_RANGO) / HASH_DIVISOR) - HASH_OFFSET;
+        double lonOffset = (((hash / HASH_RANGO) % HASH_RANGO) / HASH_DIVISOR) - HASH_OFFSET;
+        return new double[] { Constantes.BASE_LAT + latOffset, Constantes.BASE_LON + lonOffset };
     }
 
     private Map<String, double[]> crearDestinosConocidos() {
@@ -102,10 +111,10 @@ public class RutaService {
     }
 
     private double calcularProgresoReal(RutaSeguimiento ruta, double[] destino) {
-        double vectorLat = destino[0] - BASE_LAT;
-        double vectorLon = destino[1] - BASE_LON;
-        double vectorActualLat = ruta.getActualLat() - BASE_LAT;
-        double vectorActualLon = ruta.getActualLon() - BASE_LON;
+        double vectorLat = destino[0] - Constantes.BASE_LAT;
+        double vectorLon = destino[1] - Constantes.BASE_LON;
+        double vectorActualLat = ruta.getActualLat() - Constantes.BASE_LAT;
+        double vectorActualLon = ruta.getActualLon() - Constantes.BASE_LON;
         double denominador = vectorLat * vectorLat + vectorLon * vectorLon;
 
         if (denominador == 0) {

@@ -1,5 +1,6 @@
 package com.transportesrbl.dao;
 
+import com.transportesrbl.config.Constantes;
 import com.transportesrbl.config.DatabaseConnection;
 import com.transportesrbl.models.Asignacion;
 
@@ -24,11 +25,8 @@ public class AsignacionDAO {
                      "JOIN CAMIONES c ON a.Id_Camion = c.id_camion " +
                      "LEFT JOIN CONDUCTORES con ON a.Id_Conductor = con.id_conductor " +
                      "JOIN PAQUETE p ON ap.Id_Paquete = p.Id_Paquete " +
-                     "LEFT JOIN ( " +
-                     "  SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, estado " +
-                     "  FROM HISTORIAL_ESTADOS " +
-                     "  ORDER BY Id_Asig_Paq, Fecha DESC " +
-                     ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq";
+                     "LEFT JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE_SIN_FECHA + ") h " +
+                     "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -265,11 +263,8 @@ public class AsignacionDAO {
                      "JOIN CAMIONES c ON a.Id_Camion = c.id_camion " +
                      "LEFT JOIN CONDUCTORES con ON a.Id_Conductor = con.id_conductor " +
                      "JOIN PAQUETE p ON ap.Id_Paquete = p.Id_Paquete " +
-                     "LEFT JOIN ( " +
-                     "  SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, estado " +
-                     "  FROM HISTORIAL_ESTADOS " +
-                     "  ORDER BY Id_Asig_Paq, Fecha DESC " +
-                     ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
+                     "LEFT JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE_SIN_FECHA + ") h " +
+                     "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
                      "WHERE a.Id_Conductor = ? " +
                      "ORDER BY a.Fecha_Asignacion DESC";
 
@@ -308,11 +303,8 @@ public class AsignacionDAO {
             "JOIN CAMIONES c ON a.Id_Camion = c.id_camion " +
             "LEFT JOIN CONDUCTORES con ON a.Id_Conductor = con.id_conductor " +
             "JOIN PAQUETE p ON ap.Id_Paquete = p.Id_Paquete " +
-            "LEFT JOIN ( " +
-            "  SELECT DISTINCT ON (Id_Asig_Paq) Id_Asig_Paq, estado, fecha " +
-            "  FROM HISTORIAL_ESTADOS " +
-            "  ORDER BY Id_Asig_Paq, fecha DESC " +
-            ") h ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
+            "LEFT JOIN (" + Constantes.SQL_HISTORIAL_RECIENTE + ") h " +
+            "ON ap.Id_Asignacion_Paquete = h.Id_Asig_Paq " +
             "WHERE 1=1 "
         );
         
