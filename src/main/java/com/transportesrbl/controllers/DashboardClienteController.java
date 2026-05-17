@@ -171,19 +171,7 @@ public class DashboardClienteController {
         
         body.getChildren().addAll(desc, details, dir);
 
-        // Footer
-        Button btn = new Button("CANCELAR PEDIDO");
-        btn.getStyleClass().add("btn-cancelar");
-        btn.setMaxWidth(Double.MAX_VALUE);
-        
-        if (!estado.equalsIgnoreCase("pendiente")) {
-            btn.setDisable(true);
-            btn.setTooltip(new Tooltip("Solo se pueden cancelar pedidos en estado 'Pendiente'"));
-        } else {
-            btn.setOnAction(e -> handleCancelar(pkg));
-        }
-
-        card.getChildren().addAll(header, body, btn);
+        card.getChildren().addAll(header, body);
         return card;
     }
 
@@ -204,30 +192,6 @@ public class DashboardClienteController {
         lbl.getStyleClass().add("notif-text");
         item.getChildren().add(lbl);
         return item;
-    }
-
-    private void handleCancelar(Map<String, Object> pkg) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirmar Cancelación");
-        confirm.setHeaderText("¿Desea cancelar el pedido " + pkg.get("nro_paquete") + "?");
-        confirm.setContentText("Esta acción notificará al despacho y no se podrá deshacer.");
-
-        if (confirm.showAndWait().get() == ButtonType.OK) {
-            Integer idAsigPaq = (Integer) pkg.get("id_asig_paq");
-            if (idAsigPaq != null && idAsigPaq > 0) {
-                if (clienteDAO.cancelarPedido(idAsigPaq)) {
-                    cargarDatos(); // Recargar interfaz
-                    Alert success = new Alert(Alert.AlertType.INFORMATION);
-                    success.setTitle("Pedido Cancelado");
-                    success.setContentText("El pedido ha sido cancelado exitosamente.");
-                    success.show();
-                } else {
-                    mostrarAlerta("Error", "No se pudo cancelar el pedido en la base de datos.", Alert.AlertType.ERROR);
-                }
-            } else {
-                mostrarAlerta("Atención", "Este paquete no tiene una asignación activa para cancelar.", Alert.AlertType.WARNING);
-            }
-        }
     }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {

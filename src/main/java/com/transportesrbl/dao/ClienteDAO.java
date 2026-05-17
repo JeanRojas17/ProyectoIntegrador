@@ -121,16 +121,4 @@ public class ClienteDAO {
         }
         return novedades;
     }
-
-    public boolean cancelarPedido(int idAsigPaq) {
-        String sql = "INSERT INTO HISTORIAL_ESTADOS (Id_Asig_Paq, Estado, Observacion) VALUES (?, 'Cancelado', 'Cancelado por el cliente')";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idAsigPaq);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al cancelar pedido: " + e.getMessage());
-        }
-        return false;
-    }
 }
