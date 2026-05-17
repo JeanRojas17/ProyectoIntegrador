@@ -58,6 +58,9 @@ public class LoginController {
             } else if ("Auxiliar".equals(usuario.getRol())) {
                 fxmlPath = "/com/transportesrbl/views/fxml/dashboard_auxiliar.fxml";
                 title = "Transportes RBL - Dashboard Auxiliar";
+            } else if ("Cliente".equals(usuario.getRol())) {
+                fxmlPath = "/com/transportesrbl/views/fxml/dashboard_cliente.fxml";
+                title = "Transportes RBL - Dashboard Cliente";
             }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -69,8 +72,13 @@ public class LoginController {
             stage.setTitle(title);
 
             stage.setResizable(true);
-            stage.setMinWidth(1000);
-            stage.setMinHeight(600);
+            stage.setMinWidth(1100);
+            stage.setMinHeight(700);
+            
+            // Auto-ajustar y centrar
+            stage.setWidth(1200);
+            stage.setHeight(800);
+            stage.centerOnScreen();
             
             stage.show();
             

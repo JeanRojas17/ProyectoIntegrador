@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" style="-fx-background-color: #f4f7f6;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.ResumenClienteController">
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25" />
+    </padding>
+
+    <Label text="RESUMEN DETALLADO DE ENVÍOS" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+    <HBox spacing="20">
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER" spacing="5">
+                <padding><Insets top="20" right="10" bottom="20" left="10"/></padding>
+                <Label fx:id="lblTotalPedidos" text="0" styleClass="card-number"/>
+                <Label text="TOTAL PEDIDOS" styleClass="card-label"/>
+            </VBox>
+        </VBox>
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER" spacing="5">
+                <padding><Insets top="20" right="10" bottom="20" left="10"/></padding>
+                <Label fx:id="lblTasaExito" text="0%" styleClass="card-number" style="-fx-text-fill: #27ae60;"/>
+                <Label text="EFECTIVIDAD" styleClass="card-label"/>
+            </VBox>
+        </VBox>
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER" spacing="5">
+                <padding><Insets top="20" right="10" bottom="20" left="10"/></padding>
+                <Label fx:id="lblNovedades" text="0" styleClass="card-number" style="-fx-text-fill: #e67e22;"/>
+                <Label text="NOVEDADES" styleClass="card-label"/>
+            </VBox>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="10" VBox.vgrow="ALWAYS" styleClass="list-container">
+        <Label text="HISTORIAL COMPLETO" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+        <TableView fx:id="tblHistorial" VBox.vgrow="ALWAYS" styleClass="table-view">
+            <columns>
+                <TableColumn fx:id="colGuia" text="Guía" prefWidth="120" />
+                <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="250" />
+                <TableColumn fx:id="colVolumen" text="Volumen (m³)" prefWidth="100" />
+                <TableColumn fx:id="colDestino" text="Destino" prefWidth="200" />
+                <TableColumn fx:id="colEstado" text="Estado" prefWidth="120" />
+            </columns>
+            <placeholder>
+                <Label text="No hay registros de envíos." />
+            </placeholder>
+        </TableView>
+    </VBox>
+</VBox>
