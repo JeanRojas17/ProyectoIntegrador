@@ -19,7 +19,7 @@
         </padding>
         <VBox HBox.hgrow="ALWAYS">
             <Label text="MONITOREO DE RUTAS" styleClass="header-title"/>
-            <Label text="Trayectoria en tiempo real por producto y entrega" styleClass="header-subtitle"/>
+            <Label text="Consulta de trayectoria por producto y entrega" styleClass="header-subtitle"/>
         </VBox>
         <VBox alignment="CENTER_RIGHT" spacing="4">
             <Label fx:id="lblActualizacion" text="Ultima actualizacion: --:--:--" styleClass="update-text"/>
@@ -59,7 +59,7 @@
             <ComboBox fx:id="cbConductor" prefWidth="210"/>
         </VBox>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label fx:id="lblEstadoMapa" text="0 rutas visibles en el mapa" styleClass="map-status"/>
+        <Label fx:id="lblEstadoMapa" text="Seleccione una ruta para verla en el mapa" styleClass="map-status"/>
     </HBox>
 
     <SplitPane dividerPositions="0.36" VBox.vgrow="ALWAYS" minHeight="430">

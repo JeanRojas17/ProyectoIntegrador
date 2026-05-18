@@ -3,8 +3,6 @@ package com.transportesrbl.controllers;
 import com.transportesrbl.models.RutaSeguimiento;
 import com.transportesrbl.services.RutaService;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,10 +15,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.util.Duration;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -50,7 +48,6 @@ public class RutasController {
     private final ObservableList<RutaSeguimiento> rutasFiltradas = FXCollections.observableArrayList();
     private final DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private List<RutaSeguimiento> todasLasRutas = new ArrayList<>();
-    private Timeline refrescoTimeline;
     private boolean mapaListo;
 
     @FXML
@@ -59,7 +56,6 @@ public class RutasController {
         configurarFiltros();
         cargarMapaBase();
         cargarDatos();
-        iniciarRefresco();
     }
 
     private void configurarTabla() {
@@ -126,24 +122,13 @@ public class RutasController {
             .collect(Collectors.toList());
 
         rutasFiltradas.setAll(filtradas);
+        conservarSeleccion(filtradas);
         renderizarMapa();
     }
 
     @FXML
     private void handleRefrescar() {
         cargarDatos();
-    }
-
-    private void iniciarRefresco() {
-        refrescoTimeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> cargarDatos()));
-        refrescoTimeline.setCycleCount(Timeline.INDEFINITE);
-        refrescoTimeline.play();
-
-        webMapa.sceneProperty().addListener((obs, anterior, actual) -> {
-            if (actual == null && refrescoTimeline != null) {
-                refrescoTimeline.stop();
-            }
-        });
     }
 
     private void cargarMapaBase() {
@@ -164,11 +149,17 @@ public class RutasController {
 
         RutaSeguimiento seleccionada = tblRutas.getSelectionModel().getSelectedItem();
         int idSeleccionado = seleccionada != null ? seleccionada.getIdEntrega() : -1;
-        String json = construirJsonRutas(rutasFiltradas);
+        String json = seleccionada != null
+            ? construirJsonRutas(Collections.singletonList(seleccionada))
+            : "[]";
 
         try {
             webMapa.getEngine().executeScript("window.renderRoutes(" + json + ", " + idSeleccionado + ");");
-            lblEstadoMapa.setText(rutasFiltradas.size() + " rutas visibles en el mapa");
+            if (seleccionada != null) {
+                lblEstadoMapa.setText("Ruta seleccionada: #" + seleccionada.getIdEntrega());
+            } else {
+                lblEstadoMapa.setText("Seleccione una ruta para verla en el mapa");
+            }
         } catch (Exception e) {
             lblEstadoMapa.setText("No se pudo actualizar el mapa");
         }
@@ -199,6 +190,7 @@ public class RutasController {
                 .append("\"actualLon\":").append(numero(r.getActualLon())).append(",")
                 .append("\"progreso\":").append(numero(r.getProgreso())).append(",")
                 .append("\"eta\":").append(r.getEtaMinutos()).append(",")
+                .append("\"ubicacionReal\":").append(r.isUbicacionReal()).append(",")
                 .append("\"color\":\"").append(escaparJson(r.getColor())).append("\"")
                 .append("}");
         }
@@ -260,7 +252,8 @@ public class RutasController {
                             '<div class="popup-line"><b>Destino:</b> ' + esc(route.destino) + '</div>' +
                             '<div class="popup-line"><b>Conductor:</b> ' + esc(route.conductor) + '</div>' +
                             '<div class="popup-line"><b>Camion:</b> ' + esc(route.camion) + '</div>' +
-                            '<div class="popup-line"><b>Progreso:</b> ' + pct + '% | ETA: ' + route.eta + ' min</div>' +
+                            '<div class="popup-line"><b>Avance:</b> ' + pct + '% | ETA: ' + route.eta + ' min</div>' +
+                            '<div class="popup-line"><b>Ubicacion:</b> ' + (route.ubicacionReal ? 'GPS registrado' : 'Sin GPS registrado') + '</div>' +
                             '<span class="popup-tag" style="background:' + route.color + '">' + esc(route.estado) + '</span>';
                     }
 
@@ -269,6 +262,7 @@ public class RutasController {
                         routeLayer.clearLayers();
 
                         if (!routes || routes.length === 0) {
+                            if (routeLayer) routeLayer.clearLayers();
                             map.setView([3.451646, -76.531985], 12);
                             return;
                         }
@@ -280,34 +274,45 @@ public class RutasController {
                             const origin = [route.origenLat, route.origenLon];
                             const current = [route.actualLat, route.actualLon];
                             const destination = [route.destinoLat, route.destinoLon];
-                            const weight = route.id === selectedId ? 6 : 4;
-                            const opacity = route.id === selectedId ? 0.95 : 0.55;
 
-                            L.polyline([origin, current, destination], {
+                            L.polyline([origin, destination], {
                                 color: route.color,
-                                weight: weight,
-                                opacity: opacity,
-                                dashArray: route.progreso <= 0 ? '8 8' : null
+                                weight: 6,
+                                opacity: 0.85,
+                                dashArray: route.ubicacionReal ? null : '8 8'
                             }).addTo(routeLayer).bindPopup(popup(route));
 
+                            L.circleMarker(origin, {
+                                radius: 7,
+                                color: '#111827',
+                                fillColor: '#ffffff',
+                                fillOpacity: 1,
+                                weight: 2
+                            }).addTo(routeLayer).bindPopup('<b>Origen</b><br>Centro de Logistica RBL');
+
                             L.circleMarker(destination, {
-                                radius: 6,
+                                radius: 8,
                                 color: route.color,
                                 fillColor: '#fff',
                                 fillOpacity: 1,
                                 weight: 3
                             }).addTo(routeLayer).bindPopup(popup(route));
 
-                            L.circleMarker(current, {
-                                radius: route.id === selectedId ? 11 : 8,
-                                color: '#111827',
-                                fillColor: route.color,
-                                fillOpacity: 0.95,
-                                weight: 2
-                            }).addTo(routeLayer).bindPopup(popup(route));
+                            if (route.ubicacionReal) {
+                                L.circleMarker(current, {
+                                    radius: 11,
+                                    color: '#111827',
+                                    fillColor: route.color,
+                                    fillOpacity: 0.95,
+                                    weight: 2
+                                }).addTo(routeLayer).bindPopup(popup(route));
+                                bounds.push(current);
+                            }
 
-                            bounds.push(origin, current, destination);
-                            if (route.id === selectedId) selectedBounds = [origin, current, destination];
+                            bounds.push(origin, destination);
+                            if (route.id === selectedId) {
+                                selectedBounds = route.ubicacionReal ? [origin, current, destination] : [origin, destination];
+                            }
                         });
 
                         const fit = selectedBounds || bounds;
@@ -323,6 +328,20 @@ public class RutasController {
 
     private boolean contieneEstado(RutaSeguimiento ruta, String texto) {
         return normalizar(ruta.getEstado()).contains(texto);
+    }
+
+    private void conservarSeleccion(List<RutaSeguimiento> filtradas) {
+        RutaSeguimiento seleccionada = tblRutas.getSelectionModel().getSelectedItem();
+        if (seleccionada == null) {
+            return;
+        }
+
+        boolean sigueVisible = filtradas.stream()
+            .anyMatch(ruta -> ruta.getIdEntrega() == seleccionada.getIdEntrega());
+
+        if (!sigueVisible) {
+            tblRutas.getSelectionModel().clearSelection();
+        }
     }
 
     private String normalizar(String valor) {

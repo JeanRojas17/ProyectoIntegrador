@@ -12,13 +12,11 @@ import java.util.Map;
 
 public class RutaService {
 
-    private static final double CURVA_AMPLITUD = 0.006;
     private static final int ETA_MAX_MINUTOS = 75;
+    private static final double PROGRESO_CARGADO = 0.15;
+    private static final double PROGRESO_EN_REPARTO = 0.50;
+    private static final double PROGRESO_EN_TRANSITO = 0.65;
     private static final double PROGRESO_FALLIDO = 0.82;
-    private static final double PROGRESO_MAX_SIMULADO = 0.95;
-    private static final double PROGRESO_MIN_SIMULADO = 0.18;
-    private static final long SEMILLA_PROGRESO = 13L;
-    private static final int CICLO_PROGRESO = 75;
     private static final int HASH_RANGO = 1200;
     private static final double HASH_DIVISOR = 10000.0;
     private static final double HASH_OFFSET = 0.0600;
@@ -40,7 +38,6 @@ public class RutaService {
     private void completarSeguimiento(RutaSeguimiento ruta, int indice) {
         double[] destino = resolverDestino(ruta.getDestino());
         double progreso = calcularProgreso(ruta);
-        double curva = Math.sin(progreso * Math.PI) * CURVA_AMPLITUD;
 
         ruta.setOrigenLat(Constantes.BASE_LAT);
         ruta.setOrigenLon(Constantes.BASE_LON);
@@ -49,8 +46,8 @@ public class RutaService {
         if (ruta.isUbicacionReal() && estaEnMovimiento(ruta)) {
             progreso = calcularProgresoReal(ruta, destino);
         } else {
-            ruta.setActualLat(interpolar(Constantes.BASE_LAT, destino[0], progreso) + curva);
-            ruta.setActualLon(interpolar(Constantes.BASE_LON, destino[1], progreso) - curva / 2);
+            ruta.setActualLat(interpolar(Constantes.BASE_LAT, destino[0], progreso));
+            ruta.setActualLon(interpolar(Constantes.BASE_LON, destino[1], progreso));
         }
         ruta.setProgreso(progreso);
         ruta.setEtaMinutos(Math.max(0, (int) Math.round((1.0 - progreso) * ETA_MAX_MINUTOS)));
@@ -65,13 +62,20 @@ public class RutaService {
         if (estado.contains("pendiente")) {
             return 0.0;
         }
+        if (estado.contains("cargado")) {
+            return PROGRESO_CARGADO;
+        }
+        if (estado.contains("reparto") || estado.contains("progreso")) {
+            return PROGRESO_EN_REPARTO;
+        }
+        if (estado.contains("transito")) {
+            return PROGRESO_EN_TRANSITO;
+        }
         if (estado.contains("no entregado") || estado.contains("cancelado")) {
             return PROGRESO_FALLIDO;
         }
 
-        long segundos = System.currentTimeMillis() / 1000L;
-        double avance = ((segundos + ruta.getIdEntrega() * SEMILLA_PROGRESO) % CICLO_PROGRESO) / 100.0;
-        return Math.min(PROGRESO_MAX_SIMULADO, PROGRESO_MIN_SIMULADO + avance);
+        return 0.0;
     }
 
     private double[] resolverDestino(String direccion) {
