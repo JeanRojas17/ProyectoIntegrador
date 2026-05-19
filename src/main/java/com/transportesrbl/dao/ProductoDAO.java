@@ -88,7 +88,6 @@ public class ProductoDAO {
 
     public boolean actualizar(Producto producto) {
         String sqlUpdatePaquete = "UPDATE PAQUETE SET Descripcion = ?, Volumen_m3 = ?, Id_Cliente = ? WHERE Id_Paquete = ?";
-        String sqlUpdateAsigPaq = "UPDATE ASIGNACION_PAQUETE SET Dir_Entrega = ? WHERE Id_Paquete = ?";
         String sqlInsertHistorial = "INSERT INTO HISTORIAL_ESTADOS (Id_Asig_Paq, Estado, Observacion) " +
                                     "SELECT Id_Asignacion_Paquete, ?, 'Actualización desde módulo productos' " +
                                     "FROM ASIGNACION_PAQUETE WHERE Id_Paquete = ?";
@@ -103,12 +102,6 @@ public class ProductoDAO {
                     ps.setDouble(2, producto.getVolumenUnitario());
                     ps.setInt(3, producto.getClienteId());
                     ps.setInt(4, producto.getIdProducto());
-                    ps.executeUpdate();
-                }
-
-                try (PreparedStatement ps = conn.prepareStatement(sqlUpdateAsigPaq)) {
-                    ps.setString(1, producto.getDestino());
-                    ps.setInt(2, producto.getIdProducto());
                     ps.executeUpdate();
                 }
 

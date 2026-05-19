@@ -24,7 +24,6 @@ public class FormProductoController {
     @FXML private Spinner<Integer> spnCantidad;
     @FXML private ComboBox<ComboItem> cbCliente;
     @FXML private ComboBox<String> cbEstado;
-    @FXML private ComboBox<String> cbDestino;
 
     private final ProductoDAO productoDAO = new ProductoDAO();
     private Producto productoExistente = null;
@@ -41,15 +40,6 @@ public class FormProductoController {
             "No entregado"
         ));
 
-        // Lista de destinos coherentes
-        cbDestino.setItems(FXCollections.observableArrayList(
-            "Cali - Bodega Principal",
-            "Bogotá - Zona Franca",
-            "Medellín - Distribuidora",
-            "Barranquilla - Puerto",
-            "Pereira - Centro Logístico"
-        ));
-
         cargarClientesDisponibles();
     }
 
@@ -60,7 +50,6 @@ public class FormProductoController {
             txtVolumen.setText(String.valueOf(producto.getVolumenUnitario()));
             spnCantidad.getValueFactory().setValue(producto.getCantidad());
             cbEstado.setValue(producto.getEstado());
-            cbDestino.setValue(producto.getDestino());
             cbCliente.setValue(findItemByIdOrLabel(cbCliente.getItems(), producto.getClienteId(), producto.getCliente()));
         }
     }
@@ -71,7 +60,7 @@ public class FormProductoController {
             String nombre = txtNombre.getText();
             String volumenStr = txtVolumen.getText().replace(",", ".");
             
-            if (nombre.isEmpty() || volumenStr.isEmpty() || cbEstado.getValue() == null || cbDestino.getValue() == null) {
+            if (nombre.isEmpty() || volumenStr.isEmpty() || cbEstado.getValue() == null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Por favor, complete todos los campos.");
                 alert.showAndWait();
                 return;
@@ -80,7 +69,6 @@ public class FormProductoController {
             double volumenUnitario = Double.parseDouble(volumenStr);
             int cantidad = spnCantidad.getValue();
             String estado = cbEstado.getValue();
-            String destino = cbDestino.getValue();
             ComboItem clienteSeleccionado = cbCliente.getValue();
             double volumenTotal = volumenUnitario * cantidad;
 
@@ -102,7 +90,7 @@ public class FormProductoController {
                     cantidad,
                     volumenTotal,
                     estado,
-                    destino
+                    ""
                 );
                 exito = productoDAO.insertar(nuevoProducto);
             } else {
@@ -116,7 +104,7 @@ public class FormProductoController {
                     cantidad,
                     volumenTotal,
                     estado,
-                    destino
+                    ""
                 );
                 exito = productoDAO.actualizar(actualizado);
             }
