@@ -10,6 +10,9 @@ public class Personal {
     private String estado;
     private String licencia; // Solo para conductores
     private String especialidad; // Solo para auxiliares
+    private String usuario;
+    private String contrasena;
+    private int idUsuario;
 
     public Personal() {}
 
@@ -51,4 +54,13 @@ public class Personal {
 
     public String getEspecialidad() { return especialidad; }
     public void setEspecialidad(String especialidad) { this.especialidad = especialidad; }
+
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
+
+    public String getContrasena() { return contrasena; }
+    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
+
+    public int getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
 }

@@ -108,7 +108,8 @@ public class PersonalController {
         body.getChildren().addAll(
             crearFilaInfo("ESTADO:", p.getEstado()),
             crearFilaInfo("TELÉFONO:", p.getTelefono().isEmpty() ? "N/A" : p.getTelefono()),
-            crearFilaInfo("CORREO:", p.getCorreo().isEmpty() ? "N/A" : p.getCorreo())
+            crearFilaInfo("CORREO:", p.getCorreo().isEmpty() ? "N/A" : p.getCorreo()),
+            crearFilaInfo("USUARIO:", p.getUsuario() != null && !p.getUsuario().isEmpty() ? p.getUsuario() : "Sin asignar")
         );
 
         if ("AUXILIAR".equals(p.getTipo()) && !p.getEspecialidad().isEmpty()) {

@@ -12,7 +12,8 @@ import javafx.stage.Stage;
 public class FormPersonalController {
 
     @FXML private Label lblTitulo, lblDinamico;
-    @FXML private TextField txtNombre, txtIdentificacion, txtTelefono, txtCorreo, txtDinamico;
+    @FXML private TextField txtNombre, txtIdentificacion, txtTelefono, txtCorreo, txtDinamico, txtUsuario;
+    @FXML private PasswordField txtContrasena;
     @FXML private ComboBox<String> cbTipo, cbEstado;
 
     private final PersonalService service = new PersonalService();
@@ -50,6 +51,8 @@ public class FormPersonalController {
             txtTelefono.setText(p.getTelefono());
             txtCorreo.setText(p.getCorreo());
             cbEstado.setValue(p.getEstado());
+            txtUsuario.setText(p.getUsuario());
+            txtContrasena.setText(p.getContrasena());
             
             if ("CONDUCTOR".equals(p.getTipo())) {
                 txtDinamico.setText(p.getLicencia());
@@ -71,6 +74,8 @@ public class FormPersonalController {
             personal.setTelefono(txtTelefono.getText());
             personal.setCorreo(txtCorreo.getText());
             personal.setEstado(cbEstado.getValue());
+            personal.setUsuario(txtUsuario.getText());
+            personal.setContrasena(txtContrasena.getText());
             
             if ("CONDUCTOR".equals(cbTipo.getValue())) {
                 personal.setLicencia(txtDinamico.getText());

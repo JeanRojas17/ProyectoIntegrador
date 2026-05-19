@@ -35,10 +35,18 @@
         <Label text="Estado:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
         <ComboBox fx:id="cbEstado" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="5" />
         
+        <Label text="Usuario:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <TextField fx:id="txtUsuario" promptText="Nombre de usuario" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        
+        <Label text="Contraseña:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <PasswordField fx:id="txtContrasena" promptText="Mínimo 6 caracteres" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
         <!-- Campos dinámicos -->
-        <Label fx:id="lblDinamico" text="Licencia:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-        <TextField fx:id="txtDinamico" promptText="Categoría o Especialidad" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <Label fx:id="lblDinamico" text="Licencia:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+        <TextField fx:id="txtDinamico" promptText="Categoría o Especialidad" GridPane.columnIndex="1" GridPane.rowIndex="8" />
       <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
          <RowConstraints />
          <RowConstraints />
          <RowConstraints />
