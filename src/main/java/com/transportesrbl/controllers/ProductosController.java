@@ -21,11 +21,10 @@ public class ProductosController {
 
     @FXML private TableView<Producto> tblProductos;
     @FXML private TableColumn<Producto, Integer> colId;
-    @FXML private TableColumn<Producto, String> colProducto, colProveedor, colCliente, colDestino, colEstado;
+    @FXML private TableColumn<Producto, String> colProducto, colCliente, colDestino, colEstado;
     @FXML private TableColumn<Producto, Double> colVolumen;
 
     @FXML private TextField txtBuscar;
-    @FXML private TextField txtProveedor;
     @FXML private TextField txtCliente;
     @FXML private ComboBox<String> cbEstado;
 
@@ -48,7 +47,6 @@ public class ProductosController {
     private void configurarTabla() {
         colId.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
         colProducto.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
-        colProveedor.setCellValueFactory(new PropertyValueFactory<>("proveedor"));
         colCliente.setCellValueFactory(new PropertyValueFactory<>("cliente"));
         colVolumen.setCellValueFactory(new PropertyValueFactory<>("volumen"));
         colDestino.setCellValueFactory(new PropertyValueFactory<>("destino"));
@@ -65,9 +63,6 @@ public class ProductosController {
     private void configurarListeners() {
         if (txtBuscar != null) {
             txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> filtrarProductos());
-        }
-        if (txtProveedor != null) {
-            txtProveedor.textProperty().addListener((obs, oldValue, newValue) -> filtrarProductos());
         }
         if (txtCliente != null) {
             txtCliente.textProperty().addListener((obs, oldValue, newValue) -> filtrarProductos());
@@ -88,7 +83,6 @@ public class ProductosController {
         }
 
         String busqueda = txtBuscar != null && txtBuscar.getText() != null ? txtBuscar.getText().trim().toLowerCase() : "";
-        String proveedor = txtProveedor != null && txtProveedor.getText() != null ? txtProveedor.getText().trim().toLowerCase() : "";
         String cliente = txtCliente != null && txtCliente.getText() != null ? txtCliente.getText().trim().toLowerCase() : "";
         String estado = cbEstado != null && cbEstado.getValue() != null ? cbEstado.getValue() : "Seleccionar";
         boolean filtrarEstado = !"Seleccionar".equalsIgnoreCase(estado);
@@ -96,16 +90,14 @@ public class ProductosController {
         ObservableList<Producto> filtrados = FXCollections.observableArrayList();
         for (Producto p : listaProductos) {
             String nombre = p.getNombreProducto() != null ? p.getNombreProducto().toLowerCase() : "";
-            String prov = p.getProveedor() != null ? p.getProveedor().toLowerCase() : "";
             String cli = p.getCliente() != null ? p.getCliente().toLowerCase() : "";
             String est = p.getEstado() != null ? p.getEstado().toLowerCase() : "";
 
             boolean coincideBusqueda = busqueda.isEmpty() || nombre.contains(busqueda);
-            boolean coincideProveedor = proveedor.isEmpty() || prov.contains(proveedor);
             boolean coincideCliente = cliente.isEmpty() || cli.contains(cliente);
             boolean coincideEstado = !filtrarEstado || est.equalsIgnoreCase(estado);
 
-            if (coincideBusqueda && coincideProveedor && coincideCliente && coincideEstado) {
+            if (coincideBusqueda && coincideCliente && coincideEstado) {
                 filtrados.add(p);
             }
         }
@@ -170,7 +162,6 @@ public class ProductosController {
     @FXML
     private void handleLimpiar(ActionEvent event) {
         if (txtBuscar != null) txtBuscar.clear();
-        if (txtProveedor != null) txtProveedor.clear();
         if (txtCliente != null) txtCliente.clear();
         if (cbEstado != null) cbEstado.setValue("Seleccionar");
         filtrarProductos();

@@ -67,10 +67,6 @@
                     <TextField fx:id="txtBuscar" promptText="Buscar..." prefWidth="130"/>
                 </VBox>
                 <VBox spacing="5">
-                    <Label text="PROVEEDOR" styleClass="card-label"/>
-                    <TextField fx:id="txtProveedor" promptText="Proveedor..." prefWidth="130"/>
-                </VBox>
-                <VBox spacing="5">
                     <Label text="ESTADO" styleClass="card-label"/>
                     <ComboBox fx:id="cbEstado" prefWidth="130" promptText="Seleccionar"/>
                 </VBox>
@@ -93,7 +89,6 @@
                     <columns>
                         <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
                         <TableColumn fx:id="colProducto" text="PRODUCTO" prefWidth="180"/>
-                        <TableColumn fx:id="colProveedor" text="PROVEEDOR" prefWidth="150"/>
                         <TableColumn fx:id="colCliente" text="CLIENTE" prefWidth="150"/>
                         <TableColumn fx:id="colVolumen" text="VOLUMEN" prefWidth="100"/>
                         <TableColumn fx:id="colDestino" text="DESTINO" prefWidth="160"/>
