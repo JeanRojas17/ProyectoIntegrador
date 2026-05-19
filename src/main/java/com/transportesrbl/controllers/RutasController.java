@@ -3,8 +3,6 @@ package com.transportesrbl.controllers;
 import com.transportesrbl.models.RutaSeguimiento;
 import com.transportesrbl.services.RutaService;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,10 +15,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.util.Duration;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -50,7 +48,6 @@ public class RutasController {
     private final ObservableList<RutaSeguimiento> rutasFiltradas = FXCollections.observableArrayList();
     private final DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private List<RutaSeguimiento> todasLasRutas = new ArrayList<>();
-    private Timeline refrescoTimeline;
     private boolean mapaListo;
 
     @FXML
@@ -59,7 +56,6 @@ public class RutasController {
         configurarFiltros();
         cargarMapaBase();
         cargarDatos();
-        iniciarRefresco();
     }
 
     private void configurarTabla() {
@@ -126,24 +122,13 @@ public class RutasController {
             .collect(Collectors.toList());
 
         rutasFiltradas.setAll(filtradas);
+        conservarSeleccion(filtradas);
         renderizarMapa();
     }
 
     @FXML
     private void handleRefrescar() {
         cargarDatos();
-    }
-
-    private void iniciarRefresco() {
-        refrescoTimeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> cargarDatos()));
-        refrescoTimeline.setCycleCount(Timeline.INDEFINITE);
-        refrescoTimeline.play();
-
-        webMapa.sceneProperty().addListener((obs, anterior, actual) -> {
-            if (actual == null && refrescoTimeline != null) {
-                refrescoTimeline.stop();
-            }
-        });
     }
 
     private void cargarMapaBase() {
@@ -164,11 +149,17 @@ public class RutasController {
 
         RutaSeguimiento seleccionada = tblRutas.getSelectionModel().getSelectedItem();
         int idSeleccionado = seleccionada != null ? seleccionada.getIdEntrega() : -1;
-        String json = construirJsonRutas(rutasFiltradas);
+        String json = seleccionada != null
+            ? construirJsonRutas(Collections.singletonList(seleccionada))
+            : "[]";
 
         try {
             webMapa.getEngine().executeScript("window.renderRoutes(" + json + ", " + idSeleccionado + ");");
-            lblEstadoMapa.setText(rutasFiltradas.size() + " rutas visibles en el mapa");
+            if (seleccionada != null) {
+                lblEstadoMapa.setText("Calculando ruta vial para #" + seleccionada.getIdEntrega());
+            } else {
+                lblEstadoMapa.setText("Seleccione una ruta para verla en el mapa");
+            }
         } catch (Exception e) {
             lblEstadoMapa.setText("No se pudo actualizar el mapa");
         }
@@ -199,6 +190,7 @@ public class RutasController {
                 .append("\"actualLon\":").append(numero(r.getActualLon())).append(",")
                 .append("\"progreso\":").append(numero(r.getProgreso())).append(",")
                 .append("\"eta\":").append(r.getEtaMinutos()).append(",")
+                .append("\"ubicacionReal\":").append(r.isUbicacionReal()).append(",")
                 .append("\"color\":\"").append(escaparJson(r.getColor())).append("\"")
                 .append("}");
         }
@@ -221,6 +213,7 @@ public class RutasController {
                     .popup-title { font-weight: 700; color: #1f2937; margin-bottom: 6px; }
                     .popup-line { color: #4b5563; font-size: 12px; margin-top: 3px; }
                     .popup-tag { display: inline-block; padding: 3px 8px; border-radius: 4px; color: #fff; font-size: 11px; margin-top: 8px; }
+                    .map-note { position: absolute; top: 12px; left: 50px; z-index: 900; background: #fff; color: #334155; padding: 6px 10px; border-radius: 4px; box-shadow: 0 2px 8px rgba(15,23,42,.18); font-size: 12px; }
                     .fallback { height: 100%; display: grid; place-items: center; color: #334155; text-align: center; padding: 30px; box-sizing: border-box; }
                 </style>
             </head>
@@ -230,6 +223,8 @@ public class RutasController {
                 <script>
                     let map;
                     let routeLayer;
+                    let noteControl;
+                    const routeCache = {};
 
                     function ensureMap() {
                         if (!window.L) {
@@ -247,6 +242,20 @@ public class RutasController {
                         return true;
                     }
 
+                    function setNote(text) {
+                        if (!noteControl) {
+                            noteControl = L.control({ position: 'topleft' });
+                            noteControl.onAdd = function() {
+                                const div = L.DomUtil.create('div', 'map-note');
+                                div.innerHTML = text;
+                                return div;
+                            };
+                            noteControl.addTo(map);
+                            return;
+                        }
+                        noteControl.getContainer().innerHTML = text;
+                    }
+
                     function esc(value) {
                         return String(value || '').replace(/[&<>"']/g, function(char) {
                             return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
@@ -260,8 +269,119 @@ public class RutasController {
                             '<div class="popup-line"><b>Destino:</b> ' + esc(route.destino) + '</div>' +
                             '<div class="popup-line"><b>Conductor:</b> ' + esc(route.conductor) + '</div>' +
                             '<div class="popup-line"><b>Camion:</b> ' + esc(route.camion) + '</div>' +
-                            '<div class="popup-line"><b>Progreso:</b> ' + pct + '% | ETA: ' + route.eta + ' min</div>' +
+                            '<div class="popup-line"><b>Avance:</b> ' + pct + '% | ETA: ' + route.eta + ' min</div>' +
+                            '<div class="popup-line"><b>Ubicacion:</b> ' + (route.ubicacionReal ? 'GPS registrado' : 'Sin GPS registrado') + '</div>' +
                             '<span class="popup-tag" style="background:' + route.color + '">' + esc(route.estado) + '</span>';
+                    }
+
+                    function osrmKey(route) {
+                        return [
+                            route.origenLat, route.origenLon,
+                            route.destinoLat, route.destinoLon
+                        ].map(function(value) { return Number(value).toFixed(5); }).join('|');
+                    }
+
+                    function osrmUrl(route) {
+                        return 'https://router.project-osrm.org/route/v1/driving/' +
+                            route.origenLon + ',' + route.origenLat + ';' +
+                            route.destinoLon + ',' + route.destinoLat +
+                            '?overview=full&geometries=geojson&steps=false';
+                    }
+
+                    function drawFallback(route) {
+                        const origin = [route.origenLat, route.origenLon];
+                        const current = [route.actualLat, route.actualLon];
+                        const destination = [route.destinoLat, route.destinoLon];
+                        L.polyline([origin, destination], {
+                            color: route.color,
+                            weight: 6,
+                            opacity: 0.85,
+                            dashArray: '8 8'
+                        }).addTo(routeLayer).bindPopup(popup(route));
+                        drawMarkers(route, origin, current, destination);
+                        map.fitBounds(route.ubicacionReal ? [origin, current, destination] : [origin, destination], { padding: [35, 35], maxZoom: 13 });
+                    }
+
+                    function drawMarkers(route, origin, current, destination) {
+                        L.circleMarker(origin, {
+                            radius: 7,
+                            color: '#111827',
+                            fillColor: '#ffffff',
+                            fillOpacity: 1,
+                            weight: 2
+                        }).addTo(routeLayer).bindPopup('<b>Origen</b><br>Centro de Logistica RBL');
+
+                        L.circleMarker(destination, {
+                            radius: 8,
+                            color: route.color,
+                            fillColor: '#fff',
+                            fillOpacity: 1,
+                            weight: 3
+                        }).addTo(routeLayer).bindPopup(popup(route));
+
+                        if (route.ubicacionReal) {
+                            L.circleMarker(current, {
+                                radius: 11,
+                                color: '#111827',
+                                fillColor: route.color,
+                                fillOpacity: 0.95,
+                                weight: 2
+                            }).addTo(routeLayer).bindPopup(popup(route));
+                        }
+                    }
+
+                    function drawStreetRoute(route, osrmData) {
+                        const origin = [route.origenLat, route.origenLon];
+                        const current = [route.actualLat, route.actualLon];
+                        const destination = [route.destinoLat, route.destinoLon];
+                        const geometry = osrmData.routes && osrmData.routes[0] && osrmData.routes[0].geometry;
+
+                        if (!geometry) {
+                            setNote('Ruta vial no disponible. Mostrando referencia directa.');
+                            drawFallback(route);
+                            return;
+                        }
+
+                        const mainRoute = L.geoJSON(geometry, {
+                            style: {
+                                color: route.color,
+                                weight: 6,
+                                opacity: 0.88
+                            }
+                        }).addTo(routeLayer);
+
+                        const routeInfo = osrmData.routes[0];
+                        const km = (routeInfo.distance / 1000).toFixed(1);
+                        const min = Math.round(routeInfo.duration / 60);
+                        mainRoute.bindPopup(popup(route) + '<div class="popup-line"><b>Ruta vial:</b> ' + km + ' km | ' + min + ' min aprox.</div>');
+                        drawMarkers(route, origin, current, destination);
+                        map.fitBounds(mainRoute.getBounds(), { padding: [35, 35], maxZoom: 13 });
+                        setNote('Ruta vial calculada por calles');
+                    }
+
+                    function loadStreetRoute(route) {
+                        const key = osrmKey(route);
+                        if (routeCache[key]) {
+                            drawStreetRoute(route, routeCache[key]);
+                            return;
+                        }
+
+                        setNote('Calculando ruta vial...');
+                        fetch(osrmUrl(route))
+                            .then(function(response) {
+                                if (!response.ok) throw new Error('OSRM no disponible');
+                                return response.json();
+                            })
+                            .then(function(data) {
+                                routeCache[key] = data;
+                                routeLayer.clearLayers();
+                                drawStreetRoute(route, data);
+                            })
+                            .catch(function() {
+                                routeLayer.clearLayers();
+                                setNote('Ruta vial no disponible. Mostrando referencia directa.');
+                                drawFallback(route);
+                            });
                     }
 
                     window.renderRoutes = function(routes, selectedId) {
@@ -269,49 +389,13 @@ public class RutasController {
                         routeLayer.clearLayers();
 
                         if (!routes || routes.length === 0) {
+                            if (routeLayer) routeLayer.clearLayers();
+                            setNote('Seleccione una ruta para verla en el mapa');
                             map.setView([3.451646, -76.531985], 12);
                             return;
                         }
 
-                        const bounds = [];
-                        let selectedBounds = null;
-
-                        routes.forEach(function(route) {
-                            const origin = [route.origenLat, route.origenLon];
-                            const current = [route.actualLat, route.actualLon];
-                            const destination = [route.destinoLat, route.destinoLon];
-                            const weight = route.id === selectedId ? 6 : 4;
-                            const opacity = route.id === selectedId ? 0.95 : 0.55;
-
-                            L.polyline([origin, current, destination], {
-                                color: route.color,
-                                weight: weight,
-                                opacity: opacity,
-                                dashArray: route.progreso <= 0 ? '8 8' : null
-                            }).addTo(routeLayer).bindPopup(popup(route));
-
-                            L.circleMarker(destination, {
-                                radius: 6,
-                                color: route.color,
-                                fillColor: '#fff',
-                                fillOpacity: 1,
-                                weight: 3
-                            }).addTo(routeLayer).bindPopup(popup(route));
-
-                            L.circleMarker(current, {
-                                radius: route.id === selectedId ? 11 : 8,
-                                color: '#111827',
-                                fillColor: route.color,
-                                fillOpacity: 0.95,
-                                weight: 2
-                            }).addTo(routeLayer).bindPopup(popup(route));
-
-                            bounds.push(origin, current, destination);
-                            if (route.id === selectedId) selectedBounds = [origin, current, destination];
-                        });
-
-                        const fit = selectedBounds || bounds;
-                        map.fitBounds(fit, { padding: [35, 35], maxZoom: selectedBounds ? 13 : 12 });
+                        loadStreetRoute(routes[0]);
                     };
 
                     ensureMap();
@@ -323,6 +407,20 @@ public class RutasController {
 
     private boolean contieneEstado(RutaSeguimiento ruta, String texto) {
         return normalizar(ruta.getEstado()).contains(texto);
+    }
+
+    private void conservarSeleccion(List<RutaSeguimiento> filtradas) {
+        RutaSeguimiento seleccionada = tblRutas.getSelectionModel().getSelectedItem();
+        if (seleccionada == null) {
+            return;
+        }
+
+        boolean sigueVisible = filtradas.stream()
+            .anyMatch(ruta -> ruta.getIdEntrega() == seleccionada.getIdEntrega());
+
+        if (!sigueVisible) {
+            tblRutas.getSelectionModel().clearSelection();
+        }
     }
 
     private String normalizar(String valor) {
