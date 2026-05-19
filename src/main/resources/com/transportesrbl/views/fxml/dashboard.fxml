@@ -35,21 +35,29 @@
                     <Button text="PRODUCTOS" onAction="#MostrarSeccionProductos" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="CAMIONES" onAction="#mostrarSeccionCamiones" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="RUTAS" onAction="#mostrarSeccionRutas" styleClass="menu-button" maxWidth="Infinity"/>
+                    <Button text="CLIENTES" onAction="#mostrarSeccionClientes" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="PERSONAL" onAction="#mostrarSeccionPersonal" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="REPORTES" onAction="#mostrarSeccionReportes" styleClass="menu-button" maxWidth="Infinity"/>
                     <Button text="CONFIGURACION" styleClass="menu-button" maxWidth="Infinity"/>
                 </VBox>
 
-                <HBox spacing="15" styleClass="user-profile">
+                <VBox styleClass="user-profile">
                     <padding>
                         <Insets top="15" right="15" bottom="15" left="15"/>
-                    </padding>    
-                    <Circle radius="20" fill="#ecf0f1"/>
-                    <VBox>
-                        <Label fx:id="lblNombreUsuario" text="Juan Pérez" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
-                        <Label fx:id="lblRolUsuario" text="COORDINADOR LOGISTICO" style="-fx-text-fill: #bdc3c7; -fx-font-size: 10;"/>
-                    </VBox>
-                </HBox>                
+                    </padding>
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Circle radius="20" fill="#ecf0f1"/>
+                        <VBox>
+                            <Label fx:id="lblNombreUsuario" text="Juan Pérez" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblRolUsuario" text="COORDINADOR LOGISTICO" style="-fx-text-fill: #bdc3c7; -fx-font-size: 10;"/>
+                        </VBox>
+                    </HBox>
+                    <Button onAction="#handleLogout" text="Cerrar Sesión" styleClass="btn-logout" maxWidth="Infinity">
+                        <VBox.margin>
+                            <Insets top="10"/>
+                        </VBox.margin>
+                    </Button>
+                </VBox>                
             </children>
         </VBox>
     </left>

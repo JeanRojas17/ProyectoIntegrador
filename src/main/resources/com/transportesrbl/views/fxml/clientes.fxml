@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: #fafbfc;" stylesheets="@../css/personal.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.ClientesController">
+    <content>
+        <VBox styleClass="main-container">
+            
+            <HBox alignment="CENTER_LEFT">
+                <Label styleClass="section-title" text="GESTIÓN DE CLIENTES" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleNuevo" styleClass="btn-new" text="+ NUEVO CLIENTE" />
+            </HBox>
+
+            <HBox spacing="15">
+                <VBox styleClass="metric-card">
+                    <Label styleClass="metric-label" text="TOTAL CLIENTES" />
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Label fx:id="lblTotalClientes" styleClass="metric-value" text="0" />
+                </VBox>
+            </HBox>
+
+            <HBox styleClass="filter-container">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label style="-fx-font-size: 10px; -fx-text-fill: #64748b;" text="BUSCAR POR EMPRESA O CONTACTO" />
+                    <TextField fx:id="txtBuscar" promptText="Buscar cliente..." styleClass="filter-field" />
+                </VBox>
+                <VBox alignment="BOTTOM_RIGHT">
+                    <Button onAction="#handleLimpiar" styleClass="btn-clear" text="LIMPIAR" />
+                </VBox>
+            </HBox>
+
+            <FlowPane fx:id="flowClientes" hgap="20" vgap="20">
+                <!-- Se poblará dinámicamente -->
+            </FlowPane>
+
+        </VBox>
+    </content>
+</ScrollPane>

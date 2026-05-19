@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" styleClass="form-container" stylesheets="@../css/estilos_formulario.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.transportesrbl.controllers.FormClienteController">
+    <padding>
+        <Insets bottom="30" left="30" right="30" top="30" />
+    </padding>
+    
+    <Label fx:id="lblTitulo" styleClass="label-titulo" text="REGISTRO DE CLIENTE" />
+    
+    <GridPane hgap="15" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="150" />
+            <ColumnConstraints prefWidth="250" />
+        </columnConstraints>
+        
+        <Label text="Nombre Empresa:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="txtEmpresa" promptText="Ej: Haceb" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        
+        <Label text="Contacto (Persona):" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="txtContacto" promptText="Ej: Juan Pérez" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        
+        <Separator GridPane.columnSpan="2" GridPane.rowIndex="2">
+            <padding><Insets top="10" bottom="10"/></padding>
+        </Separator>
+        
+        <Label text="DATOS DE CUENTA" style="-fx-font-weight: bold; -fx-text-fill: #34495e;" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+        
+        <Label text="Usuario (Login):" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <TextField fx:id="txtUsuario" promptText="usuario.cliente" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        
+        <Label text="Contraseña:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <PasswordField fx:id="txtPassword" promptText="********" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        
+        <Label fx:id="lblInfoEdicion" text="* Al editar solo se cambia Empresa/Contacto" visible="false" managed="false" style="-fx-text-fill: #e67e22; -fx-font-size: 10px;" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+
+    </GridPane>
+    
+    <HBox alignment="CENTER_RIGHT" spacing="15">
+        <Button onAction="#handleCancelar" prefWidth="100" styleClass="button-cancelar" text="CANCELAR" />
+        <Button onAction="#handleGuardar" prefWidth="100" styleClass="button-guardar" text="GUARDAR" />
+    </HBox>
+</VBox>

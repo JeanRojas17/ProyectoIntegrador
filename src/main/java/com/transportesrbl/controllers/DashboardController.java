@@ -3,6 +3,7 @@ package com.transportesrbl.controllers;
 import com.transportesrbl.models.Camion;
 import com.transportesrbl.models.Entrega;
 import com.transportesrbl.models.MetricasDashboard;
+import com.transportesrbl.models.SesionUsuario;
 import com.transportesrbl.services.DashboardService;
 
 import java.io.IOException;
@@ -184,6 +185,22 @@ public class DashboardController {
     }
 
     @FXML
+    private void mostrarSeccionClientes(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/clientes.fxml"));
+            ScrollPane clientesView = loader.load();
+
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(clientesView);
+
+            System.out.println(">>> Sección de Clientes cargada en el contentArea.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar la sección de clientes: " + e.getMessage());
+        }
+    }
+
+    @FXML
     private void mostrarSeccionReportes(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/transportesrbl/views/fxml/reportes.fxml"));
@@ -214,6 +231,20 @@ public class DashboardController {
             cargarDatos(); 
         } catch (IOException e) {
             System.err.println("Error: No se pudo cargar form_asignacion.fxml");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        try {
+            SesionUsuario.getInstancia().setUsuarioActivo(null);
+            Parent root = FXMLLoader.load(getClass().getResource("/com/transportesrbl/views/fxml/Login.fxml"));
+            Stage stage = (Stage) contentArea.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Transportes RBL - Login");
+            stage.show();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -190,6 +190,7 @@ public class DashboardClienteController {
         item.getStyleClass().add("notif-item");
         Label lbl = new Label(text);
         lbl.getStyleClass().add("notif-text");
+        lbl.setWrapText(true);
         item.getChildren().add(lbl);
         return item;
     }
